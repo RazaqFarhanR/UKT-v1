@@ -1,45 +1,36 @@
 'use strict';
-
-const { sequelize } = require('../models');
-
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable('user', {
-      id_user: {
+    await queryInterface.createTable('session', {
+      id_session: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      username: {
-        type: Sequelize.STRING
-      },
-      name: {
-        type: Sequelize.STRING
-      },
-      id_role: {
-        type: Sequelize.STRING,
+      id_lembar_soal: {
+        type: Sequelize.INTEGER,
         allowNull: false,
         references: {
-          model: "role",
-          key: "id_role"
+          model: "lembar_soal",
+          key: "id_lembar_soal"
         }
       },
-      id_cabang: {
+      id_siswa: {
         type: Sequelize.INTEGER,
-        allowNull: true,
+        allowNull: false,
         references: {
-          model: "cabang",
-          key: "id_cabang"
+          model: "siswa",
+          key: "id_siswa"
         }
       },
-      foto: {
-        type: Sequelize.STRING,
-        allowNull: true
+      nilai: {
+        type: Sequelize.INTEGER,
+        allowNull: false
       },
-      password: {
-        type: Sequelize.STRING
+      waktu_pengerjaan: {
+        type: Sequelize.INTEGER
       },
       createdAt: {
         allowNull: false,
@@ -52,6 +43,6 @@ module.exports = {
     });
   },
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable('user');
+    await queryInterface.dropTable('session');
   }
 };

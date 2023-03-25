@@ -2,39 +2,35 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable('pengurus', {
-      id_pengurus: {
+    await queryInterface.createTable('soal', {
+      id_soal: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      name: {
-        type: Sequelize.STRING
-      },
-      id_role: {
-        type: Sequelize.STRING,
+      id_lembar_soal: {
+        type: Sequelize.INTEGER,
         allowNull: false,
         references: {
-          model: "role",
-          key: "id_role"
+          model: "lembar_soal",
+          key: "id_lembar_soal"
         }
       },
-      id_ranting: {
-        type: Sequelize.INTEGER
-      },
-      username: {
+      pertanyaan: {
         type: Sequelize.STRING
       },
-      password: {
+      opsi1: {
         type: Sequelize.STRING
       },
-      foto: {
-        type: Sequelize.STRING,
-        allowNull: true
+      opsi2: {
+        type: Sequelize.STRING
       },
-      no_wa: {
-        type: Sequelize.INTEGER
+      opsi3: {
+        type: Sequelize.STRING
+      },
+      opsi4: {
+        type: Sequelize.STRING
       },
       createdAt: {
         allowNull: false,
@@ -47,6 +43,6 @@ module.exports = {
     });
   },
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable('pengurus');
+    await queryInterface.dropTable('soal');
   }
 };
