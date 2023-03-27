@@ -69,6 +69,22 @@ app.use("/ukt/ukt_hijau", ukt_hijau)
 const ukt_putih = require('./routes/ukt_putih');
 app.use("/ukt/ukt_putih", ukt_putih)
 
+//endpoint Soal
+const soal = require('./routes/soal');
+app.use("/ukt/soal", soal)
+
+//endpoint Lembar Soal
+const lembar_soal = require('./routes/lembar_soal');
+app.use("/ukt/lembar_soal", lembar_soal)
+
+//endpoint Kunci Soal
+const kunci_soal = require('./routes/kunci_soal');
+app.use("/ukt/kunci_soal", kunci_soal)
+
+//endpoint Session
+const session = require('./routes/session');
+app.use("/ukt/session", session)
+
 //run server
 app.listen(8080, () => {
     console.log('server run on port 8080')

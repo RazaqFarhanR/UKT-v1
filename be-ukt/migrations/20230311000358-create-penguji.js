@@ -41,6 +41,10 @@ module.exports = {
       },
       username: {
         type: Sequelize.STRING
+      },      
+      foto: {
+        type: Sequelize.STRING,
+        allowNull: true
       },
       password: {
         type: Sequelize.STRING
