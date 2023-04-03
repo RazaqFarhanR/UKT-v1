@@ -14,6 +14,11 @@ app.use(bodyParser.urlencoded({extended: true}));
 const models = require('../models/index');
 const user = models.user;
 
+//import auth
+const auth = require("../auth")
+const jwt = require("jsonwebtoken")
+const SECRET_KEY = "BelajarNodeJSItuMenyengankan";
+
 //konfigurasi proses upload file
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
@@ -63,10 +68,11 @@ app.post("/", upload2.single('foto'), (req,res) =>{
     // md5_hash.update(password_bytes);
     // const hashed_password = md5_hash.hexdigest(); 
     let data ={
+        NIW: req.body.niw,
         username: req.body.username,
         name: req.body.name,
         id_role: req.body.id_role,
-        id_cabang: req.body.id_cabang,
+        id_ranting: req.body.id_ranting,
         foto: req.file.filename,
         password: req.body.password
     }
@@ -126,5 +132,40 @@ app.delete("/:id", (req,res) => {
     })
 })
 
+//endpoint login user (authorization), METHOD: POST, function: findOne
+app.post("/auth", async (req,res) => {
+    let data = {
+        username: req.body.username,
+        password: req.body.password
+    }
+
+    //cari data user yang username dan password sama dengan input
+    let result = await user.findOne({where: data})
+    if(result){
+        //ditemukan
+        //set payload from data
+        let payload = JSON.stringify({
+            id_user: result.id_user,
+            username: result.username
+        })
+
+        // generate token based on payload and secret_key
+        let token = jwt.sign(payload, SECRET_KEY)
+
+        //set output
+        res.json({
+            logged: true,
+            data: result,
+            token: token
+        })
+    }
+    else{
+        //tidak ditemukan
+        res.json({
+            logged: false,
+            message: "Invalid username or password"
+        })
+    }
+})
 
 module.exports = app;
