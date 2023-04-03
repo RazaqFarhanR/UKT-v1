@@ -13,9 +13,9 @@ module.exports = (sequelize, DataTypes) => {
         foreignKey: "id_role",
         as: "user_role"
       })
-      this.belongsTo(models.cabang, {
-        foreignKey: "id_cabang",
-        as: "user_cabang",
+      this.belongsTo(models.ranting, {
+        foreignKey: "id_ranting",
+        as: "user_ranting",
       });
     }
   }
@@ -27,6 +27,7 @@ module.exports = (sequelize, DataTypes) => {
         primaryKey: true,
         type: DataTypes.INTEGER,
       },
+      NIW: DataTypes.STRING,
       username: DataTypes.STRING,
       name: DataTypes.STRING,
       id_role: DataTypes.STRING,

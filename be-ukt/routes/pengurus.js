@@ -83,9 +83,12 @@ app.post("/name_dan_ranting", (req,res) => {
 //endpoint untuk menyimpan data pengurus, METHOD POST, function create
 app.post("/", upload2.single('foto'), (req,res) =>{
     let data ={
+        NIW: req.body.niw,
+        jabatan: req.body.jabatan,
         name: req.body.name,
         id_role: req.body.id_role,
         id_ranting: req.body.id_ranting,
+        id_cabang: req.body.id_cabang,
         username: req.body.username,
         password: req.body.password,
         foto: req.file.filename,

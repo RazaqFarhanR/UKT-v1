@@ -19,6 +19,10 @@ module.exports = (sequelize, DataTypes) => {
         foreignKey: "id_ranting",
         as: "penguji_ranting"
       })
+      this.belongsTo(models.cabang, {
+        foreignKey: "id_cabang",
+        as: "penguji_cabang"
+      })
     }
   }
   penguji.init({
@@ -28,6 +32,7 @@ module.exports = (sequelize, DataTypes) => {
       autoIncrement: true,
       primaryKey: true,
     },
+    NIW: DataTypes.STRING,
     name: DataTypes.STRING,
     id_role: DataTypes.STRING,
     id_ranting: {

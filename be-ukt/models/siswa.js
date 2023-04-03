@@ -64,11 +64,12 @@ module.exports = (sequelize, DataTypes) => {
       autoIncrement: true,
       allowNull: false
     },
+    id_event: DataTypes.INTEGER,
     nis: DataTypes.INTEGER,
     name: DataTypes.STRING,
     jenis_kelamin: DataTypes.ENUM('pria', 'perempuan'),
     id_role: DataTypes.STRING,
-    jenis_latihan: DataTypes.STRING,
+    jenis_latihan: DataTypes.ENUM('Reguler','Privat'),
     id_ranting: DataTypes.INTEGER,
     id_rayon: {
       type:DataTypes.INTEGER,

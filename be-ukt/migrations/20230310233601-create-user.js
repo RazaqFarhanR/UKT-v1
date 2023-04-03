@@ -12,6 +12,9 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.INTEGER
       },
+      NIW: {
+        type: Sequelize.STRING
+      },
       username: {
         type: Sequelize.STRING
       },
@@ -26,12 +29,12 @@ module.exports = {
           key: "id_role"
         }
       },
-      id_cabang: {
+      id_ranting: {
         type: Sequelize.INTEGER,
         allowNull: true,
         references: {
-          model: "cabang",
-          key: "id_cabang"
+          model: "ranting",
+          key: "id_ranting"
         }
       },
       foto: {
