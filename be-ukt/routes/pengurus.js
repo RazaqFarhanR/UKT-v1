@@ -15,6 +15,11 @@ const models = require('../models/index');
 const { sequelize, Op } = require("sequelize");
 const pengurus = models.pengurus;
 
+//import auth
+const auth = require("../auth")
+const jwt = require("jsonwebtoken")
+const SECRET_KEY = "BelajarNodeJSItuMenyengankan";
+
 //konfigurasi proses upload file
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
@@ -83,9 +88,12 @@ app.post("/name_dan_ranting", (req,res) => {
 //endpoint untuk menyimpan data pengurus, METHOD POST, function create
 app.post("/", upload2.single('foto'), (req,res) =>{
     let data ={
+        NIW: req.body.niw,
+        jabatan: req.body.jabatan,
         name: req.body.name,
         id_role: req.body.id_role,
         id_ranting: req.body.id_ranting,
+        id_cabang: req.body.id_cabang,
         username: req.body.username,
         password: req.body.password,
         foto: req.file.filename,
@@ -148,5 +156,40 @@ app.delete("/:id", (req,res) => {
     })
 })
 
+//endpoint login pengurus (authorization), METHOD: POST, function: findOne
+app.post("/auth", async (req,res) => {
+    let data = {
+        username: req.body.username,
+        password: req.body.password
+    }
+  
+    //cari data pengurus yang username dan password sama dengan input
+    let result = await pengurus.findOne({where: data})
+    if(result){
+        //ditemukan
+        //set payload from data
+        let payload = JSON.stringify({
+            id_user: result.id_user,
+            username: result.username
+        })
+  
+        // generate token based on payload and secret_key
+        let token = jwt.sign(payload, SECRET_KEY)
+  
+        //set output
+        res.json({
+            logged: true,
+            data: result,
+            token: token
+        })
+    }
+    else{
+        //tidak ditemukan
+        res.json({
+            logged: false,
+            message: "Invalid username or password"
+        })
+    }
+  })
 
 module.exports = app;

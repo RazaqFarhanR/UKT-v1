@@ -13,11 +13,11 @@ module.exports = (sequelize, DataTypes) => {
       // define association here
       this.hasMany(models.penguji, {
         foreignKey: "id_cabang",
-        as: "penguji"
+        as: "penguji_cabang"
       })
-      this.hasMany(models.user, {
+      this.hasMany(models.pengurus, {
         foreignKey: "id_cabang",
-        as: "user_cabang"
+        as: "pengurus_cabang"
       })
     }
   }

@@ -15,6 +15,11 @@ const models = require("../models/index");
 const { Op } = require("sequelize");
 const penguji = models.penguji;
 
+//import auth
+const auth = require("../auth")
+const jwt = require("jsonwebtoken")
+const SECRET_KEY = "BelajarNodeJSItuMenyengankan";
+
 //konfigurasi proses upload file
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
@@ -93,6 +98,7 @@ app.post("/", upload2.single("foto"), async (req, res) => {
       });
       if (ranting) {
         const data = {
+          NIW: req.body.niw,
           name: req.body.name,
           id_role: req.body.id_role,
           id_ranting: req.body.id_ranting,
@@ -113,9 +119,11 @@ app.post("/", upload2.single("foto"), async (req, res) => {
       }
     } else if (!req.body.id_ranting) {
         const data = {
+            NIW: req.body.niw,
             name: req.body.name,
             id_role: req.body.id_role,
-            id_ranting: req.body.id_ranting, // set id_cabang based on the corresponding value in the ranting table
+            id_ranting: req.body.id_ranting,
+            foto: req.file.filename, // set id_cabang based on the corresponding value in the ranting table
             username: req.body.username,
             password: req.body.password,
             no_wa: req.body.no_wa,
@@ -181,5 +189,42 @@ app.delete("/:id", (req, res) => {
       });
     });
 });
+
+//endpoint login penguji (authorization), METHOD: POST, function: findOne
+app.post("/auth", async (req,res) => {
+  let data = {
+      username: req.body.username,
+      password: req.body.password
+  }
+
+  //cari data penguji yang username dan password sama dengan input
+  let result = await penguji.findOne({where: data})
+  if(result){
+      //ditemukan
+      //set payload from data
+      let payload = JSON.stringify({
+          id_user: result.id_user,
+          username: result.username
+      })
+
+      // generate token based on payload and secret_key
+      let token = jwt.sign(payload, SECRET_KEY)
+
+      //set output
+      res.json({
+          logged: true,
+          data: result,
+          token: token
+      })
+  }
+  else{
+      //tidak ditemukan
+      res.json({
+          logged: false,
+          message: "Invalid username or password"
+      })
+  }
+})
+
 
 module.exports = app;

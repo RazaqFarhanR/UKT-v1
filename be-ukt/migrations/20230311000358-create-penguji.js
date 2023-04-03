@@ -12,6 +12,9 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.INTEGER
       },
+      NIW: {
+        type: Sequelize.STRING
+      },
       name: {
         type: Sequelize.STRING
       },

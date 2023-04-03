@@ -33,6 +33,7 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.INTEGER
     },
     id_siswa: DataTypes.INTEGER,
+    id_event: DataTypes.INTEGER,
     id_rayon: DataTypes.INTEGER,
     keshan: DataTypes.INTEGER,
     senam: DataTypes.INTEGER,

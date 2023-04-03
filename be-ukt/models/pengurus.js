@@ -15,6 +15,14 @@ module.exports = (sequelize, DataTypes) => {
         foreignKey: "id_role",
         as: "pengurus"
       })
+      this.belongsTo(models.cabang, {
+        foreignKey: "id_cabang",
+        as: "pengurus_cabang"
+      })
+      this.belongsTo(models.ranting, {
+        foreignKey: "id_ranting",
+        as: "pengurus_ranting"
+      })
     }
   }
   pengurus.init({
@@ -24,9 +32,18 @@ module.exports = (sequelize, DataTypes) => {
       autoIncrement: true,
       allowNull: false
     },
+    NIW: DataTypes.STRING,
+    jabatan: DataTypes.STRING,
     name: DataTypes.STRING,
     id_role: DataTypes.STRING,
-    id_ranting: DataTypes.INTEGER,
+    id_ranting: {
+      type: DataTypes.INTEGER,
+      allowNull: true
+    },
+    id_cabang: {
+      type: DataTypes.INTEGER,
+      allowNull: true
+    },
     username: DataTypes.STRING,
     foto: DataTypes.STRING,
     password: DataTypes.STRING,

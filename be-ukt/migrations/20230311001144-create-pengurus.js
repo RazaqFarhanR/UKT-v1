@@ -9,6 +9,12 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.INTEGER
       },
+      NIW: {
+        type: Sequelize.STRING
+      },
+      jabatan: {
+        type: Sequelize.STRING
+      },
       name: {
         type: Sequelize.STRING
       },
@@ -22,6 +28,14 @@ module.exports = {
       },
       id_ranting: {
         type: Sequelize.INTEGER
+      },
+      id_cabang: {
+        type: Sequelize.INTEGER,
+        allowNull: true,
+        references: {
+          model: "cabang",
+          key: "id_cabang"
+        }
       },
       username: {
         type: Sequelize.STRING
