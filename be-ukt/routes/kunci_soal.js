@@ -1,6 +1,7 @@
 //import library
 const express = require('express');
 const bodyParser = require('body-parser');
+const { randomUUID } = require('crypto');
 
 //implementasi
 const app = express();
@@ -31,7 +32,9 @@ app.get("/", (req,res) => {
 
 //endpoint untuk menyimpan data kunci_soal, METHOD POST, function create
 app.post("/", (req,res) =>{
+    const id = randomUUID();
     let data ={
+        id_kunci_soal: id,
         id_soal: req.body.id_soal,
         opsi: req.body.opsi
     }

@@ -23,12 +23,12 @@ module.exports = (sequelize, DataTypes) => {
   }
   soal.init({
     id_soal: {
-      type: DataTypes.INTEGER,
+      type: DataTypes.STRING,
       primaryKey: true,
-      autoIncrement: true,
+      autoIncrement: false,
       allowNull: false
     },
-    id_lembar_soal: DataTypes.INTEGER,
+    id_lembar_soal: DataTypes.STRING,
     pertanyaan: DataTypes.STRING,
     opsi1: DataTypes.STRING,
     opsi2: DataTypes.STRING,

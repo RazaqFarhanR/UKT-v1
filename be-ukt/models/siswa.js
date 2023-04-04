@@ -20,7 +20,7 @@ module.exports = (sequelize, DataTypes) => {
         as: "siswa_ranting"
       })
       this.belongsTo(models.event, {
-        foreign: "id_event",
+        foreignKey: "id_event",
         as: "event_siswa"
       })
       this.hasMany(models.senam, {

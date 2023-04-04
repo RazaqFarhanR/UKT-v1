@@ -23,9 +23,9 @@ module.exports = (sequelize, DataTypes) => {
   }
   lembar_soal.init({
     id_lembar_soal: {
-      type: DataTypes.INTEGER,
+      type: DataTypes.STRING,
       primaryKey: true,
-      autoIncrement: true,
+      autoIncrement: false,
       allowNull: false
     },
     

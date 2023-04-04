@@ -5,9 +5,9 @@ module.exports = {
     await queryInterface.createTable('lembar_soal', {
       id_lembar_soal: {
         allowNull: false,
-        autoIncrement: true,
+        autoIncrement: false,
         primaryKey: true,
-        type: Sequelize.INTEGER
+        type: Sequelize.STRING
       },
       id_ranting: {
         type: Sequelize.INTEGER,

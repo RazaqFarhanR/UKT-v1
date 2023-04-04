@@ -60,6 +60,7 @@ app.post("/name_dan_ranting", (req,res) => {
 
 //endpoint untuk menyimpan data siswa, METHOD POST, function create
 app.post("/", (req,res) =>{
+    
     let data ={
         nis: req.body.nis,
         name: req.body.name,
