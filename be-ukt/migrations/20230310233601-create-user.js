@@ -12,6 +12,14 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.INTEGER
       },
+      id_event: {
+        type: Sequelize.INTEGER,
+        allowNull: false,
+        references: {
+          model: "event",
+          key: "id_event"
+        }
+      },
       NIW: {
         type: Sequelize.STRING
       },
@@ -43,6 +51,9 @@ module.exports = {
       },
       password: {
         type: Sequelize.STRING
+      },
+      no_wa: {
+        type: Sequelize.INTEGER
       },
       createdAt: {
         allowNull: false,

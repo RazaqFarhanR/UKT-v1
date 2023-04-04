@@ -19,12 +19,12 @@ module.exports = (sequelize, DataTypes) => {
   }
   kunci_soal.init({
     id_kunci_soal: {
-      type: DataTypes.INTEGER,
+      type: DataTypes.STRING,
       primaryKey: true,
-      autoIncrement: true,
+      autoIncrement: false,
       allowNull: false
     },
-    id_soal: DataTypes.INTEGER,
+    id_soal: DataTypes.STRING,
     opsi: DataTypes.ENUM('opsi1', 'opsi2', 'opsi3', 'opsi4')
   }, {
     sequelize,

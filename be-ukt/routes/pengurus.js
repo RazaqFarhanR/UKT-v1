@@ -4,6 +4,9 @@ const bodyParser = require('body-parser');
 const multer = require("multer");
 const path = require("path");
 const fs = require("fs");
+const bcrypt = require("bcrypt");
+const salt = bcrypt.genSaltSync(10);
+const { randomUUID } = require('crypto');
 
 //implementasi
 const app = express();
@@ -86,7 +89,8 @@ app.post("/name_dan_ranting", (req,res) => {
 })
 
 //endpoint untuk menyimpan data pengurus, METHOD POST, function create
-app.post("/", upload2.single('foto'), (req,res) =>{
+app.post("/", upload2.single('foto'), async (req,res) =>{
+    const hash = await bcrypt.hash(req.body.password, salt);
     let data ={
         NIW: req.body.niw,
         jabatan: req.body.jabatan,
@@ -95,7 +99,7 @@ app.post("/", upload2.single('foto'), (req,res) =>{
         id_ranting: req.body.id_ranting,
         id_cabang: req.body.id_cabang,
         username: req.body.username,
-        password: req.body.password,
+        password: hash,
         foto: req.file.filename,
         no_wa: req.body.no_wa
     }
@@ -156,40 +160,58 @@ app.delete("/:id", (req,res) => {
     })
 })
 
-//endpoint login pengurus (authorization), METHOD: POST, function: findOne
-app.post("/auth", async (req,res) => {
+//endpoint login user (authorization), METHOD: POST, function: findOne
+app.post("/auth", async (req, res) => {
     let data = {
-        username: req.body.username,
-        password: req.body.password
-    }
+      username: req.body.username,
+      password: req.body.password,
+    };
   
-    //cari data pengurus yang username dan password sama dengan input
-    let result = await pengurus.findOne({where: data})
-    if(result){
+    //cari data user yang username dan password sama dengan input
+    try {
+      let result = await pengurus.findAll({ where: {
+          username: req.body.username
+      } });
+      if (result) {
         //ditemukan
         //set payload from data
-        let payload = JSON.stringify({
-            id_user: result.id_user,
-            username: result.username
-        })
+        console.log("oi" + req.body.password)
+        const match = await bcrypt.compare(req.body.password, result[0].password);
+        if (!match) return res.status(400).json({ msg: "password salah" });
+        if (result[0].id_role === "penguji ranting" || "pengurus cabang") {
+          const id_user = result[0].id_user;
+          const id_role = result[0].id_role;
+          const id = randomUUID();
+          let payload = JSON.stringify({
+            id_user: id_user,
+            id_role: id_role,
+          });
+          // generate token based on payload and secret_key
+          let localToken = jwt.sign(payload, SECRET_KEY);
   
-        // generate token based on payload and secret_key
-        let token = jwt.sign(payload, SECRET_KEY)
-  
-        //set output
-        res.json({
+          const data = await pengurus.findAll({
+            where: {
+              username: req.body.username,
+            },
+          });
+          res.json({
             logged: true,
-            data: result,
-            token: token
-        })
-    }
-    else{
+            data: data[0],
+            token: localToken,
+          });
+        } else {
+          res.status(404).json({ msg: "Kamu Bukan Pengurus" });
+        }
+      } else {
         //tidak ditemukan
         res.json({
-            logged: false,
-            message: "Invalid username or password"
-        })
+          logged: false,
+          message: "Invalid username or password",
+        });
+      }
+    } catch (error) {
+      res.status(404).json({ msg: error.message });
     }
-  })
+  });
 
 module.exports = app;
