@@ -3,6 +3,7 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const { randomUUID } = require('crypto');
 const Sequelize = require('sequelize');
+const { sequelize, Op } = require("sequelize");
 //implementasi
 const app = express();
 app.use(bodyParser.json());
@@ -11,12 +12,43 @@ app.use(bodyParser.urlencoded({extended: true}));
 //import model
 const models = require('../models/index');
 const soal = models.soal;
+const kunciSoal = models.kunci_soal;
 
 //endpoint ditulis disini
 
 //endpoint get data soal
 app.get("/", (req,res) => {
     soal.findAll()
+    .then(soal => {
+        res.json({
+            count: soal.length,
+            data: soal
+        })
+    })
+    .catch(error => {
+        res.json({
+            message: error.message
+        })
+    })    
+})
+//endpoint get data soal
+app.get("/kosong", (req,res) => {
+    soal.findAll({
+        include: [
+            {
+                model: kunciSoal,
+                as: "kunci_soal",
+                attributes: ['id_soal'],
+                required: false,
+
+            }
+        ],
+        where: {
+            "$kunci_soal.id_soal$": {
+              [Op.is]: null
+            },
+          },
+    })
     .then(soal => {
         res.json({
             count: soal.length,

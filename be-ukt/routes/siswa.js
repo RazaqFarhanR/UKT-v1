@@ -62,6 +62,7 @@ app.post("/name_dan_ranting", (req,res) => {
 app.post("/", (req,res) =>{
     
     let data ={
+        id_event: req.body.id_event,
         nis: req.body.nis,
         name: req.body.name,
         id_role: req.body.id_role,

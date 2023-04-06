@@ -17,7 +17,7 @@ module.exports = (sequelize, DataTypes) => {
       })
       this.hasMany(models.kunci_soal, {
         foreignKey: "id_soal",
-        as: "soal"
+        as: "kunci_soal"
       })
     }
   }
