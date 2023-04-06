@@ -148,31 +148,57 @@ app.post("/", upload2.single("foto"), async (req, res) => {
   }
 });
 
-//endpoint untuk mengupdate data penguji, METHOD: PUT, fuction: UPDATE
-app.put("/:id", (req, res) => {
-  let param = {
-    id_penguji: req.params.id,
-  };
-  let data = {
-    name: req.body.name,
-    id_role: req.body.id_role,
-    id_ranting: req.body.id_ranting,
-    username: req.body.username,
-    password: req.body.password,
-    no_wa: req.body.no_wa,
-  };
-  penguji
-    .update(data, { where: param })
-    .then((result) => {
-      res.json({
-        message: "data has been updated",
-      });
-    })
-    .catch((error) => {
-      res.json({
-        message: error.message,
-      });
+//endpoint untuk mengupdate data user, METHOD: PUT, fuction: UPDATE
+app.put("/:id", upload2.single("foto"), async (req, res) => {
+  const hash = await bcrypt.hash(req.body.password, salt);
+  try {
+    let param = {
+      id_penguji: req.params.id,
+    };
+    let result = await penguji.findAll({
+      where: param
     });
+    if (result.length > 0) {
+      let data = {
+        NIW: req.body.niw,
+        jabatan: req.body.jabatan,
+        name: req.body.name,
+        id_role: req.body.id_role,
+        id_ranting: req.body.id_ranting,
+        id_cabang: req.body.id_cabang,
+        username: req.body.username,
+        password: hash,
+        no_wa: req.body.no_wa,
+      };
+      if (req.file) {
+        const imagePath = "C:/Users/RAFI DUTA/Documents/KODING/REACT JS/UKT/be-ukt/image/" + result[0].foto;
+        fs.unlink(imagePath, (err) => {
+          if (err) {
+            console.error(err);
+            return;
+          }
+          console.log('User image deleted successfully');
+        });
+        data.foto = req.file.filename;
+      }
+      penguji
+        .update(data, { where: param })
+        .then((result) => {
+          res.json({
+            message: "data has been updated",
+          });
+        })
+        .catch((error) => {
+          res.json({
+            message: error.message,
+          });
+        });
+    } else {
+      res.status(404).json({ msg: "User not found" });
+    }
+  } catch (error) {
+    res.status(404).json({ msg: error.message });
+  }
 });
 
 //endpoint untuk menghapus data penguji,METHOD: DELETE, function: destroy

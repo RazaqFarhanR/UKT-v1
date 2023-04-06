@@ -2,7 +2,7 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const { randomUUID } = require('crypto');
-
+const Sequelize = require('sequelize');
 //implementasi
 const app = express();
 app.use(bodyParser.json());
@@ -17,6 +17,29 @@ const soal = models.soal;
 //endpoint get data soal
 app.get("/", (req,res) => {
     soal.findAll()
+    .then(soal => {
+        res.json({
+            count: soal.length,
+            data: soal
+        })
+    })
+    .catch(error => {
+        res.json({
+            message: error.message
+        })
+    })    
+})
+//endpoint get data soal
+app.get("/:id", (req,res) => {
+    soal.findAll({
+        where: {
+            id_lembar_soal: req.params.id
+        },
+        order: [
+            Sequelize.fn('RAND')
+        ],
+        limit: 20
+    })
     .then(soal => {
         res.json({
             count: soal.length,
