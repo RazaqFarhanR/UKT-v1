@@ -32,6 +32,33 @@ app.get("/", (req,res) => {
     })    
 })
 //endpoint get data soal
+app.post("/kunci_jawaban", (req,res) => {
+    soal.findAll({
+        include: [
+            {
+                model: kunciSoal,
+                as: "kunci_soal",
+                attributes: ['opsi'],
+                required: true,
+            }
+        ],
+        where: {
+            id_lembar_soal: req.body.id_lembar_soal
+        }
+    })
+    .then(soal => {
+        res.json({
+            count: soal.length,
+            data: soal
+        })
+    })
+    .catch(error => {
+        res.json({
+            message: error.message
+        })
+    })    
+})
+//endpoint get data soal
 app.get("/kosong", (req,res) => {
     soal.findAll({
         include: [
@@ -95,12 +122,21 @@ app.post("/", (req,res) =>{
         opsi1: req.body.opsi1,
         opsi2: req.body.opsi2,
         opsi3: req.body.opsi3,
-        opsi4: req.body.opsi4
+        opsi4: req.body.opsi4,
     }
     soal.create(data)
     .then(result => {
-        res.json({
-            message: "data has been inserted"
+        const id_kunci = randomUUID();
+        console.log(result.dataValues.id_soal);
+        kunciSoal.create({
+            id_kunci_soal: id_kunci,
+            id_soal: result.dataValues.id_soal,
+            opsi: req.body.opsi
+        })
+        .then(result => {
+            res.json({
+                message: "data is inserted"
+            })
         })
     })
     .catch(error =>{

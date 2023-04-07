@@ -16,6 +16,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 //import model
 const models = require("../models/index");
 const user = models.user;
+const ranting = models.ranting;
 
 //import auth
 const auth = require("../auth");
@@ -43,7 +44,16 @@ app.get("/", (req, res) => {
   const imagePath = "http://localhost:8080/image/";
 
   user
-    .findAll()
+    .findAll({
+      include: [
+        {
+          model: ranting,
+          as: "user_ranting",
+          attributes: ['name'],
+          required: false,
+        }
+      ]
+    })
     .then((user) => {
       // Map over the tipe_kamar array and add the image URL to each object
       const user_with_image_url = user.map((tk) => ({
@@ -159,13 +169,23 @@ app.delete("/:id", (req, res) => {
     });
 });
 
+app.post("/niw", async (req, res) => {
+  try {
+    let niw = await user.findAll({
+      where: {
+        NIW: req.body.niw
+      }
+    });
+    res.json({
+      data: niw 
+    })
+  } catch (e) {
+    res.status(404).json({ msg: error.message });
+  }
+})
+
 //endpoint login user (authorization), METHOD: POST, function: findOne
 app.post("/auth", async (req, res) => {
-  let data = {
-    username: req.body.username,
-    password: req.body.password,
-  };
-
   //cari data user yang username dan password sama dengan input
   try {
     let result = await user.findAll({
