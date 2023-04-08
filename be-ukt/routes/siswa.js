@@ -68,6 +68,7 @@ app.post("/", (req,res) =>{
         id_role: req.body.id_role,
         jenis_latihan: req.body.jenis_latihan,
         jenis_kelamin: req.body.jenis_kelamin,
+        ukt: req.body.ukt,
         id_ranting: req.body.id_ranting,
         id_rayon: req.body.id_rayon,
         tingkatan: req.body.tingkatan,

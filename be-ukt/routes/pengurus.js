@@ -116,6 +116,21 @@ app.post("/", upload2.single('foto'), async (req,res) =>{
     })
 }) 
 
+app.post("/niw", async (req, res) => {
+  try {
+    let niw = await pengurus.findAll({
+      where: {
+        NIW: req.body.niw
+      }
+    });
+    res.json({
+      data: niw 
+    })
+  } catch (e) {
+    res.status(404).json({ msg: error.message });
+  }
+})
+
 //endpoint untuk mengupdate data user, METHOD: PUT, fuction: UPDATE
 app.put("/:id", upload2.single("foto"), async (req, res) => {
   const hash = await bcrypt.hash(req.body.password, salt);

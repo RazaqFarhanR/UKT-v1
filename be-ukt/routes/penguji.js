@@ -92,6 +92,21 @@ app.post("/name_dan_ranting", (req, res) => {
     });
 });
 
+app.post("/niw", async (req, res) => {
+  try {
+    let niw = await penguji.findAll({
+      where: {
+        NIW: req.body.niw
+      }
+    });
+    res.json({
+      data: niw 
+    })
+  } catch (e) {
+    res.status(404).json({ msg: error.message });
+  }
+})
+
 app.post("/", upload2.single("foto"), async (req, res) => {
   const Ranting = models.ranting;
   const hash = await bcrypt.hash(req.body.password, salt);
