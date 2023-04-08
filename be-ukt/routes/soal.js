@@ -1,7 +1,9 @@
 //import library
 const express = require('express');
 const bodyParser = require('body-parser');
-
+const { randomUUID } = require('crypto');
+const Sequelize = require('sequelize');
+const { sequelize, Op } = require("sequelize");
 //implementasi
 const app = express();
 app.use(bodyParser.json());
@@ -10,6 +12,7 @@ app.use(bodyParser.urlencoded({extended: true}));
 //import model
 const models = require('../models/index');
 const soal = models.soal;
+const kunciSoal = models.kunci_soal;
 
 //endpoint ditulis disini
 
@@ -28,21 +31,112 @@ app.get("/", (req,res) => {
         })
     })    
 })
+//endpoint get data soal
+app.post("/kunci_jawaban", (req,res) => {
+    soal.findAll({
+        include: [
+            {
+                model: kunciSoal,
+                as: "kunci_soal",
+                attributes: ['opsi'],
+                required: true,
+            }
+        ],
+        where: {
+            id_lembar_soal: req.body.id_lembar_soal
+        }
+    })
+    .then(soal => {
+        res.json({
+            count: soal.length,
+            data: soal
+        })
+    })
+    .catch(error => {
+        res.json({
+            message: error.message
+        })
+    })    
+})
+//endpoint get data soal
+app.get("/kosong", (req,res) => {
+    soal.findAll({
+        include: [
+            {
+                model: kunciSoal,
+                as: "kunci_soal",
+                attributes: ['id_soal'],
+                required: false,
+
+            }
+        ],
+        where: {
+            "$kunci_soal.id_soal$": {
+              [Op.is]: null
+            },
+          },
+    })
+    .then(soal => {
+        res.json({
+            count: soal.length,
+            data: soal
+        })
+    })
+    .catch(error => {
+        res.json({
+            message: error.message
+        })
+    })    
+})
+//endpoint get data soal
+app.get("/:id", (req,res) => {
+    soal.findAll({
+        where: {
+            id_lembar_soal: req.params.id
+        },
+        order: [
+            Sequelize.fn('RAND')
+        ],
+        limit: 20
+    })
+    .then(soal => {
+        res.json({
+            count: soal.length,
+            data: soal
+        })
+    })
+    .catch(error => {
+        res.json({
+            message: error.message
+        })
+    })    
+})
 
 //endpoint untuk menyimpan data soal, METHOD POST, function create
 app.post("/", (req,res) =>{
+    const id = randomUUID();
     let data ={
+        id_soal: id,
         id_lembar_soal: req.body.id_lembar_soal,
         pertanyaan: req.body.pertanyaan,
         opsi1: req.body.opsi1,
         opsi2: req.body.opsi2,
         opsi3: req.body.opsi3,
-        opsi4: req.body.opsi4
+        opsi4: req.body.opsi4,
     }
     soal.create(data)
     .then(result => {
-        res.json({
-            message: "data has been inserted"
+        const id_kunci = randomUUID();
+        console.log(result.dataValues.id_soal);
+        kunciSoal.create({
+            id_kunci_soal: id_kunci,
+            id_soal: result.dataValues.id_soal,
+            opsi: req.body.opsi
+        })
+        .then(result => {
+            res.json({
+                message: "data is inserted"
+            })
         })
     })
     .catch(error =>{

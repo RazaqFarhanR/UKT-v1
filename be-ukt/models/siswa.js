@@ -20,7 +20,7 @@ module.exports = (sequelize, DataTypes) => {
         as: "siswa_ranting"
       })
       this.belongsTo(models.event, {
-        foreign: "id_event",
+        foreignKey: "id_event",
         as: "event_siswa"
       })
       this.hasMany(models.senam, {
@@ -67,9 +67,10 @@ module.exports = (sequelize, DataTypes) => {
     id_event: DataTypes.INTEGER,
     nis: DataTypes.INTEGER,
     name: DataTypes.STRING,
-    jenis_kelamin: DataTypes.ENUM('pria', 'perempuan'),
     id_role: DataTypes.STRING,
+    jenis_kelamin: DataTypes.ENUM('pria', 'perempuan'),
     jenis_latihan: DataTypes.ENUM('Reguler','Privat'),
+    ukt: DataTypes.ENUM('UKT Jambon','UKT Hijau','UKT Putih','UKCW'),
     id_ranting: DataTypes.INTEGER,
     id_rayon: {
       type:DataTypes.INTEGER,

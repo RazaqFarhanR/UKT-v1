@@ -17,18 +17,18 @@ module.exports = (sequelize, DataTypes) => {
       })
       this.hasMany(models.kunci_soal, {
         foreignKey: "id_soal",
-        as: "soal"
+        as: "kunci_soal"
       })
     }
   }
   soal.init({
     id_soal: {
-      type: DataTypes.INTEGER,
+      type: DataTypes.STRING,
       primaryKey: true,
-      autoIncrement: true,
+      autoIncrement: false,
       allowNull: false
     },
-    id_lembar_soal: DataTypes.INTEGER,
+    id_lembar_soal: DataTypes.STRING,
     pertanyaan: DataTypes.STRING,
     opsi1: DataTypes.STRING,
     opsi2: DataTypes.STRING,

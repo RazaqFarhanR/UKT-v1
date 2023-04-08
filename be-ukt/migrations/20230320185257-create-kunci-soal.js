@@ -5,12 +5,12 @@ module.exports = {
     await queryInterface.createTable('kunci_soal', {
       id_kunci_soal: {
         allowNull: false,
-        autoIncrement: true,
+        autoIncrement: false,
         primaryKey: true,
-        type: Sequelize.INTEGER
+        type: Sequelize.STRING
       },
       id_soal: {
-        type: Sequelize.INTEGER,
+        type: Sequelize.STRING,
         allowNull: false,
         references: {
           model: "soal",
