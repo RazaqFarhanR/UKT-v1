@@ -2,23 +2,31 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable('lembar_soal', {
-      id_lembar_soal: {
+    await queryInterface.createTable('ukt', {
+      id_ukt: {
         allowNull: false,
-        autoIncrement: false,
+        autoIncrement: true,
         primaryKey: true,
-        type: Sequelize.STRING
-      },
-      id_ranting: {
-        type: Sequelize.INTEGER,
-        allowNull: false,
-        references: {
-          model: "ranting",
-          key: "id_ranting"
-        }
+        type: Sequelize.INTEGER
       },
       tipe_ukt: {
+        allowNull: false,
         type: Sequelize.ENUM('UKT Jambon','UKT Hijau','UKT Putih','UKCW')
+      },
+      keshan: {
+        type: Sequelize.INTEGER
+      },
+      senam: {
+        type: Sequelize.INTEGER
+      },
+      jurus: {
+        type: Sequelize.INTEGER
+      },
+      teknik: {
+        type: Sequelize.INTEGER
+      },
+      sambung: {
+        type: Sequelize.INTEGER
       },
       createdAt: {
         allowNull: false,
@@ -31,6 +39,6 @@ module.exports = {
     });
   },
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable('lembar_soal');
+    await queryInterface.dropTable('ukt');
   }
 };

@@ -1,6 +1,9 @@
 //import library
 const express = require('express');
 const bodyParser = require('body-parser');
+require('dotenv').config();
+const Auth = require('../middleware/Auth.js');
+const verifyRoles = require("../middleware/verifyRoles");
 
 //implementasi
 const app = express();
@@ -14,7 +17,7 @@ const senam = models.senam;
 //endpoint ditulis disini
 
 //endpoint get data senam
-app.get("/", (req,res) => {
+app.get("/", Auth, verifyRoles("admin", "super admin", "admin ranting", "pengurus cabang", "pengurus ranting", "penguji"), (req,res) => {
     senam.findAll()
     .then(senam => {
         res.json({
@@ -30,7 +33,7 @@ app.get("/", (req,res) => {
 })
 
 //endpoint untuk menyimpan data senam, METHOD POST, function create
-app.post("/", (req,res) =>{
+app.post("/", Auth, verifyRoles("admin", "super admin", "admin ranting", "pengurus cabang", "pengurus ranting", "penguji"), (req,res) =>{
     let data ={
         id_siswa: req.body.id_siswa,
         senam69: req.body.senam69,
@@ -60,7 +63,7 @@ app.post("/", (req,res) =>{
 }) 
 
 //endpoint untuk mengupdate data senam, METHOD: PUT, fuction: UPDATE
-app.put("/:id", (req,res) => {
+app.put("/:id", Auth, verifyRoles("admin", "super admin", "admin ranting", "pengurus cabang", "pengurus ranting", "penguji"), (req,res) => {
     let param = {
         id_senam : req.params.id
     }
@@ -93,7 +96,7 @@ app.put("/:id", (req,res) => {
 })
 
 //endpoint untuk menghapus data senam,METHOD: DELETE, function: destroy
-app.delete("/:id", (req,res) => {
+app.delete("/:id", Auth, verifyRoles("admin", "super admin", "admin ranting", "pengurus cabang", "pengurus ranting", "penguji"), (req,res) => {
     let param = {
         id_senam : req.params.id
     }

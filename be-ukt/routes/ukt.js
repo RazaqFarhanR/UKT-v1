@@ -1,11 +1,9 @@
 //import library
 const express = require('express');
 const bodyParser = require('body-parser');
-const { randomUUID } = require('crypto');
 require('dotenv').config();
 const Auth = require('../middleware/Auth.js');
-const verifyRoles = require("../middleware/verifyRoles");
-
+const verifyRoles = require("../middleware/verifyRoles")
 //implementasi
 const app = express();
 app.use(bodyParser.json());
@@ -13,27 +11,17 @@ app.use(bodyParser.urlencoded({extended: true}));
 
 //import model
 const models = require('../models/index');
-const lembar_soal = models.lembar_soal;
-const ranting = models.ranting
+const ukt = models.ukt;
 
 //endpoint ditulis disini
 
-//endpoint get data lembar_soal
+//endpoint get data ukt
 app.get("/", Auth, verifyRoles("admin", "super admin", "admin ranting", "pengurus cabang", "pengurus ranting", "penguji"), (req,res) => {
-    lembar_soal.findAll({
-        include: [
-            {
-                model: ranting,
-                as: "lembar_ranting",
-                attributes: ['name'],
-                required: false
-            }
-        ]
-    })
-    .then(lembar_soal => {
+    ukt.findAll()
+    .then(ukt => {
         res.json({
-            count: lembar_soal.length,
-            data: lembar_soal
+            count: ukt.length,
+            data: ukt
         })
     })
     .catch(error => {
@@ -43,15 +31,14 @@ app.get("/", Auth, verifyRoles("admin", "super admin", "admin ranting", "penguru
     })    
 })
 
-//endpoint untuk menyimpan data lembar_soal, METHOD POST, function create
+//endpoint untuk menyimpan data ukt, METHOD POST, function create
 app.post("/", Auth, verifyRoles("admin", "super admin", "admin ranting", "pengurus cabang", "pengurus ranting", "penguji"), (req,res) =>{
-    const id = randomUUID();
     let data ={
-        id_lembar_soal: id,
-        id_ranting: req.body.id_ranting,
-        tipe_ukt: req.body.tipe_ukt
+        name: req.body.name,
+        tanggal: req.body.tanggal,
+        tipe: req.body.tipe
     }
-    lembar_soal.create(data)
+    ukt.create(data)
     .then(result => {
         res.json({
             message: "data has been inserted"
@@ -64,16 +51,15 @@ app.post("/", Auth, verifyRoles("admin", "super admin", "admin ranting", "pengur
     })
 }) 
 
-//endpoint untuk mengupdate data lembar_soal, METHOD: PUT, fuction: UPDATE
+//endpoint untuk mengupdate data ukt, METHOD: PUT, fuction: UPDATE
 app.put("/:id", Auth, verifyRoles("admin", "super admin", "admin ranting", "pengurus cabang", "pengurus ranting", "penguji"), (req,res) => {
     let param = {
-        id_lembar_soal : req.params.id
+        id_ukt : req.params.id
     }
     let data = {
-        id_ranting: req.body.id_ranting,
-        tipe_soal: req.body.tipe_soal
+        name: req.body.name
     }
-    lembar_soal.update(data, {where: param})
+    ukt.update(data, {where: param})
     .then(result => {
         res.json({
             message : "data has been updated"
@@ -86,12 +72,12 @@ app.put("/:id", Auth, verifyRoles("admin", "super admin", "admin ranting", "peng
     })
 })
 
-//endpoint untuk menghapus data lembar_soal,METHOD: DELETE, function: destroy
+//endpoint untuk menghapus data ukt,METHOD: DELETE, function: destroy
 app.delete("/:id", Auth, verifyRoles("admin", "super admin", "admin ranting", "pengurus cabang", "pengurus ranting", "penguji"), (req,res) => {
     let param = {
-        id_lembar_soal : req.params.id
+        id_ukt : req.params.id
     }
-    lembar_soal.destroy({where: param})
+    ukt.destroy({where: param})
     .then(result => {
         res.json({
             massege : "data has been deleted"

@@ -37,7 +37,7 @@ module.exports = {
       jenis_kelamin: {
         type: Sequelize.ENUM('pria', 'perempuan')
       },
-      ukt: {
+      tipe_ukt: {
         type: Sequelize.ENUM('UKT Jambon','UKT Hijau','UKT Putih','UKCW')
       },
       id_ranting: {

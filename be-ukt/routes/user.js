@@ -1,4 +1,5 @@
 //import library
+require('dotenv').config();
 const express = require("express");
 const bodyParser = require("body-parser");
 const multer = require("multer");
@@ -7,6 +8,8 @@ const fs = require("fs");
 const bcrypt = require("bcrypt");
 const salt = bcrypt.genSaltSync(10);
 const { randomUUID } = require("crypto");
+const Auth = require('../middleware/Auth.js');
+const verifyRoles = require("../middleware/verifyRoles")
 
 //implementasi
 const app = express();
@@ -37,9 +40,7 @@ const storage = multer.diskStorage({
 
 let upload2 = multer({ storage: storage });
 
-//endpoint ditulis disini
-
-//endpoint get data user
+//endpoint get data semua user
 app.get("/", (req, res) => {
   const imagePath = "http://localhost:8080/image/";
 
@@ -73,7 +74,7 @@ app.get("/", (req, res) => {
 });
 
 //endpoint untuk menyimpan data user, METHOD POST, function create
-app.post("/", upload2.single("foto"), async (req, res) => {
+app.post("/", Auth, verifyRoles("admin", "super admin"), upload2.single("foto"), async (req, res) => {
   const hash = await bcrypt.hash(req.body.password, salt);
 
   let data = {
@@ -101,7 +102,7 @@ app.post("/", upload2.single("foto"), async (req, res) => {
 });
 
 //endpoint untuk mengupdate data user, METHOD: PUT, fuction: UPDATE
-app.put("/:id", upload2.single("foto"), async (req, res) => {
+app.put("/:id", Auth, verifyRoles("admin", "super admin", "admin ranting"), upload2.single("foto"), async (req, res) => {
   const hash = await bcrypt.hash(req.body.password, salt);
   try {
     let param = {
@@ -151,7 +152,7 @@ app.put("/:id", upload2.single("foto"), async (req, res) => {
 });
 
 //endpoint untuk menghapus data user,METHOD: DELETE, function: destroy
-app.delete("/:id", (req, res) => {
+app.delete("/:id", Auth, verifyRoles("admin", "super admin", "admin ranting"), (req, res) => {
   let param = {
     id_user: req.params.id,
   };
@@ -169,7 +170,7 @@ app.delete("/:id", (req, res) => {
     });
 });
 
-app.post("/niw", async (req, res) => {
+app.post("/niw", Auth, verifyRoles("admin", "super admin", "admin ranting"), async (req, res) => {
   try {
     let niw = await user.findAll({
       where: {
@@ -199,16 +200,14 @@ app.post("/auth", async (req, res) => {
       console.log("oi" + req.body.password);
       const match = await bcrypt.compare(req.body.password, result[0].password);
       if (!match) return res.status(400).json({ msg: "password salah" });
-      if (result[0].id_role === "admin" || "super admin" || "admin cabang") {
-        const id_user = result[0].id_user;
-        const id_role = result[0].id_role;
+      if (result[0].id_role === "admin" || "super admin" || "admin ranting") {
+        const idUser = result[0].id_user;
+        const role = result[0].id_role;
+        console.log(role);
         const id = randomUUID();
-        let payload = JSON.stringify({
-          id_user: id_user,
-          id_role: id_role,
-        });
+
         // generate token based on payload and secret_key
-        let localToken = jwt.sign(payload, SECRET_KEY);
+        let localToken = jwt.sign({ idUser, role }, process.env.ACCESS_TOKEN_SECRET);
 
         const data = await user.findAll({
           where: {

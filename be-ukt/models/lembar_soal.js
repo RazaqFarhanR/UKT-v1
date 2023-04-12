@@ -19,6 +19,10 @@ module.exports = (sequelize, DataTypes) => {
         foreignKey: "id_lembar_soal",
         as: "lembar_session"
       })
+      this.belongsTo(models.ranting, {
+        foreignKey: "id_ranting",
+        as: "lembar_ranting"
+      })
     }
   }
   lembar_soal.init({
@@ -30,7 +34,7 @@ module.exports = (sequelize, DataTypes) => {
     },
     
     id_ranting: DataTypes.INTEGER,
-    tipe_soal: DataTypes.ENUM('ukt_jambon', 'ukt_putih', 'ukt_hijau', 'ukcw')
+    tipe_ukt: DataTypes.ENUM('UKT Jambon','UKT Hijau','UKT Putih','UKCW'),
   }, {
     sequelize,
     modelName: 'lembar_soal',

@@ -13,7 +13,7 @@ module.exports = (sequelize, DataTypes) => {
       // define association here
       this.hasMany(models.siswa, {
         foreignKey: "id_event",
-        as: "event_siswa"
+        as: "siswa_event"
       })
       this.hasMany(models.ukcw, {
         foreignKey: "id_event",
@@ -42,7 +42,7 @@ module.exports = (sequelize, DataTypes) => {
     },
     name: DataTypes.STRING,
     tanggal: DataTypes.DATE,
-    tipe: DataTypes.ENUM('ukcw','ukt_jambon','ukt_hijau','ukt_putih')
+    tipe: DataTypes.ENUM('UKT Jambon','UKT Hijau','UKT Putih','UKCW'),
   }, {
     sequelize,
     modelName: 'event',
