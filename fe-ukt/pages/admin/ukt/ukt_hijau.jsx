@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import Link from 'next/link'
-import { globalState } from '@/context/context'
 import axios from 'axios'
+import { globalState } from '@/context/context'
 import Sidebar from '../components/sidebar'
 import Header from '../components/header'
 import Footer from '../components/footer'
@@ -9,7 +9,7 @@ import Modal_event from '../components/modal_event'
 import Modal_delete from '../components/modal_delete'
 const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
 
-const ukt_jambon = () => {
+const ukt_hijau = () => {
 
     // state modal
     const [showModalEvent, setShowModalEvent] = useState (false)
@@ -40,17 +40,17 @@ const ukt_jambon = () => {
         setAction ('insert')
         setName ('')
         setDate ('')
-        setTipe ('ukt_jambon')
+        setTipe ('ukt_hijau')
     }
 
     // function modal edit
     const editModal = (selectedItem) => {
-        setShowModalEvent (true)
+        setShowModalEvent(true)
         setAction ('update')
         setIdEvent (selectedItem.id_event)
         setName (selectedItem.name)
         setDate (selectedItem.tanggal)
-        setTipe ('ukt_jambon')
+        setTipe ('ukt_hijau')
     }
 
     // function modal delete
@@ -91,7 +91,7 @@ const ukt_jambon = () => {
                         <div className="flex justify-between items-center text-white mb-7">
 
                             {/* page name */}
-                            <h1 className='text-2xl tracking-wider'>UKT - UKT Jambon</h1>
+                            <h1 className='text-2xl tracking-wider'>UKT - UKT Hijau</h1>
 
                             {/* search and button add data */}
                             <div className="flex gap-x-3">
@@ -115,7 +115,7 @@ const ukt_jambon = () => {
                         <div className="grid grid-cols-2 gap-x-5">
                             
                             {/* card event */}
-                            {dataEvent.filter(a => a.tipe === 'ukt_jambon').map((item, index) => (
+                            {dataEvent.filter(a => a.tipe === 'ukt_hijau').map((item, index) => (
                                 <div key={index + 1} className="bg-navy hover:bg-gradient-to-r from-[#16D4FC] to-[#9A4BE9] rounded-md p-0.5">
 
                                     {/* inner bg */}
@@ -174,4 +174,4 @@ const ukt_jambon = () => {
     )
 }
 
-export default ukt_jambon
+export default ukt_hijau
