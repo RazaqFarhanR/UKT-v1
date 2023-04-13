@@ -1,10 +1,175 @@
 import { globalState } from '@/context/context'
-import React, { useContext } from 'react'
+import axios from 'axios';
+import React, { useContext, useEffect } from 'react'
+const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
 
 const modal_delete = () => {
-    
+
     // state modal
     const {showModalDelete, setShowModalDelete} = useContext (globalState)
+
+    // state
+    const {setDataAdminCabang, setDataAdminRanting} = useContext (globalState)
+    const {setDataPengujiCabang, setDataPengujiRanting} = useContext (globalState)
+    const {setDataPengurusCabang, setDataPengurusRanting} = useContext (globalState)
+    const {action} = useContext (globalState)
+    const {idAdminCabang, idAdminRanting} = useContext (globalState)
+    const {idPengujiCabang, idPengujiRanting} = useContext (globalState)
+    const {idPengurusCabang, idPengurusRanting} = useContext (globalState)
+    const {setDataEvent, idEvent} = useContext (globalState)
+
+    
+    // function get data admin cabang
+    const getDataAdminCabang = () => {
+        axios.get (BASE_URL + `user`)
+        .then (res => {
+            setDataAdminCabang (res.data.data)
+        })
+        .catch (err => {
+            console.log(err.message);
+        })
+    }
+
+    // function get data admin ranting
+    const getDataAdminRanting = () => {
+        axios.get (BASE_URL + `user`)
+        .then (res => {
+            setDataAdminRanting (res.data.data)
+        })
+        .catch (err => {
+            console.log(err.message);
+        })
+    }
+
+    // function get data penguji cabang
+    const getDataPengujiCabang = () => {
+        axios.get (BASE_URL + `penguji`)
+        .then (res => {
+            setDataPengujiCabang (res.data.data)
+        })
+        .catch (err => {
+            console.log(err.message);
+        })
+    }
+
+    // function get data penguji ranting
+    const getDataPengujiRanting = () => {
+        axios.get (BASE_URL + `penguji`)
+        .then (res => {
+            setDataPengujiRanting (res.data.data)
+        })
+        .catch (err => {
+            console.log(err.message);
+        })
+    }
+
+    // function get data pengurus cabang
+    const getDataPengurusCabang = () => {
+        axios.get (BASE_URL + `pengurus`)
+        .then (res => {
+            setDataPengurusCabang (res.data.data)
+        })
+        .catch (err => {
+            console.log(err.message);
+        })
+    }
+
+    // function get data pengurus ranting
+    const getDataPengurusRanting = () => {
+        axios.get (BASE_URL + `pengurus`)
+        .then (res => {
+            setDataPengurusRanting (res.data.data)
+        })
+        .catch (err => {
+            console.log(err.message);
+        })
+    }
+
+    // function get data event
+    const getDataEvent = () => {
+        axios.get (BASE_URL + `event`)
+        .then (res => {
+            setDataEvent (res.data.data)
+        })
+        .catch (err => {
+            console.log(err.message);
+        })
+    }
+
+    // function handle delete data admin cabang
+    const handleDelete = () => {
+        if (action === 'deleteAdminCabang') {
+            axios.delete (BASE_URL + `user/${idAdminCabang}`)
+            .then (res => {
+                getDataAdminCabang ()
+                setShowModalDelete (false)
+                console.log(res.data.message);
+            })
+            .catch (err => {
+                console.log(err.message);
+            })
+        } else if (action === 'deleteAdminRanting') {
+            axios.delete (BASE_URL + `user/${idAdminRanting}`)
+            .then (res => {
+                getDataAdminRanting ()
+                setShowModalDelete (false)
+                console.log(res.data.message);
+            })
+            .catch (err => {
+                console.log(err.message);
+            })
+        } else if (action === 'deletePengujiCabang') {
+            axios.delete (BASE_URL + `penguji/${idPengujiCabang}`)
+            .then (res => {
+                getDataPengujiCabang ()
+                setShowModalDelete (false)
+                console.log(res.data.message);
+            })
+            .catch (err => {
+                console.log(err.message);
+            })
+        } else if (action === 'deletePengujiRanting') {
+            axios.delete (BASE_URL + `penguji/${idPengujiRanting}`)
+            .then (res => {
+                getDataPengujiRanting ()
+                setShowModalDelete (false)
+                console.log(res.data.message);
+            })
+            .catch (err => {
+                console.log(err.message);
+            })
+        } else if (action === 'deletePengurusCabang') {
+            axios.delete (BASE_URL + `pengurus/${idPengurusCabang}`)
+            .then (res => {
+                getDataPengurusCabang ()
+                setShowModalDelete (false)
+                console.log(res.data.message);
+            })
+            .catch (err => {
+                console.log(err.message);
+            })
+        } else if (action === 'deletePengurusRanting') {
+            axios.delete (BASE_URL + `pengurus/${idPengurusRanting}`)
+            .then (res => {
+                getDataPengurusRanting ()
+                setShowModalDelete (false)
+                console.log(res.data.message);
+            })
+            .catch (err => {
+                console.log(err.message);
+            })
+        } else if (action === 'deleteEvent') {
+            axios.delete (BASE_URL + `event/${idEvent}`)
+            .then (res => {
+                getDataEvent ()
+                setShowModalDelete (false)
+                console.log(res.data.message);
+            })
+            .catch (err => {
+                console.log(err.message);
+            })
+        }
+    }
 
     return (
         <>
@@ -16,7 +181,7 @@ const modal_delete = () => {
                         
                         {/* Modal content */}
                         <div className="relative bg-navy text-white rounded-lg shadow">
-                            
+
                             {/* Modal header */}
                             <div className="flex justify-center px-4 pt-7 pb-4">
                                 {/* <svg className='stroke-red' width="90" height="90" viewBox="0 0 29 33" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -46,7 +211,7 @@ const modal_delete = () => {
                             {/* Modal footer */}
                             <div className="flex items-center justify-end p-6 space-x-2">
                                 <button onClick={() => setShowModalDelete(false)} className="text-white hover:text-red bg-red hover:bg-white duration-300 font-medium rounded-lg px-5 py-2.5 text-center">Cancel</button>
-                                <button className="text-white hover:text-green bg-green hover:bg-white duration-300 rounded-lg font-medium px-5 py-2.5 focus:z-10">Yes</button>
+                                <button onClick={() => handleDelete()} className="text-white hover:text-green bg-green hover:bg-white duration-300 rounded-lg font-medium px-5 py-2.5 focus:z-10">Yes</button>
                             </div>
                         </div>
                     </div>
