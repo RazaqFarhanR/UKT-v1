@@ -1,11 +1,13 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import Link from 'next/link'
+import axios from 'axios'
 import { globalState } from '@/context/context'
 import Sidebar from '../components/sidebar'
 import Header from '../components/header'
 import Footer from '../components/footer'
 import Modal_penguji_cabang from '../components/modal_penguji_cabang'
 import Modal_delete from '../components/modal_delete'
+const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
 
 const penguji_cabang = () => {
 
@@ -13,15 +15,70 @@ const penguji_cabang = () => {
     const [showModalPengujiCabang, setShowModalPengujiCabang] = useState (false)
     const [showModalDelete, setShowModalDelete] = useState (false)
 
+    // state
+    const [dataPengujiCabang, setDataPengujiCabang] = useState ([])
+    const [action, setAction] = useState ('')
+    const [idPengujiCabang, setIdPengujiCabang] = useState ('')
+    const [niw, setNiw] = useState ('')
+    const [name, setName] = useState ('')
+    const [ranting, setRanting] = useState ('')
+    const [username, setUsername] = useState ('')
+    const [password, setPassword] = useState ('')
+    const [noWa, setNoWa] = useState ('')
+    const [role, setRole] = useState ('')
+    const [foto, setFoto] = useState ('')
+
+    // function get data penguji cabang
+    const getDataPengujiCabang = () => {
+        axios.get (BASE_URL + `penguji`)
+        .then (res => {
+            setDataPengujiCabang (res.data.data)
+        })
+        .catch (err => {
+            console.log(err.message);
+        })
+    }
+
     // function modal add
     const addModal = () => {
         setShowModalPengujiCabang (true)
+        setAction ('insert')
+        setNiw ('')
+        setName ('')
+        setRanting ('')
+        setUsername ('')
+        setPassword ('')
+        setNoWa ('')
+        setRole ('penguji cabang')
+        setFoto ()
+    }
+
+    // function modal edit
+    const editModal = (selectedItem) => {
+        setShowModalPengujiCabang (true)
+        setAction ('update')
+        setIdPengujiCabang (selectedItem.id_penguji)
+        setNiw (selectedItem.NIW)
+        setName (selectedItem.name)
+        setRanting (selectedItem.id_ranting)
+        setUsername (selectedItem.username)
+        setPassword (selectedItem.password)
+        setNoWa (selectedItem.no_wa)
+        setRole ('penguji cabang')
+        setFoto (selectedItem.foto)
     }
 
     // funtion modal delete
-    const deleteModal = () => {
+    const deleteModal = (selectedId) => {
         setShowModalDelete (true)
+        setAction ('deletePengujiCabang')
+        setIdPengujiCabang (selectedId)
     }
+
+    useEffect (() => {
+        getDataPengujiCabang ()
+    }, [])
+
     return (
         <>
         <div className="flex font-lato">
@@ -93,26 +150,27 @@ const penguji_cabang = () => {
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr className='text-white text-center'>
-                                    <td className='border-b-2 py-3 border-gray'>test</td>
-                                    <td className='border-b-2 border-gray'>test</td>
-                                    <td className='border-b-2 border-gray'>test</td>
-                                    <td className='border-b-2 border-gray'>test</td>
-                                    <td className='border-b-2 border-gray'>test</td>
-                                    <td className='border-b-2 border-gray'>test</td>
-                                    <td className='border-b-2 border-gray p-3'>
-                                        <img className='rounded-lg object-cover' src="/images/profile.jpeg" alt="" />
-                                    </td>
-                                    <td className='border-b-2 border-gray'>
-                                        <div className="flex gap-x-2">
-                                                <button onClick={() => addModal()} className="bg-green hover:bg-white text-white hover:text-green py-2 rounded-md w-28 flex justify-center items-center space-x-1 mx-auto group duration-300">
+                                {dataPengujiCabang.filter(a => a.id_role === 'penguji cabang').map ((item, index) => (
+                                    <tr key={index + 1} className='text-white text-center'>
+                                        <td className='border-b-2 py-3 border-gray'>{index + 1}</td>
+                                        <td className='border-b-2 border-gray'>{item.NIW}</td>
+                                        <td className='border-b-2 border-gray'>{item.name}</td>
+                                        <td className='border-b-2 border-gray'>{item.id_ranting}</td>
+                                        <td className='border-b-2 border-gray'>{item.username}</td>
+                                        <td className='border-b-2 border-gray'>{item.no_wa}</td>
+                                        <td className='border-b-2 border-gray p-3'>
+                                            <img className='rounded-lg object-cover' src={item.image} alt="" />
+                                        </td>
+                                        <td className='border-b-2 border-gray'>
+                                            <div className="flex gap-x-2">
+                                                <button onClick={() => editModal(item)} className="bg-green hover:bg-white text-white hover:text-green py-2 rounded-md w-28 flex justify-center items-center space-x-1 mx-auto group duration-300">
                                                     <svg className='stroke-white group-hover:stroke-green duration-300' width="24" height="24" viewBox="0 0 38 38" fill="none" xmlns="http://www.w3.org/2000/svg">
                                                         <path d="M19 31.6667H33.25" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"/>
                                                         <path d="M26.125 5.54166C26.7549 4.91177 27.6092 4.55791 28.5 4.55791C28.9411 4.55791 29.3778 4.64478 29.7853 4.81358C30.1928 4.98237 30.5631 5.22977 30.875 5.54166C31.1869 5.85355 31.4343 6.22382 31.6031 6.63132C31.7719 7.03883 31.8588 7.47559 31.8588 7.91666C31.8588 8.35774 31.7719 8.7945 31.6031 9.202C31.4343 9.60951 31.1869 9.97977 30.875 10.2917L11.0833 30.0833L4.75 31.6667L6.33333 25.3333L26.125 5.54166Z" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"/>
                                                     </svg>
                                                     <h1>Edit</h1>
                                                 </button>
-                                                <button onClick={() => deleteModal()} className="bg-red hover:bg-white text-white hover:text-red py-2 rounded-md w-28 flex justify-center items-center space-x-[1px] mx-auto group duration-300">
+                                                <button onClick={() => deleteModal(item.id_penguji)} className="bg-red hover:bg-white text-white hover:text-red py-2 rounded-md w-28 flex justify-center items-center space-x-[1px] mx-auto group duration-300">
                                                     <svg className='stroke-white group-hover:stroke-red duration-300' width="22" height="22" viewBox="0 0 29 33" fill="none" xmlns="http://www.w3.org/2000/svg">
                                                         <path d="M4.1543 5.76929L5.64468 29.6154C5.71547 30.9933 6.71776 32.0001 8.0293 32.0001H21.7408C23.0576 32.0001 24.0412 30.9933 24.1255 29.6154L25.6158 5.76929" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
                                                         <path d="M1.76953 5.76929H28.0003H1.76953Z" fill="black"/>
@@ -122,8 +180,9 @@ const penguji_cabang = () => {
                                                     <h1>Delete</h1>
                                                 </button>
                                             </div>
-                                    </td>
-                                </tr>
+                                        </td>
+                                    </tr>
+                                ))}
                             </tbody>
                         </table>
                     </div>
@@ -138,11 +197,11 @@ const penguji_cabang = () => {
             {/* akhir wrapper konten utama */}
         </div>  
 
-        <globalState.Provider value={{ showModalPengujiCabang, setShowModalPengujiCabang }}>
+        <globalState.Provider value={{ showModalPengujiCabang, setShowModalPengujiCabang, dataPengujiCabang, setDataPengujiCabang, action, setAction, idPengujiCabang, setIdPengujiCabang, niw, setNiw, name, setName, ranting, setRanting, username, setUsername, password, setPassword, noWa, setNoWa, role, setRole, foto, setFoto }}>
             <Modal_penguji_cabang />
         </globalState.Provider>
 
-        <globalState.Provider value={{ showModalDelete, setShowModalDelete }}>
+        <globalState.Provider value={{ showModalDelete, setShowModalDelete, dataPengujiCabang, setDataPengujiCabang, action, idPengujiCabang }}>
             <Modal_delete />
         </globalState.Provider>
     </>
