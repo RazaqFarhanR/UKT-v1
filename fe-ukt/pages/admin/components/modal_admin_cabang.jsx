@@ -31,6 +31,11 @@ const modal_admin_cabang = () => {
         })
     }
 
+    // function handle file photo profile
+    const handleFile = (e) => {
+        e.preventDefault ()
+        setFoto (e.target.files [0])
+    }
     // function handle add and edit data
     const handleSave = (e) => {
         e.preventDefault()
@@ -38,7 +43,7 @@ const modal_admin_cabang = () => {
         let form = new FormData()
         form.append ('niw', niw)
         form.append ('name', name)
-        form.append ('ranting', ranting)
+        form.append ('id_ranting', ranting)
         form.append ('username', username)
         form.append ('password', password)
         form.append ('no_wa', noWa)
@@ -60,7 +65,7 @@ const modal_admin_cabang = () => {
             axios.put (BASE_URL + `user/${idAdminCabang}`, form)
             .then (res => {
                 getDataAdminCabang ()
-                // setShowModalAdminCabang (false)
+                setShowModalAdminCabang (false)
                 console.log(res.data.message);
                 console.log('berhasil');
             })
@@ -71,11 +76,6 @@ const modal_admin_cabang = () => {
         }
     }
 
-    // function handle file photo profile
-    const handleFile = (e) => {
-        e.preventDefault ()
-        setFoto (e.target.files [0])
-    }
 
     return (
         <>
@@ -196,7 +196,7 @@ const modal_admin_cabang = () => {
                                             <input className='w-full file:bg-gray file:text-white file:px-5 bg-darkBlue rounded-md focus:outline-none'
                                             type="file"
                                             onChange={(e) => handleFile(e)}
-                                            required
+                                            // required
                                             >        
                                             </input>
                                         </div>

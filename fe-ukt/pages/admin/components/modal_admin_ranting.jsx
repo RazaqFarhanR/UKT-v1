@@ -33,6 +33,12 @@ const modal_admin_ranting = () => {
         })
     }
 
+    // function handle file photo profile
+    const handleFile = (e) => {
+        e.preventDefault ()
+        setFoto (e.target.files [0])
+    }
+    
     // function handle add and edit data
     const handleSave = (e) => {
         e.preventDefault ()
@@ -40,7 +46,7 @@ const modal_admin_ranting = () => {
         let form = new FormData()
         form.append ('niw', niw)
         form.append ('name', name)
-        form.append ('ranting', ranting)
+        form.append ('id_ranting', ranting)
         form.append ('username', username)
         form.append ('password', password)
         form.append ('no_wa', noWa)
@@ -68,12 +74,6 @@ const modal_admin_ranting = () => {
                 console.log(err.message);
             })
         }
-    }
-
-    // function handle file photo profile
-    const handleFile = (e) => {
-        e.preventDefault ()
-        setFoto (e.target.files [0])
     }
 
     return (
