@@ -1,6 +1,9 @@
 //import library
 const express = require('express');
 const bodyParser = require('body-parser');
+require('dotenv').config();
+const Auth = require('../middleware/Auth.js');
+const verifyRoles = require("../middleware/verifyRoles");
 
 //implementasi
 const app = express();
@@ -11,12 +14,36 @@ app.use(bodyParser.urlencoded({extended: true}));
 const models = require('../models/index');
 const { sequelize, Op } = require("sequelize");
 const siswa = models.siswa;
+const ranting = models.ranting
+const event = models.event;
+const rayon = models.rayon;
 
 //endpoint ditulis disini
 
 //endpoint get data siswa
-app.get("/", (req,res) => {
-    siswa.findAll()
+app.get("/", Auth, verifyRoles("admin", "super admin", "admin ranting", "pengurus cabang", "pengurus ranting", "penguji"), (req,res) => {
+    siswa.findAll({        
+        include: [
+            {
+                model: ranting,
+                as: "siswa_ranting",
+                attributes: ['name'],
+                required: false,
+            },
+            {
+                model: event,
+                as: "siswa_event",
+                attributes: ['name'],
+                required: false
+            },
+            {
+                model: rayon,
+                as: "siswa_rayon",
+                attributes: ['name'],
+                required: false
+            }
+        ]
+    })
     .then(siswa => {
         res.json({
             count: siswa.length,
@@ -30,20 +57,33 @@ app.get("/", (req,res) => {
     })    
 })
 
-
-app.post("/name_dan_ranting", (req,res) => {
-    const name = req.body.name;
-    const id_ranting = req.body.id_ranting;
+app.get("/ranting/:id", Auth, verifyRoles("admin", "super admin", "admin ranting", "pengurus cabang", "pengurus ranting", "penguji"), (req,res) => {
+    const id_ranting = req.params.id;
     siswa
     .findAll({
       where: {
-        name: {
-            [Op.like]: '%'+name+'%'
-          },
-        id_ranting: {
-            [Op.like]: '%'+id_ranting+'%'
-        } 
+        id_ranting: id_ranting
       },
+      include: [
+        {
+            model: ranting,
+            as: "siswa_ranting",
+            attributes: ['name'],
+            required: false,
+        },
+        {
+            model: event,
+            as: "siswa_event",
+            attributes: ['name'],
+            required: false
+        },
+        {
+            model: rayon,
+            as: "siswa_rayon",
+            attributes: ['name'],
+            required: false
+        }
+    ]
     })
     .then((siswa) => {
       res.json({
@@ -58,9 +98,43 @@ app.post("/name_dan_ranting", (req,res) => {
     }); 
 })
 
+app.post("/nis", (req, res) => {
+    siswa.findAll({
+        where: {
+            nis: req.body.nis
+        },
+    })
+    .then((result) => {
+        const data = {
+            password: req.body.password
+        }
+        if(result) {
+            siswa.update(data, {where: {
+             nis: req.body.nis   
+            }})
+            .then((result) => {
+                console.log(result[0]);
+                res.json({
+                    count: result.length,
+                    message: "data has been updated"
+                })
+            })
+            .catch(e => {
+                res.json({
+                    message: e.message
+                })
+            })
+        }
+    })
+    .catch(e => {
+        res.json({
+            message: e.message
+        })
+    })
+})
+
 //endpoint untuk menyimpan data siswa, METHOD POST, function create
-app.post("/", (req,res) =>{
-    
+app.post("/", Auth, verifyRoles("admin", "super admin", "admin ranting", "pengurus cabang", "pengurus ranting", "penguji"), (req,res) =>{    
     let data ={
         id_event: req.body.id_event,
         nis: req.body.nis,
@@ -87,7 +161,7 @@ app.post("/", (req,res) =>{
 }) 
 
 //endpoint untuk meng UPDATE data siswa, METHOD: PUT, fuction: UPDATE
-app.put("/:id", (req,res) => {
+app.put("/:id", Auth, verifyRoles("admin", "super admin", "admin ranting", "pengurus cabang", "pengurus ranting", "penguji"), (req,res) => {
     let param = {
         id_siswa : req.params.id
     }
@@ -115,7 +189,7 @@ app.put("/:id", (req,res) => {
 })
 
 //endpoint untuk menghapus data siswa,METHOD: DELETE, function: destroy
-app.delete("/:id", (req,res) => {
+app.delete("/:id", Auth, verifyRoles("admin", "super admin", "admin ranting", "pengurus cabang", "pengurus ranting", "penguji"), (req,res) => {
     let param = {
         id_siswa : req.params.id
     }

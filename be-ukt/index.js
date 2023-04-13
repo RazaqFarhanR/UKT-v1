@@ -88,6 +88,9 @@ app.use("/ukt/session", session)
 //endpoint Event
 const event = require('./routes/event');
 app.use("/ukt/event", event)
+//endpoint Ukt
+const ukt = require('./routes/ukt');
+app.use("/ukt/ukt", ukt)
 
 //run server
 app.listen(8080, () => {

@@ -1,6 +1,9 @@
 //import library
 const express = require('express');
 const bodyParser = require('body-parser');
+require('dotenv').config();
+const Auth = require('../middleware/Auth.js');
+const verifyRoles = require("../middleware/verifyRoles");
 
 //implementasi
 const app = express();
@@ -14,7 +17,7 @@ const role = models.role;
 //endpoint ditulis disini
 
 //endpoint get data kamar
-app.get("/", (req,res) => {
+app.get("/", Auth, verifyRoles("admin", "super admin", "admin ranting"), (req,res) => {
     role.findAll()
     .then(role => {
         res.json({
@@ -30,7 +33,7 @@ app.get("/", (req,res) => {
 })
 
 //endpoint untuk menyimpan data kamar, METHOD POST, function create
-app.post("/", (req,res) =>{
+app.post("/", Auth, verifyRoles("admin", "super admin", "admin ranting"), (req,res) =>{
     let data ={
         id_role: req.body.id_role,
         role: req.body.id_role,
@@ -49,7 +52,7 @@ app.post("/", (req,res) =>{
 }) 
 
 //endpoint untuk mengupdate data kamar, METHOD: PUT, fuction: UPDATE
-app.put("/:id", (req,res) => {
+app.put("/:id", Auth, verifyRoles("admin", "super admin", "admin ranting"), (req,res) => {
     let param = {
         id_role : req.params.id
     }
@@ -67,7 +70,7 @@ app.put("/:id", (req,res) => {
 })
 
 //endpoint untuk menghapus data kamar,METHOD: DELETE, function: destroy
-app.delete("/:id", (req,res) => {
+app.delete("/:id", Auth, verifyRoles("admin", "super admin", "admin ranting"), (req,res) => {
     let param = {
         id_role : req.params.id
     }

@@ -1,6 +1,9 @@
 //import library
 const express = require('express');
 const bodyParser = require('body-parser');
+require('dotenv').config();
+const Auth = require('../middleware/Auth.js');
+const verifyRoles = require("../middleware/verifyRoles");
 
 //implementasi
 const app = express();
@@ -14,7 +17,7 @@ const session = models.session;
 //endpoint ditulis disini
 
 //endpoint get data session
-app.get("/", (req,res) => {
+app.get("/", Auth,(req,res) => {
     session.findAll()
     .then(session => {
         res.json({
@@ -30,7 +33,7 @@ app.get("/", (req,res) => {
 })
 
 //endpoint untuk menyimpan data session, METHOD POST, function create
-app.post("/", (req,res) =>{
+app.post("/", Auth, (req,res) =>{
     let data ={
         id_lembar_soal: req.body.id_lembar_soal,
         id_siswa: req.body.id_siswa,
@@ -51,7 +54,7 @@ app.post("/", (req,res) =>{
 }) 
 
 //endpoint untuk mengupdate data session, METHOD: PUT, fuction: UPDATE
-app.put("/:id", (req,res) => {
+app.put("/:id", Auth, (req,res) => {
     let param = {
         id_session : req.params.id
     }
@@ -75,7 +78,7 @@ app.put("/:id", (req,res) => {
 })
 
 //endpoint untuk menghapus data session,METHOD: DELETE, function: destroy
-app.delete("/:id", (req,res) => {
+app.delete("/:id", Auth, (req,res) => {
     let param = {
         id_session : req.params.id
     }

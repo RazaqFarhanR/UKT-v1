@@ -7,6 +7,9 @@ const fs = require("fs");
 const bcrypt = require("bcrypt");
 const salt = bcrypt.genSaltSync(10);
 const { randomUUID } = require('crypto');
+require('dotenv').config();
+const Auth = require('../middleware/Auth.js');
+const verifyRoles = require("../middleware/verifyRoles");
 
 //implementasi
 const app = express();
@@ -42,7 +45,7 @@ let upload2 = multer({ storage: storage });
 
 //endpoint ditulis disini
 //endpoint get data penguji
-app.get("/", (req, res) => {
+app.get("/", Auth, verifyRoles("admin", "super admin", "admin ranting", "pengurus cabang", "pengurus ranting", "penguji"), (req, res) => {
   const imagePath = "http://localhost:8080/image/"
 
   penguji
@@ -64,8 +67,9 @@ app.get("/", (req, res) => {
       });
     });
 });
-//endpoint get data penguji cabang berdasarkan nama dan cabang
-app.post("/name_dan_ranting", (req, res) => {
+
+//endpoint get data penguji cabang berdasarkan nama dan ranting
+app.post("/name_dan_ranting", Auth, verifyRoles("admin", "super admin", "admin ranting", "pengurus cabang", "pengurus ranting",), (req, res) => {
   const name = req.body.name;
   const id_ranting = req.body.id_ranting;
   penguji
@@ -107,7 +111,7 @@ app.post("/niw", async (req, res) => {
   }
 })
 
-app.post("/", upload2.single("foto"), async (req, res) => {
+app.post("/", Auth, verifyRoles("admin", "super admin", "admin ranting", "pengurus cabang", "pengurus ranting"), upload2.single("foto"), async (req, res) => {
   const Ranting = models.ranting;
   const hash = await bcrypt.hash(req.body.password, salt);
   try {
@@ -164,7 +168,7 @@ app.post("/", upload2.single("foto"), async (req, res) => {
 });
 
 //endpoint untuk mengupdate data user, METHOD: PUT, fuction: UPDATE
-app.put("/:id", upload2.single("foto"), async (req, res) => {
+app.put("/:id", Auth, verifyRoles("admin", "super admin", "admin ranting", "pengurus cabang", "pengurus ranting"), upload2.single("foto"), async (req, res) => {
   const hash = await bcrypt.hash(req.body.password, salt);
   try {
     let param = {
@@ -217,7 +221,7 @@ app.put("/:id", upload2.single("foto"), async (req, res) => {
 });
 
 //endpoint untuk menghapus data penguji,METHOD: DELETE, function: destroy
-app.delete("/:id", (req, res) => {
+app.delete("/:id", Auth, verifyRoles("admin", "super admin", "admin ranting", "pengurus cabang", "pengurus ranting"), (req, res) => {
   let param = {
     id_penguji: req.params.id,
   };

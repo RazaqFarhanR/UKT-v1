@@ -4,6 +4,9 @@ const bodyParser = require('body-parser');
 const { randomUUID } = require('crypto');
 const Sequelize = require('sequelize');
 const { sequelize, Op } = require("sequelize");
+require('dotenv').config();
+const Auth = require('../middleware/Auth.js');
+const verifyRoles = require("../middleware/verifyRoles");
 //implementasi
 const app = express();
 app.use(bodyParser.json());
@@ -17,7 +20,7 @@ const kunciSoal = models.kunci_soal;
 //endpoint ditulis disini
 
 //endpoint get data soal
-app.get("/", (req,res) => {
+app.get("/", Auth,  (req,res) => {
     soal.findAll()
     .then(soal => {
         res.json({
@@ -32,7 +35,7 @@ app.get("/", (req,res) => {
     })    
 })
 //endpoint get data soal
-app.post("/kunci_jawaban", (req,res) => {
+app.post("/kunci_jawaban", Auth, verifyRoles("admin", "super admin", "admin ranting", "pengurus cabang", "pengurus ranting", "penguji"), (req,res) => {
     soal.findAll({
         include: [
             {
@@ -59,7 +62,7 @@ app.post("/kunci_jawaban", (req,res) => {
     })    
 })
 //endpoint get data soal
-app.get("/kosong", (req,res) => {
+app.get("/kosong", Auth, verifyRoles("admin", "super admin", "admin ranting", "pengurus cabang", "pengurus ranting", "penguji"), (req,res) => {
     soal.findAll({
         include: [
             {
@@ -89,7 +92,7 @@ app.get("/kosong", (req,res) => {
     })    
 })
 //endpoint get data soal
-app.get("/:id", (req,res) => {
+app.get("/:id", Auth, verifyRoles("admin", "super admin", "admin ranting", "pengurus cabang", "pengurus ranting", "penguji"), (req,res) => {
     soal.findAll({
         where: {
             id_lembar_soal: req.params.id
@@ -113,7 +116,7 @@ app.get("/:id", (req,res) => {
 })
 
 //endpoint untuk menyimpan data soal, METHOD POST, function create
-app.post("/", (req,res) =>{
+app.post("/", Auth, verifyRoles("admin", "super admin", "admin ranting", "pengurus cabang", "pengurus ranting", "penguji"), (req,res) =>{
     const id = randomUUID();
     let data ={
         id_soal: id,
@@ -147,7 +150,7 @@ app.post("/", (req,res) =>{
 }) 
 
 //endpoint untuk mengupdate data soal, METHOD: PUT, fuction: UPDATE
-app.put("/:id", (req,res) => {
+app.put("/:id", Auth, verifyRoles("admin", "super admin", "admin ranting", "pengurus cabang", "pengurus ranting", "penguji"), (req,res) => {
     let param = {
         id_soal : req.params.id
     }
@@ -173,7 +176,7 @@ app.put("/:id", (req,res) => {
 })
 
 //endpoint untuk menghapus data soal,METHOD: DELETE, function: destroy
-app.delete("/:id", (req,res) => {
+app.delete("/:id", Auth, verifyRoles("admin", "super admin", "admin ranting", "pengurus cabang", "pengurus ranting", "penguji"), (req,res) => {
     let param = {
         id_soal : req.params.id
     }

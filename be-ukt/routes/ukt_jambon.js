@@ -1,6 +1,9 @@
 //import library
 const express = require('express');
 const bodyParser = require('body-parser');
+require('dotenv').config();
+const Auth = require('../middleware/Auth.js');
+const verifyRoles = require("../middleware/verifyRoles");
 
 //implementasi
 const app = express();
@@ -14,7 +17,7 @@ const ukt_jambon = models.ukt_jambon;
 //endpoint ditulis disini
 
 //endpoint get data ukt_jambon
-app.get("/", (req,res) => {
+app.get("/", Auth, verifyRoles("admin", "super admin", "admin ranting", "pengurus cabang", "pengurus ranting", "penguji"), (req,res) => {
     ukt_jambon.findAll()
     .then(ukt_jambon => {
         res.json({
@@ -30,7 +33,7 @@ app.get("/", (req,res) => {
 })
 
 //endpoint untuk menyimpan data ukt_jambon, METHOD POST, function create
-app.post("/", (req,res) =>{
+app.post("/", Auth, verifyRoles("admin", "super admin", "admin ranting", "pengurus cabang", "pengurus ranting", "penguji"), (req,res) =>{
     let data ={
         id_siswa: req.body.id_siswa,
         id_rayon: req.body.id_rayon,
@@ -55,7 +58,7 @@ app.post("/", (req,res) =>{
 }) 
 
 //endpoint untuk mengupdate data ukt_jambon, METHOD: PUT, fuction: UPDATE
-app.put("/:id", (req,res) => {
+app.put("/:id", Auth, verifyRoles("admin", "super admin", "admin ranting", "pengurus cabang", "pengurus ranting", "penguji"), (req,res) => {
     let param = {
         id_ukt_jambon : req.params.id
     }
@@ -83,7 +86,7 @@ app.put("/:id", (req,res) => {
 })
 
 //endpoint untuk menghapus data ukt_jambon,METHOD: DELETE, function: destroy
-app.delete("/:id", (req,res) => {
+app.delete("/:id", Auth, verifyRoles("admin", "super admin", "admin ranting", "pengurus cabang", "pengurus ranting", "penguji"), (req,res) => {
     let param = {
         id_ukt_jambon : req.params.id
     }
