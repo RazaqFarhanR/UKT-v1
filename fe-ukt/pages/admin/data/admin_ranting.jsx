@@ -49,7 +49,7 @@ const admin_ranting = () => {
         setUsername ('')
         setPassword ('')
         setNoWa ('')
-        setRole ('admin')
+        setRole ('admin ranting')
         setFoto ()
     }
 
@@ -64,7 +64,7 @@ const admin_ranting = () => {
         setUsername (selectedItem.username)
         setPassword (selectedItem.password)
         setNoWa (selectedItem.no_wa)
-        setRole ('admin')
+        setRole ('admin ranting')
         setFoto (selectedItem.foto)
     }
 
@@ -150,7 +150,7 @@ const admin_ranting = () => {
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    {dataAdminRanting.map ((item, index) => (
+                                    {dataAdminRanting.filter(a => a.id_role === 'admin ranting').map ((item, index) => (
                                         <tr key={index + 1} className='text-white text-center'>
                                             <td className='border-b-2 py-3 border-gray'>{index + 1}</td>
                                             <td className='border-b-2 border-gray'>{item.NIW}</td>

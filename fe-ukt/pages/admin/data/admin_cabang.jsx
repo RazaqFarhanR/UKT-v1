@@ -37,6 +37,7 @@ const admin_cabang = () => {
         .catch (err => {
             console.log(err.message);
         })
+        console.log((BASE_URL + `user`));
     }
 
     // function modal add
@@ -152,7 +153,7 @@ const admin_cabang = () => {
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    {dataAdminCabang.map ((item, index) => (
+                                    {dataAdminCabang.filter(a => a.id_role === 'super admin').map ((item, index) => (
                                         <tr key={index + 1} className='text-white text-center'>
                                             <td className='border-b-2 py-3 border-gray'>{index + 1}</td>
                                             <td className='border-b-2 border-gray'>{item.NIW}</td>
