@@ -53,7 +53,7 @@ app.post("/", Auth, verifyRoles("admin", "super admin", "admin ranting", "pengur
         })
     })
 }) 
-//endpoint untuk menyimpan data kunci_soal, METHOD POST, function create
+//endpoint untuk menyimpan untuk membandingkan soal mengambalikan true jika benar, METHOD POST, function create
 app.post("/score", Auth, verifyRoles("admin", "super admin", "admin ranting", "pengurus cabang", "pengurus ranting", "penguji"), (req,res) =>{
     const id = randomUUID();
     let data ={

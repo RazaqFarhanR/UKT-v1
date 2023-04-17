@@ -45,7 +45,7 @@ const storage = multer.diskStorage({
 
 //endpoint ditulis disini
 //endpoint get data pengurus
-app.get("/", Auth, verifyRoles("admin", "super admin", "admin ranting"), (req,res) => {
+app.get("/", Auth, verifyRoles("admin", "super admin", "admin ranting", "pengurus cabang", "pengurus ranting"), (req,res) => {
     const imagePath = "http://localhost:8080/image/"
     pengurus.findAll()
     .then(pengurus => {
