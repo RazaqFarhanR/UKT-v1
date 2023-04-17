@@ -61,8 +61,14 @@ app.put("/:id", Auth, verifyRoles("admin", "super admin", "admin ranting", "peng
     let param = {
         id_fisik : req.params.id
     }
-    let data = {
-        name: req.body.name
+    let data ={
+        id_siswa: req.body.id_siswa,
+        mft: req.body.mft,
+        push_up: req.body.push_up,
+        spir_perut_atas: req.body.spir_perut_atas,
+        spir_perut_bawah: req.body.spir_perut_bawah,
+        spir_dada: req.body.spir_dada,
+        plank: req.body.plank,
     }
     fisik.update(data, {where: param})
     .then(result => {

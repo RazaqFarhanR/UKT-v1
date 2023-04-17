@@ -61,15 +61,15 @@ app.put("/:id", Auth, verifyRoles("admin", "super admin", "admin ranting", "peng
     let param = {
         id_standar_fisik : req.params.id
     }
-    let data = {
-        id_siswa: req.body.id_siswa,
-        id_rayon: req.body.id_rayon,
-        keshan: req.body.keshan,
-        senam: req.body.senam,
-        jurus: req.body.jurus,
-        fisik: req.body.fisik,
-        teknik: req.body.teknik,
-        sambung: req.body.sambung
+    let data ={
+        tipe_ukt: req.body.tipe_ukt,
+        peserta: req.body.peserta,
+        mft: req.body.mft,
+        push_up: req.body.push_up,
+        spir_perut_atas: req.body.spir_perut_atas,
+        spir_perut_bawah: req.body.spir_perut_bawah,
+        spir_dada: req.body.spir_dada,
+        plank: req.body.plank,
     }
     standar_fisik.update(data, {where: param})
     .then(result => {
