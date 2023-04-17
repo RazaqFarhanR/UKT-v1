@@ -4,7 +4,6 @@ const bodyParser = require('body-parser');
 require('dotenv').config();
 const Auth = require('../middleware/Auth.js');
 const verifyRoles = require("../middleware/verifyRoles");
-
 //implementasi
 const app = express();
 app.use(bodyParser.json());
@@ -12,17 +11,17 @@ app.use(bodyParser.urlencoded({extended: true}));
 
 //import model
 const models = require('../models/index');
-const fisik = models.fisik;
+const standar_fisik = models.standar_fisik;
 
 //endpoint ditulis disini
 
-//endpoint get data fisik
+//endpoint get data standar_fisik
 app.get("/", Auth, verifyRoles("admin", "super admin", "admin ranting", "pengurus cabang", "pengurus ranting", "penguji"), (req,res) => {
-    fisik.findAll()
-    .then(fisik => {
+    standar_fisik.findAll()
+    .then(standar_fisik => {
         res.json({
-            count: fisik.length,
-            data: fisik
+            count: standar_fisik.length,
+            data: standar_fisik
         })
     })
     .catch(error => {
@@ -32,10 +31,11 @@ app.get("/", Auth, verifyRoles("admin", "super admin", "admin ranting", "penguru
     })    
 })
 
-//endpoint untuk menyimpan data fisik, METHOD POST, function create
+//endpoint untuk menyimpan data standar_fisik, METHOD POST, function create
 app.post("/", Auth, verifyRoles("admin", "super admin", "admin ranting", "pengurus cabang", "pengurus ranting", "penguji"), (req,res) =>{
     let data ={
-        id_siswa: req.body.id_siswa,
+        tipe_ukt: req.body.tipe_ukt,
+        peserta: req.body.peserta,
         mft: req.body.mft,
         push_up: req.body.push_up,
         spir_perut_atas: req.body.spir_perut_atas,
@@ -43,7 +43,7 @@ app.post("/", Auth, verifyRoles("admin", "super admin", "admin ranting", "pengur
         spir_dada: req.body.spir_dada,
         plank: req.body.plank,
     }
-    fisik.create(data)
+    standar_fisik.create(data)
     .then(result => {
         res.json({
             message: "data has been inserted"
@@ -56,13 +56,14 @@ app.post("/", Auth, verifyRoles("admin", "super admin", "admin ranting", "pengur
     })
 }) 
 
-//endpoint untuk mengupdate data fisik, METHOD: PUT, fuction: UPDATE
-app.put("/:id", Auth, verifyRoles("admin", "super admin", "admin ranting", "pengurus cabang", "pengurus ranting", "penguji"), (req,res) => {
+//endpoint untuk mengupdate data standar_fisik, METHOD: PUT, fuction: UPDATE
+app.put("/:id", Auth, verifyRoles("admin", "super admin", "admin ranting", "pengurus cabang", "pengurus ranting", "penguji"),(req,res) => {
     let param = {
-        id_fisik : req.params.id
+        id_standar_fisik : req.params.id
     }
     let data ={
-        id_siswa: req.body.id_siswa,
+        tipe_ukt: req.body.tipe_ukt,
+        peserta: req.body.peserta,
         mft: req.body.mft,
         push_up: req.body.push_up,
         spir_perut_atas: req.body.spir_perut_atas,
@@ -70,7 +71,7 @@ app.put("/:id", Auth, verifyRoles("admin", "super admin", "admin ranting", "peng
         spir_dada: req.body.spir_dada,
         plank: req.body.plank,
     }
-    fisik.update(data, {where: param})
+    standar_fisik.update(data, {where: param})
     .then(result => {
         res.json({
             message : "data has been updated"
@@ -83,12 +84,12 @@ app.put("/:id", Auth, verifyRoles("admin", "super admin", "admin ranting", "peng
     })
 })
 
-//endpoint untuk menghapus data fisik,METHOD: DELETE, function: destroy
+//endpoint untuk menghapus data standar_fisik,METHOD: DELETE, function: destroy
 app.delete("/:id", Auth, verifyRoles("admin", "super admin", "admin ranting", "pengurus cabang", "pengurus ranting", "penguji"), (req,res) => {
     let param = {
-        id_fisik : req.params.id
+        id_standar_fisik : req.params.id
     }
-    fisik.destroy({where: param})
+    standar_fisik.destroy({where: param})
     .then(result => {
         res.json({
             massege : "data has been deleted"

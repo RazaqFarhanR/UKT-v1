@@ -67,6 +67,29 @@ app.get("/", Auth, verifyRoles("admin", "super admin", "admin ranting", "penguru
       });
     });
 });
+//endpoint get data penguji cabang
+app.get("/", Auth, verifyRoles("admin", "super admin", "admin ranting", "pengurus cabang", "pengurus ranting", "penguji"), (req, res) => {
+  const imagePath = "http://localhost:8080/image/"
+
+  penguji
+    .findAll()
+    .then((penguji) => {
+      // Map over the tipe_kamar array and add the image URL to each object
+      const penguji_with_image_url = penguji.map((tk) => ({
+        ...tk.toJSON(),
+        image: `${imagePath}${tk.foto}`,
+      }));
+      res.json({
+        count: penguji_with_image_url.length,
+        data: penguji_with_image_url,
+      });
+    })
+    .catch((error) => {
+      res.json({
+        message: error.message,
+      });
+    });
+});
 
 //endpoint get data penguji cabang berdasarkan nama dan ranting
 app.post("/name_dan_ranting", Auth, verifyRoles("admin", "super admin", "admin ranting", "pengurus cabang", "pengurus ranting",), (req, res) => {

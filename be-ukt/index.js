@@ -91,6 +91,12 @@ app.use("/ukt/event", event)
 //endpoint Ukt
 const ukt = require('./routes/ukt');
 app.use("/ukt/ukt", ukt)
+//endpoint Standar Fisik
+const standar_fisik = require('./routes/standar_fisik');
+app.use("/ukt/standar_fisik", standar_fisik)
+//endpoint Sambung
+const sambung = require('./routes/sambung');
+app.use("/ukt/sambung", sambung)
 
 //run server
 app.listen(8080, () => {

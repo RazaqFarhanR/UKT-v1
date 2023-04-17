@@ -2,20 +2,12 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable('fisik', {
-      id_fisik: {
-        type: Sequelize.INTEGER,
-        primaryKey: true,
+    await queryInterface.createTable('standar_fisik', {
+      id_standar_fisik: {
+        allowNull: false,
         autoIncrement: true,
-        allowNull: false,
-      },
-      id_siswa: {
-        type: Sequelize.INTEGER,
-        allowNull: false,
-        references: {
-          model: "siswa",
-          key: "id_siswa"
-        }
+        primaryKey: true,
+        type: Sequelize.INTEGER
       },
       tipe_ukt: {
         allowNull: false,
@@ -54,6 +46,6 @@ module.exports = {
     });
   },
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable('fisiks');
+    await queryInterface.dropTable('standar_fisik');
   }
 };

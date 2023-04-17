@@ -3,7 +3,7 @@ const {
   Model
 } = require('sequelize');
 module.exports = (sequelize, DataTypes) => {
-  class teknik extends Model {
+  class daftar_jurus extends Model {
     /**
      * Helper method for defining associations.
      * This method is not a part of Sequelize lifecycle.
@@ -11,30 +11,21 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
-      this.belongsTo(models.siswa, {
-        foreignKey: "id_siswa",
-        as: "siswa"
-      })
     }
   }
-  teknik.init({
-    id_teknik: {
+  daftar_jurus.init({
+    id_daftar_jurus: {
       allowNull: false,
       autoIncrement: true,
       primaryKey: true,
-      type: DataTypes.INTEGER
+      type: DataTypes.INTEGER,
     },
-    id_siswa: DataTypes.INTEGER,
-    teknik1: DataTypes.STRING,
-    teknik2: DataTypes.STRING,
-    teknik3: DataTypes.STRING,
-    teknik4: DataTypes.STRING,
-    teknik5: DataTypes.STRING,
-    teknik6: DataTypes.STRING
+    tipe_ukt: DataTypes.ENUM('UKT Jambon','UKT Hijau','UKT Putih','UKCW'),
+    name: DataTypes.STRING,
   }, {
     sequelize,
-    modelName: 'teknik',
-    tableName: 'teknik'
+    modelName: 'daftar_jurus',
+    tableName: 'daftar_jurus',
   });
-  return teknik;
+  return daftar_jurus;
 };

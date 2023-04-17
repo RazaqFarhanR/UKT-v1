@@ -17,7 +17,7 @@ const ranting = models.ranting;
 //endpoint ditulis disini
 
 //endpoint get data ranting
-app.get("/", Auth, verifyRoles("admin", "super admin", "admin ranting"), (req,res) => {
+app.get("/", Auth, verifyRoles("admin", "super admin", "admin ranting", "pengurus cabang"), (req,res) => {
     ranting.findAll()
     .then(ranting => {
         res.json({
@@ -33,7 +33,7 @@ app.get("/", Auth, verifyRoles("admin", "super admin", "admin ranting"), (req,re
 })
 
 //endpoint untuk menyimpan data ranting, METHOD POST, function create
-app.post("/", Auth, verifyRoles("admin", "super admin", "admin ranting"), (req,res) =>{
+app.post("/", Auth, verifyRoles("admin", "super admin", "admin ranting", "pengurus cabang"), (req,res) =>{
     let data ={
         id_cabang: req.body.id_cabang,
         name: req.body.name,
@@ -52,7 +52,7 @@ app.post("/", Auth, verifyRoles("admin", "super admin", "admin ranting"), (req,r
 }) 
 
 //endpoint untuk mengupdate data ranting, METHOD: PUT, fuction: UPDATE
-app.put("/:id", Auth, verifyRoles("admin", "super admin", "admin ranting"), (req,res) => {
+app.put("/:id", Auth, verifyRoles("admin", "super admin", "admin ranting", "pengurus cabang"), (req,res) => {
     let param = {
         id_ranting: req.params.id
     }
@@ -74,7 +74,7 @@ app.put("/:id", Auth, verifyRoles("admin", "super admin", "admin ranting"), (req
 })
 
 //endpoint untuk menghapus data ranting,METHOD: DELETE, function: destroy
-app.delete("/:id", Auth, verifyRoles("admin", "super admin", "admin ranting"), (req,res) => {
+app.delete("/:id", Auth, verifyRoles("admin", "super admin", "admin ranting", "pengurus cabang"), (req,res) => {
     let param = {
         id_ranting : req.params.id
     }
