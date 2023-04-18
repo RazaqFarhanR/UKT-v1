@@ -25,12 +25,12 @@ const ranting = models.ranting;
 const auth = require("../auth");
 const jwt = require("jsonwebtoken");
 const SECRET_KEY = "BelajarNodeJSItuMenyengankan";
-
+const localStorage = process.env.LOCAL_STORAGE
 //konfigurasi proses upload file
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
     // set file storage
-    cb(null, "C:/Users/RAFI DUTA/Documents/KODING/REACT JS/UKT/be-ukt/image");
+    cb(null, localStorage);
   },
   filename: (req, file, cb) => {
     // generate file name
@@ -246,6 +246,13 @@ app.post("/auth", async (req, res) => {
           where: {
             username: req.body.username,
           },
+          include: [
+            {
+              model: ranting,
+              attributes: ['name'],
+              as: "user_ranting"
+            }
+          ]
         });
         res.json({
           logged: true,

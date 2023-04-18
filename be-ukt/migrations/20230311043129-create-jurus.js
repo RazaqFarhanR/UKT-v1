@@ -17,9 +17,6 @@ module.exports = {
           key: "id_siswa"
         }
       },
-      id_jurus: {
-        type: Sequelize.INTEGER
-      },
       jurus1A: {
         type: Sequelize.BOOLEAN
       },

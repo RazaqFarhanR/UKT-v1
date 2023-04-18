@@ -137,7 +137,7 @@ app.post("/nis", (req, res) => {
 app.post("/", Auth, verifyRoles("admin", "super admin", "admin ranting", "pengurus cabang", "pengurus ranting", "penguji"), (req,res) =>{    
     let data ={
         id_event: req.body.id_event,
-        nis: req.body.nis,
+        nomor_urut: req.body.nomor_urut,
         name: req.body.name,
         id_role: req.body.id_role,
         jenis_latihan: req.body.jenis_latihan,
