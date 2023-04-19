@@ -7,15 +7,15 @@ import Footer from '../components/footer'
 const pengurus = () => {
 
     // state
-    const [username, setUsername] = useState ('')
+    const [role, setRole] = useState ([])
 
-    const role = () => {
-        const role = localStorage.getItem ('admin')
-        setUsername (role)
+    const getRole = () => {
+        const role = JSON.parse (localStorage.getItem ('admin'))
+        setRole (role)
     }
 
     useEffect (() => {
-        role ()
+        getRole ()
     }, [])
 
     return (
@@ -62,7 +62,7 @@ const pengurus = () => {
 
                             {/* card pengurus cabang */}
                             {(() => {
-                                if (username === 'admincabang') {
+                                if (role.id_role === 'super admin') {
                                     return (
                                         <Link href={'./pengurus_cabang'} className="bg-navy hover:bg-gradient-to-r from-[#16D4FC] to-[#9A4BE9] rounded-md p-0.5">
 
@@ -82,7 +82,7 @@ const pengurus = () => {
                                             </div>
                                         </Link>
                                     )
-                                } else if (username === 'adminranting') {
+                                } else if (role.id_role === 'admin ranting') {
                                     return (
                                         <Link href={'./pengurus_cabang'} className="hidden bg-navy hover:bg-gradient-to-r from-[#16D4FC] to-[#9A4BE9] rounded-md p-0.5">
 

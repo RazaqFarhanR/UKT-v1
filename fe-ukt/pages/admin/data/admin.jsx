@@ -7,16 +7,16 @@ import Link from 'next/link'
 const admin = () => {
 
     // state
-    const [username, setUsername] = useState ('')
+    const [role, setRole] = useState ([])
 
-    const role = () => {
-        const role = localStorage.getItem ('admin')
-        setUsername (role)
+    const getRole = () => {
+        const role = JSON.parse (localStorage.getItem ('admin'))
+        setRole (role)
     }
 
     // state login
     useEffect (() => {
-        role ()
+        getRole ()
     }, [])
 
     return (
@@ -62,7 +62,7 @@ const admin = () => {
 
                         {/* card admin cabang */}
                         {(() => {
-                            if (username === 'admincabang') {
+                            if (role.id_role === 'super admin') {
                                 return (
                                     <Link href={'./admin_cabang'} className="bg-navy hover:bg-gradient-to-r from-[#16D4FC] to-[#9A4BE9] rounded-md p-0.5">
 
@@ -93,7 +93,7 @@ const admin = () => {
                                         </div>
                                     </Link>
                                 )
-                            } else if (username === 'adminranting') {
+                            } else if (role.id_role === 'admin ranting') {
                                 return (
                                     <Link href={'./admin_cabang'} className="hidden bg-navy hover:bg-gradient-to-r from-[#16D4FC] to-[#9A4BE9] rounded-md p-0.5">
 
