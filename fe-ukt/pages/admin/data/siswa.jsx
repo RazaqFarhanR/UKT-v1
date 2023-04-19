@@ -1,10 +1,32 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import Link from 'next/link'
 import Sidebar from '../components/sidebar'
 import Header from '../components/header'
 import Footer from '../components/footer'
+import axios from 'axios'
+const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
 
 const siswa = () => {
+
+    // state
+    const [dataRanting, setDataRanting] = useState ([])
+
+    // function get data ranting
+    const getDataRanting = () => {
+        const token = localStorage.getItem ('token')
+        axios.get (BASE_URL + `ranting`, { headers: { Authorization: `Bearer ${token}`}})
+        .then (res => {
+            setDataRanting (res.data.data)
+        })
+        .catch (err => {
+            console.log(err.message);
+        })
+    }
+
+    useEffect (() => {
+        getDataRanting ()
+    }, [])
+
     return (
         <>
             <div className="flex font-lato">
@@ -47,18 +69,20 @@ const siswa = () => {
                         <div className="grid grid-cols-4 gap-x-5">
                             
                             {/* card ranting */}
-                            <Link href={'./detail_siswa'} className="bg-navy hover:bg-gradient-to-r from-[#16D4FC] to-[#9A4BE9] rounded-md p-0.5">
-                                
-                                {/* inner bg */}
-                                <div className="bg-navy p-5 rounded-md space-y-5">
+                            {dataRanting.map ((item, index) => (
+                                <Link key={index + 1} href={'./' + item.name} className="bg-navy hover:bg-gradient-to-r from-[#16D4FC] to-[#9A4BE9] rounded-md p-0.5">
+                                    
+                                    {/* inner bg */}
+                                    <div className="bg-navy p-5 rounded-md space-y-5">
 
-                                    {/* ranting name */}
-                                    <h1 className='text-green text-lg'>Ranting Trenggalek</h1>
+                                        {/* ranting name */}
+                                        <h1 className='text-green text-lg'>Ranting {item.name}</h1>
 
-                                    {/* ranting data count and add button */}
-                                    <h1 className='text-white text-3xl font-semibold tracking-wider'>1180</h1>
-                                </div>
-                            </Link>
+                                        {/* ranting data count and add button */}
+                                        <h1 className='text-white text-3xl font-semibold tracking-wider'>1180</h1>
+                                    </div>
+                                </Link>
+                            ))}
                         </div>
                     </div>
                     {/* akhir konten utama */}

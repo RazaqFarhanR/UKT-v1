@@ -30,7 +30,8 @@ const pengurus_ranting = () => {
 
     // function get data pengurus ranting
     const getDataPengurusRanting = () => {
-        axios.get (BASE_URL + `pengurus`)
+        const token = localStorage.getItem ('token')
+        axios.get (BASE_URL + `pengurus`, { headers: { Authorization: `Bearer ${token}`}})
         .then (res => {
             setDataPengurusRanting (res.data.data)
         })

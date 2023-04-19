@@ -6,10 +6,11 @@ import Link from 'next/link'
 const sidebar = () => {
 
     // state role
-    const [username, setUsername] = useState ('')
-    const role = () => {
-        const role = localStorage.getItem ('admin')
-        setUsername (role)
+    const [role, setRole] = useState ([])
+
+    const getRole = () => {
+        const role = JSON.parse(localStorage.getItem ('admin'))
+        setRole (role)
     }
 
     // deklarasi router
@@ -24,7 +25,7 @@ const sidebar = () => {
     const {showSideBar, setShowSideBar} = useContext (globalState)
 
     useEffect (() => {
-        role ()
+        getRole ()
     }, [])
 
     return (
@@ -51,7 +52,7 @@ const sidebar = () => {
                     <div className="space-y-4 w-full">
 
                         {/* ---------- DASHBOARD ---------- */}
-                        <Link href={'/admin/'} className={splitLoc[1] === '/admin' ? 
+                        <Link href={'/admin/'} className={splitLoc[1] === '' ? 
                         
                         // clicked
                         `${showSideBar ? 'px-5 py-4 gap-x-3' : 'justify-center p-2'} bg-white shadow-md shadow-purple rounded-lg flex items-center text-purple` 
@@ -72,7 +73,7 @@ const sidebar = () => {
                             
                             {/* ---------- ADMIN ---------- */}
                             {(() => {
-                                if (username === 'admincabang') {
+                                if (role.id_role === "super admin") {
                                     return (
                                         <Link href={'/admin/data/admin'} className={splitLoc[1] === 'data/admin' || splitLoc[1] === 'data/admin_cabang' || splitLoc[1] === 'data/admin_ranting' ? 
                                         
@@ -98,7 +99,7 @@ const sidebar = () => {
                                             <h1 className={`${showSideBar ? 'block' : 'hidden'} translate-y-[1px]`}>Admin</h1>
                                         </Link>
                                     )
-                                } else if (username === 'adminranting') {
+                                } else if (role.id_role === 'admin ranting') {
                                     return (
                                         <Link href={'/admin/data/admin'} className={splitLoc[1] === 'data/admin' || splitLoc[1] === 'data/admin_cabang' || splitLoc[1] === 'data/admin_ranting' ? 
                                         
@@ -123,6 +124,10 @@ const sidebar = () => {
                                             </svg>
                                             <h1 className={`${showSideBar ? 'block' : 'hidden'} translate-y-[1px]`}>Admin</h1>
                                         </Link>
+                                    )
+                                } else {
+                                    return (
+                                        <h1>gagal</h1>
                                     )
                                 }
                             })()}

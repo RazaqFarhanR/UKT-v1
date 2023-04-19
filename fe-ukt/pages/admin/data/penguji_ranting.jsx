@@ -27,10 +27,11 @@ const penguji_ranting = () => {
     const [noWa, setNoWa] = useState ('')
     const [role, setRole] = useState ('')
     const [foto, setFoto] = useState ('')
-
+    
     // function get data penguji cabang
     const getDataPengujiRanting = () => {
-        axios.get (BASE_URL + `penguji`)
+        const token = localStorage.getItem ('token')
+        axios.get (BASE_URL + `penguji`, { headers: { Authorization: `Bearer ${token}`}})
         .then (res => {
             setDataPengujiRanting (res.data.data)
         })

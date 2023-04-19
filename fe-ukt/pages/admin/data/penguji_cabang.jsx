@@ -8,7 +8,6 @@ import Footer from '../components/footer'
 import Modal_penguji_cabang from '../components/modal_penguji_cabang'
 import Modal_delete from '../components/modal_delete'
 const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
-
 const penguji_cabang = () => {
 
     // state modal
@@ -30,8 +29,10 @@ const penguji_cabang = () => {
 
     // function get data penguji cabang
     const getDataPengujiCabang = () => {
-        axios.get (BASE_URL + `penguji`)
+        const token = localStorage.getItem ('token')
+        axios.get (BASE_URL + `penguji`, { headers: { Authorization: `Bearer ${token}`}})
         .then (res => {
+            console.log(res.data.data);
             setDataPengujiCabang (res.data.data)
         })
         .catch (err => {

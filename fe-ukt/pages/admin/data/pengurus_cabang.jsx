@@ -30,7 +30,8 @@ const pengurus_cabang = () => {
 
     // function get data pengurus cabang
     const getDataPengurusCabang = () => {
-        axios.get(BASE_URL + `pengurus`)
+        const token = localStorage.getItem ('token')
+        axios.get(BASE_URL + `pengurus`, { headers: { Authorization: `Bearer ${token}`}})
         .then (res => {
             setDataPengurusCabang (res.data.data)
         })
