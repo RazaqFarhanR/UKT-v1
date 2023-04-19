@@ -20,26 +20,25 @@ app.use(bodyParser.urlencoded({extended: true}));
 const models = require('../models/index');
 const { sequelize, Op } = require("sequelize");
 const pengurus = models.pengurus;
+const ranting = models.ranting;
 
 //import auth
 const auth = require("../auth")
 const jwt = require("jsonwebtoken")
 const SECRET_KEY = "BelajarNodeJSItuMenyengankan";
 
+const localStorage = process.env.LOCAL_STORAGE
 //konfigurasi proses upload file
 const storage = multer.diskStorage({
-    destination: (req, file, cb) => {
-      // set file storage
-      cb(
-        null,
-        "C:/Users/RAFI DUTA/Documents/KODING/REACT JS/UKT/be-ukt/image"
-      );
-    },
-    filename: (req, file, cb) => {
-      // generate file name
-      cb(null, "foto-" + Date.now() + path.extname(file.originalname));
-    },
-  });
+  destination: (req, file, cb) => {
+    // set file storage
+    cb(null, localStorage);
+  },
+  filename: (req, file, cb) => {
+    // generate file name
+    cb(null, "foto-" + Date.now() + path.extname(file.originalname));
+  },
+});
   
   let upload2 = multer({ storage: storage });
 
@@ -47,7 +46,15 @@ const storage = multer.diskStorage({
 //endpoint get data pengurus
 app.get("/", Auth, verifyRoles("admin", "super admin", "admin ranting", "pengurus cabang", "pengurus ranting"), (req,res) => {
     const imagePath = "http://localhost:8080/image/"
-    pengurus.findAll()
+    pengurus.findAll({    
+      include: [
+        {
+          model: ranting,
+          as: 'pengurus_ranting',
+          attributes: ['name']
+        }
+      ]
+    })
     .then(pengurus => {
         const pengurus_with_image_url = pengurus.map((tk) => ({
             ...tk.toJSON(),
@@ -238,6 +245,13 @@ app.post("/auth", async (req, res) => {
             where: {
               username: req.body.username,
             },
+            include: [
+              {
+                model: ranting,
+                as: 'pengurus_ranting',
+                attributes: ['name']
+              }
+            ]
           });
           res.json({
             logged: true,
