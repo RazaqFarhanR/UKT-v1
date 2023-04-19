@@ -32,7 +32,7 @@ const storage = multer.diskStorage({
     // set file storage
     cb(
       null,
-      "C:/Users/RAFI DUTA/Documents/KODING/REACT JS/UKT/be-ukt/image"
+      "D:/Project/UKT/be-ukt/image"
     );
   },
   filename: (req, file, cb) => {
@@ -213,7 +213,7 @@ app.put("/:id", Auth, verifyRoles("admin", "super admin", "admin ranting", "peng
         no_wa: req.body.no_wa,
       };
       if (req.file) {
-        const imagePath = "C:/Users/RAFI DUTA/Documents/KODING/REACT JS/UKT/be-ukt/image/" + result[0].foto;
+        const imagePath = "D:/Project/UKT/be-ukt/image" + result[0].foto;
         fs.unlink(imagePath, (err) => {
           if (err) {
             console.error(err);

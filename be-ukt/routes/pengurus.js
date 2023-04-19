@@ -32,7 +32,7 @@ const storage = multer.diskStorage({
       // set file storage
       cb(
         null,
-        "C:/Users/RAFI DUTA/Documents/KODING/REACT JS/UKT/be-ukt/image"
+        "D:/Project/UKT/be-ukt/image"
       );
     },
     filename: (req, file, cb) => {
