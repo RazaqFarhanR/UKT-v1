@@ -134,58 +134,54 @@ app.put(
     "penguji"
   ),
   (req, res) => {
-    let data = {
-        id_penguji: req.body.id_penguji,
-      };
-      let param = {
-        id_sambung: req.params.id
-      }
-      sambung
-        .update(data, {where: param})
-        .then(async (result) => {
-            sambung.findOne({where: {param}})
-            .then((result) => {
-                
-            })
-          console.log("oi" + req.params.id);
-          let id_sambung = req.params.id;
+    sambung
+      .findAll({
+        where: { id_sambung: req.params.id },
+        include: [
+          {
+            model: detail_sambung,
+            as: "detail_sambung",
+            attributes: ["id_detail_sambung", "posisi", "id_siswa", "nilai"],
+            include: [
+              {
+                model: siswa,
+                as: "sambung_siswa",
+                attributes: ["name"],
+              },
+            ],
+          },
+        ],
+      })
+      .then((sambung) => {
+        for (let i = 0; i < 2; i++) {
+          console.log(sambung[0].detail_sambung[i].id_detail_sambung);
           let data = [
             {
-              id_sambung: id_sambung,
               posisi: 1,
-              id_siswa: req.body.id_siswa1,
               nilai: req.body.nilai1,
             },
             {
-              id_sambung: id_sambung,
-              posisi: 2,
-              id_siswa: req.body.id_siswa2,
-              nilai: req.body.nilai2,
-            },
-          ];
-          for (let i = 0; i < 2; i++) {
-            if (data[i]) {
-              detail_sambung.update(data[i], {where: {
-                id_sambung: req.params.id
-              }})
-            } else {
-              console.log(`data ${i} tidak ditemukan`);
+                posisi: 2,
+                nilai: req.body.nilai2
             }
-          }
-          const response = {
-            message: "data has been inserted",
+          ];
+          const id = sambung[0].detail_sambung[i].id_detail_sambung;
+          detail_sambung.update(data[i], {where: {id_detail_sambung: id}});
+        }
+        const response = {
+            message: "data has been updated",
             data: {
               id_siswa1: req.body.id_siswa1,
-              id_siswa2: req.body.id_siswa2
+              id_siswa2: req.body.id_siswa2,
             },
           };
           res.json(response);
-        })
-        .catch((error) => {
-          res.json({
-            message: error.message,
-          });
+      })
+      .catch((error) => {
+        res.json({
+          message: error.message,
         });
+      });
   }
 );
 
@@ -202,15 +198,38 @@ app.delete(
     "penguji"
   ),
   (req, res) => {
-    let param = {
-      id_sambung: req.params.id,
-    };
     sambung
-      .destroy({ where: param })
-      .then((result) => {
-        res.json({
-          massege: "data has been deleted",
-        });
+      .findAll({
+        where: {id_sambung: req.params.id},
+        include: [
+          {
+            model: detail_sambung,
+            as: "detail_sambung",
+            attributes: ["id_detail_sambung","posisi", "id_siswa", "nilai"],
+            include: [
+              {
+                    model: siswa,
+                as: "sambung_siswa",
+                attributes: ["name"],
+              },
+            ],
+          },
+        ],
+      })
+      .then((sambung) => {
+        for (let i = 0; i < 2; i++) {
+            console.log(sambung[0].detail_sambung[i].id_detail_sambung);
+
+            const id = sambung[0].detail_sambung[i].id_detail_sambung;
+            detail_sambung.destroy({where: {id_detail_sambung: id}});
+        }
+        const sambung1 = models.sambung;
+        sambung1.destroy({where: {id_sambung:req.params.id}})
+        .then((result) => {
+            res.json({
+                message: 'data has been deleted'
+            })
+        })
       })
       .catch((error) => {
         res.json({

@@ -26,7 +26,7 @@ module.exports = {
         type: Sequelize.ENUM('Remaja - Laki laki','Remaja - Perempuan','Privat - Laki laki','Privat - Perempuan')
       },
       mft: {
-        type: Sequelize.INTEGER
+        type: Sequelize.DOUBLE
       },
       push_up: {
         type: Sequelize.INTEGER

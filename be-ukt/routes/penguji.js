@@ -25,7 +25,9 @@ const penguji = models.penguji;
 const auth = require("../auth")
 const jwt = require("jsonwebtoken")
 const SECRET_KEY = "BelajarNodeJSItuMenyengankan";
-
+const localStorage = process.env.LOCAL_STORAGE
+const cabang = models.cabang;
+const ranting = models.ranting;
 //konfigurasi proses upload file
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
@@ -49,30 +51,20 @@ app.get("/", Auth, verifyRoles("admin", "super admin", "admin ranting", "penguru
   const imagePath = "http://localhost:8080/image/"
 
   penguji
-    .findAll()
-    .then((penguji) => {
-      // Map over the tipe_kamar array and add the image URL to each object
-      const penguji_with_image_url = penguji.map((tk) => ({
-        ...tk.toJSON(),
-        image: `${imagePath}${tk.foto}`,
-      }));
-      res.json({
-        count: penguji_with_image_url.length,
-        data: penguji_with_image_url,
-      });
+    .findAll({
+      include: [
+        {
+          model: cabang,
+          as: "penguji_cabang",
+          attributes: ['name']
+        },
+        {
+          model: ranting,
+          as: "penguji_ranting",
+          attributes: ['name']
+        }
+      ]
     })
-    .catch((error) => {
-      res.json({
-        message: error.message,
-      });
-    });
-});
-//endpoint get data penguji cabang
-app.get("/", Auth, verifyRoles("admin", "super admin", "admin ranting", "pengurus cabang", "pengurus ranting", "penguji"), (req, res) => {
-  const imagePath = "http://localhost:8080/image/"
-
-  penguji
-    .findAll()
     .then((penguji) => {
       // Map over the tipe_kamar array and add the image URL to each object
       const penguji_with_image_url = penguji.map((tk) => ({
@@ -295,6 +287,13 @@ app.post("/auth", async (req, res) => {
           where: {
             username: req.body.username,
           },
+          include: [
+            {
+              model: ranting,
+              as: "penguji_ranting",
+              attributes: ['name'],
+            }
+          ]
         });
         res.json({
           logged: true,

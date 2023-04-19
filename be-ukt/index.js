@@ -98,6 +98,19 @@ app.use("/ukt/standar_fisik", standar_fisik)
 const sambung = require('./routes/sambung');
 app.use("/ukt/sambung", sambung)
 
+//endpoint jurus_ukcw
+const jurus_ukcw = require('./routes/jurus_ukcw');
+app.use("/ukt/jurus_ukcw", jurus_ukcw)
+//endpoint jurus_putih
+const jurus_putih = require('./routes/jurus_putih');
+app.use("/ukt/jurus_putih", jurus_putih)
+//endpoint jurus_ukcw
+const jurus_hijau = require('./routes/jurus_hijau');
+app.use("/ukt/jurus_hijau", jurus_hijau)
+//endpoint jurus_ukcw
+const jurus_jambon = require('./routes/jurus_jambon');
+app.use("/ukt/jurus_jambon", jurus_jambon)
+
 //run server
 app.listen(8080, () => {
     console.log('server run on port 8080')
