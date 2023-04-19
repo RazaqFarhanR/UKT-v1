@@ -1,6 +1,6 @@
 import { globalState } from '@/context/context'
 import axios from 'axios';
-import React, { useContext, useEffect } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
 
 const modal_delete = () => {
@@ -18,10 +18,18 @@ const modal_delete = () => {
     const {idPengurusCabang, idPengurusRanting} = useContext (globalState)
     const {setDataEvent, idEvent} = useContext (globalState)
 
+    // state from local storage
+    const [token, setToken] = useState ('')
+
+    // function get token from local storage
+    const getToken = () => {
+        const token = localStorage.getItem ('token')
+        setToken (token)
+    } 
     
     // function get data admin cabang
     const getDataAdminCabang = () => {
-        axios.get (BASE_URL + `user`)
+        axios.get (BASE_URL + `user`, { headers: { Authorization: `Bearer ${token}`}})
         .then (res => {
             setDataAdminCabang (res.data.data)
         })
@@ -32,7 +40,7 @@ const modal_delete = () => {
 
     // function get data admin ranting
     const getDataAdminRanting = () => {
-        axios.get (BASE_URL + `user`)
+        axios.get (BASE_URL + `user`, { headers: { Authorization: `Bearer ${token}`}})
         .then (res => {
             setDataAdminRanting (res.data.data)
         })
@@ -43,7 +51,7 @@ const modal_delete = () => {
 
     // function get data penguji cabang
     const getDataPengujiCabang = () => {
-        axios.get (BASE_URL + `penguji`)
+        axios.get (BASE_URL + `penguji`, { headers: { Authorization: `Bearer ${token}`}})
         .then (res => {
             setDataPengujiCabang (res.data.data)
         })
@@ -54,7 +62,7 @@ const modal_delete = () => {
 
     // function get data penguji ranting
     const getDataPengujiRanting = () => {
-        axios.get (BASE_URL + `penguji`)
+        axios.get (BASE_URL + `penguji`, { headers: { Authorization: `Bearer ${token}`}})
         .then (res => {
             setDataPengujiRanting (res.data.data)
         })
@@ -65,7 +73,7 @@ const modal_delete = () => {
 
     // function get data pengurus cabang
     const getDataPengurusCabang = () => {
-        axios.get (BASE_URL + `pengurus`)
+        axios.get (BASE_URL + `pengurus`, { headers: { Authorization: `Bearer ${token}`}})
         .then (res => {
             setDataPengurusCabang (res.data.data)
         })
@@ -76,7 +84,7 @@ const modal_delete = () => {
 
     // function get data pengurus ranting
     const getDataPengurusRanting = () => {
-        axios.get (BASE_URL + `pengurus`)
+        axios.get (BASE_URL + `pengurus`, { headers: { Authorization: `Bearer ${token}`}})
         .then (res => {
             setDataPengurusRanting (res.data.data)
         })
@@ -87,7 +95,7 @@ const modal_delete = () => {
 
     // function get data event
     const getDataEvent = () => {
-        axios.get (BASE_URL + `event`)
+        axios.get (BASE_URL + `event`, { headers: { Authorization: `Bearer ${token}`}})
         .then (res => {
             setDataEvent (res.data.data)
         })
@@ -98,8 +106,9 @@ const modal_delete = () => {
 
     // function handle delete data admin cabang
     const handleDelete = () => {
+        const token = localStorage.getItem ('token')
         if (action === 'deleteAdminCabang') {
-            axios.delete (BASE_URL + `user/${idAdminCabang}`)
+            axios.delete (BASE_URL + `user/${idAdminCabang}`, { headers: { Authorization: `Bearer ${token}`}})
             .then (res => {
                 getDataAdminCabang ()
                 setShowModalDelete (false)
@@ -109,7 +118,7 @@ const modal_delete = () => {
                 console.log(err.message);
             })
         } else if (action === 'deleteAdminRanting') {
-            axios.delete (BASE_URL + `user/${idAdminRanting}`)
+            axios.delete (BASE_URL + `user/${idAdminRanting}`, { headers: { Authorization: `Bearer ${token}`}})
             .then (res => {
                 getDataAdminRanting ()
                 setShowModalDelete (false)
@@ -119,7 +128,7 @@ const modal_delete = () => {
                 console.log(err.message);
             })
         } else if (action === 'deletePengujiCabang') {
-            axios.delete (BASE_URL + `penguji/${idPengujiCabang}`)
+            axios.delete (BASE_URL + `penguji/${idPengujiCabang}`, { headers: { Authorization: `Bearer ${token}`}})
             .then (res => {
                 getDataPengujiCabang ()
                 setShowModalDelete (false)
@@ -129,7 +138,7 @@ const modal_delete = () => {
                 console.log(err.message);
             })
         } else if (action === 'deletePengujiRanting') {
-            axios.delete (BASE_URL + `penguji/${idPengujiRanting}`)
+            axios.delete (BASE_URL + `penguji/${idPengujiRanting}`, { headers: { Authorization: `Bearer ${token}`}})
             .then (res => {
                 getDataPengujiRanting ()
                 setShowModalDelete (false)
@@ -139,7 +148,7 @@ const modal_delete = () => {
                 console.log(err.message);
             })
         } else if (action === 'deletePengurusCabang') {
-            axios.delete (BASE_URL + `pengurus/${idPengurusCabang}`)
+            axios.delete (BASE_URL + `pengurus/${idPengurusCabang}`, { headers: { Authorization: `Bearer ${token}`}})
             .then (res => {
                 getDataPengurusCabang ()
                 setShowModalDelete (false)
@@ -149,7 +158,7 @@ const modal_delete = () => {
                 console.log(err.message);
             })
         } else if (action === 'deletePengurusRanting') {
-            axios.delete (BASE_URL + `pengurus/${idPengurusRanting}`)
+            axios.delete (BASE_URL + `pengurus/${idPengurusRanting}`, { headers: { Authorization: `Bearer ${token}`}})
             .then (res => {
                 getDataPengurusRanting ()
                 setShowModalDelete (false)
@@ -159,7 +168,7 @@ const modal_delete = () => {
                 console.log(err.message);
             })
         } else if (action === 'deleteEvent') {
-            axios.delete (BASE_URL + `event/${idEvent}`)
+            axios.delete (BASE_URL + `event/${idEvent}`, { headers: { Authorization: `Bearer ${token}`}})
             .then (res => {
                 getDataEvent ()
                 setShowModalDelete (false)
@@ -170,6 +179,10 @@ const modal_delete = () => {
             })
         }
     }
+
+    useEffect (() => {
+        getToken ()
+    }, [])
 
     return (
         <>

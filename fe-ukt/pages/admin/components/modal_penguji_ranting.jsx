@@ -1,6 +1,6 @@
 import { globalState } from '@/context/context'
 import axios from 'axios'
-import React, { useContext } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
 const modal_penguji_ranting = () => {
 
@@ -17,10 +17,11 @@ const modal_penguji_ranting = () => {
     const {noWa, setNoWa} = useContext (globalState)
     const {role, setRole} = useContext (globalState)
     const {foto, setFoto} = useContext (globalState)
-    
+
     // function get data penguji ranting
     const getDataPengujiRanting = () => {
-        axios.get (BASE_URL + `penguji`)
+        const token = localStorage.getItem ('token')
+        axios.get (BASE_URL + `penguji`, { headers: { Authorization: `Bearer ${token}`}})
         .then (res => {
             setDataPengujiRanting (res.data.data)
         })
@@ -28,7 +29,7 @@ const modal_penguji_ranting = () => {
             console.log(err.message);
         })
     }
-
+    
     // function handle file photo profile
     const handleFile = (e) => {
         e.preventDefault()
@@ -38,6 +39,8 @@ const modal_penguji_ranting = () => {
     // function handle add and edit data
     const handleSave = (e) => {
         e.preventDefault ()
+
+        const token = localStorage.getItem ('token')
 
         let form = new FormData()
         form.append ('niw', niw)
@@ -50,7 +53,7 @@ const modal_penguji_ranting = () => {
         form.append ('foto', foto)
 
         if (action === 'insert') {
-            axios.post (BASE_URL + `penguji`, form)
+            axios.post (BASE_URL + `penguji`, form, { headers: { Authorization: `Bearer ${token}`}})
             .then (res => {
                 setShowModalPengujiRanting (false)
                 getDataPengujiRanting ()
@@ -60,7 +63,7 @@ const modal_penguji_ranting = () => {
                 console.log(err.message);
             })
         } else if (action === 'update') {
-            axios.put (BASE_URL + `penguji/${idPengujiRanting}`, form)
+            axios.put (BASE_URL + `penguji/${idPengujiRanting}`, form, { headers: { Authorization: `Bearer ${token}`}})
             .then (res => {
                 setShowModalPengujiRanting (false)
                 getDataPengujiRanting ()

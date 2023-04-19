@@ -1,6 +1,6 @@
 import { globalState } from '@/context/context'
 import axios from 'axios'
-import React, { useContext } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
 
 const modal_pengurus_cabang = () => {
@@ -21,6 +21,7 @@ const modal_pengurus_cabang = () => {
 
     // function get data pengurus cabang
     const getDataPengurusCabang = () => {
+        const token = localStorage.getItem ('token', { headers: { Authorization: `Bearer ${token}`}})
         axios.get (BASE_URL + `pengurus`)
         .then (res => {
             setDataPengurusCabang (res.data.data)
@@ -40,6 +41,8 @@ const modal_pengurus_cabang = () => {
     const handleSave = (e) => {
         e.preventDefault ()
 
+        const token = localStorage.getItem ('token')
+
         let form = new FormData()
         form.append ('niw', niw)
         form.append ('name', name)
@@ -51,7 +54,7 @@ const modal_pengurus_cabang = () => {
         form.append ('foto', foto)
 
         if (action === 'insert') {
-            axios.post (BASE_URL + `pengurus`, form)
+            axios.post (BASE_URL + `pengurus`, form, { headers: { Authorization: `Bearer ${token}`}})
             .then (res => {
                 setShowModalPengurusCabang (false)
                 getDataPengurusCabang ()
@@ -61,7 +64,7 @@ const modal_pengurus_cabang = () => {
                 console.log(err.message);
             })
         } else if (action === 'update') {
-            axios.put (BASE_URL + `pengurus/${idPengurusCabang}`, form)
+            axios.put (BASE_URL + `pengurus/${idPengurusCabang}`, form, { headers: { Authorization: `Bearer ${token}`}})
             .then (res => {
                 setShowModalPengurusCabang (false)
                 getDataPengurusCabang ()

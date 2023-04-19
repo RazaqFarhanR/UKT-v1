@@ -1,6 +1,6 @@
 import { globalState } from '@/context/context'
 import axios from 'axios'
-import React, { useContext } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
 
 const modal_pengurus_ranting = () => {
@@ -18,10 +18,11 @@ const modal_pengurus_ranting = () => {
     const {password, setPassword} = useContext (globalState)
     const {role, setRole} = useContext (globalState)
     const {foto, setFoto} = useContext (globalState)
-
+    
     // function get data pengurus ranting
     const getDataPengurusRanting = () => {
-        axios.get (BASE_URL + `pengurus`)
+        const token = localStorage.getItem ('token')
+        axios.get (BASE_URL + `pengurus`, { headers: { Authorization: `Bearer ${token}`}})
         .then (res => {
             setDataPengurusRanting (res.data.data)
         })
@@ -40,6 +41,8 @@ const modal_pengurus_ranting = () => {
     const handleSave = (e) => {
         e.preventDefault ()
 
+        { headers: { Authorization: `Bearer ${token}`}}
+
         let form = new FormData()
         form.append ('niw', niw)
         form.append ('name', name)
@@ -51,7 +54,7 @@ const modal_pengurus_ranting = () => {
         form.append ('foto', foto)
 
         if (action === 'insert') {
-            axios.post (BASE_URL + `pengurus`, form)
+            axios.post (BASE_URL + `pengurus`, form, { headers: { Authorization: `Bearer ${token}`}})
             .then (res => {
                 setShowModalPengurusRanting (false)
                 getDataPengurusRanting (res.data.data)
@@ -61,7 +64,7 @@ const modal_pengurus_ranting = () => {
                 console.log(err.message);
             })
         } else if (action === 'update') {
-            axios.put (BASE_URL + `pengurus/${idPengurusRanting}`, form)
+            axios.put (BASE_URL + `pengurus/${idPengurusRanting}`, form, { headers: { Authorization: `Bearer ${token}`}})
             .then (res=> {
                 setDataPengurusRanting (false)
                 getDataPengurusRanting (res.data.data)
@@ -72,7 +75,6 @@ const modal_pengurus_ranting = () => {
             })
         }
     }
-
 
     return (
         <>

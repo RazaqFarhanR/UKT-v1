@@ -1,4 +1,4 @@
-import React, { useContext } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import axios from 'axios'
 import { globalState } from '@/context/context'
 const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
@@ -22,7 +22,8 @@ const modal_admin_cabang = () => {
 
     // function get data admin cabang
     const getDataAdminCabang = () => {
-        axios.get (BASE_URL + `user`)
+        const token = localStorage.getItem ('token')
+        axios.get (BASE_URL + `user`, { headers: { Authorization: `Bearer ${token}`}})
         .then (res => {
             setDataAdminCabang (res.data.data)
         })
@@ -36,9 +37,12 @@ const modal_admin_cabang = () => {
         e.preventDefault ()
         setFoto (e.target.files [0])
     }
+
     // function handle add and edit data
     const handleSave = (e) => {
         e.preventDefault()
+
+        const token = localStorage.getItem ('token')
 
         let form = new FormData()
         form.append ('niw', niw)
@@ -51,7 +55,7 @@ const modal_admin_cabang = () => {
         form.append ('foto', foto)
 
         if (action === 'insert') {
-            axios.post (BASE_URL + `user`, form)
+            axios.post (BASE_URL + `user`, form, { headers: { Authorization: `Bearer ${token}`}})
             .then (res => {
                 getDataAdminCabang ()
                 setShowModalAdminCabang (false)
@@ -61,8 +65,7 @@ const modal_admin_cabang = () => {
                 console.log(err.message);
             })
         } else if (action === 'update') {
-            console.log(form);
-            axios.put (BASE_URL + `user/${idAdminCabang}`, form)
+            axios.put (BASE_URL + `user/${idAdminCabang}`, form, { headers: { Authorization: `Bearer ${token}`}})
             .then (res => {
                 getDataAdminCabang ()
                 setShowModalAdminCabang (false)
@@ -75,7 +78,6 @@ const modal_admin_cabang = () => {
             })
         }
     }
-
 
     return (
         <>

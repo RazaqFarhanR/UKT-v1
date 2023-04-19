@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import { globalState } from '@/context/context'
 import axios from 'axios'
 const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
@@ -22,7 +22,8 @@ const modal_admin_ranting = () => {
 
     // function get data admin ranting
     const getDataAdminRanting = () => {
-        axios.get (BASE_URL + `user`)
+        const token = localStorage.getItem ('token')
+        axios.get (BASE_URL + `user`, { headers: { Authorization: `Bearer ${token}`}})
         .then (res => {
             setDataAdminRanting (res.data.data)
         })
@@ -43,6 +44,8 @@ const modal_admin_ranting = () => {
     const handleSave = (e) => {
         e.preventDefault ()
 
+        const token = localStorage.getItem ('token')
+
         let form = new FormData()
         form.append ('niw', niw)
         form.append ('name', name)
@@ -54,7 +57,7 @@ const modal_admin_ranting = () => {
         form.append ('foto', foto)
     
         if (action === 'insert') {
-            axios.post (BASE_URL + `user`, form)
+            axios.post (BASE_URL + `user`, form, { headers: { Authorization: `Bearer ${token}`}})
             .then (res => {
                 setShowModalAdminRanting (false)
                 getDataAdminRanting ()
@@ -64,7 +67,7 @@ const modal_admin_ranting = () => {
                 console.log(err.message);
             })
         } else if (action === 'update') {
-            axios.put (BASE_URL + `user/${idAdminRanting}`, form)
+            axios.put (BASE_URL + `user/${idAdminRanting}`, form, { headers: { Authorization: `Bearer ${token}`}})
             .then (res => {
                 setShowModalAdminRanting (false)
                 getDataAdminRanting ()
@@ -75,6 +78,10 @@ const modal_admin_ranting = () => {
             })
         }
     }
+
+    useEffect (() => {
+        getToken()
+    }, [])
 
     return (
         <>

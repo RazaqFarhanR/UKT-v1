@@ -1,4 +1,4 @@
-import React, { useContext } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import { globalState } from '@/context/context'
 import axios from 'axios';
 const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
@@ -18,10 +18,11 @@ const modal_penguji_cabang = () => {
     const {noWa, setNoWa} = useContext (globalState)
     const {role, setRole} = useContext (globalState)
     const {foto, setFoto} = useContext (globalState)
- 
+    
     // function get data penguji cabang
     const getDataPengujiCabang = () => {
-        axios.get (BASE_URL + `penguji`)
+        const token = localStorage.getItem ('token')
+        axios.get (BASE_URL + `penguji`, { headers: { Authorization: `Bearer ${token}`}})
         .then (res => {
             setDataPengujiCabang (res.data.data)
         })
@@ -39,6 +40,9 @@ const modal_penguji_cabang = () => {
     // function handle add and edit data
     const handleSave = (e) => {
         e.preventDefault ()
+
+        const token = localStorage.getItem ('token')
+        
         let form = new FormData()
         form.append ('niw', niw)
         form.append ('name', name)
@@ -50,7 +54,7 @@ const modal_penguji_cabang = () => {
         form.append ('foto', foto)
 
         if (action === 'insert') {
-            axios.post (BASE_URL + `penguji`, form)
+            axios.post (BASE_URL + `penguji`, form, { headers: { Authorization: `Bearer ${token}`}})
             .then (res => {
                 getDataPengujiCabang ()
                 setShowModalPengujiCabang (false)
@@ -60,7 +64,7 @@ const modal_penguji_cabang = () => {
                 console.log(err.message);
             })
         } else if (action === 'update') {
-            axios.put (BASE_URL + `penguji/${idPengujiCabang}`, form)
+            axios.put (BASE_URL + `penguji/${idPengujiCabang}`, form, { headers: { Authorization: `Bearer ${token}`}})
             .then (res => {
                 getDataPengujiCabang ()
                 setShowModalPengujiCabang (false)
@@ -71,7 +75,7 @@ const modal_penguji_cabang = () => {
             })
         }
     }
-    
+
     return (
         <>
         {showModalPengujiCabang ? (

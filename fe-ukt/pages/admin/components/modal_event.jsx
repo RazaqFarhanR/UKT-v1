@@ -1,6 +1,6 @@
 import { globalState } from '@/context/context'
 import axios from 'axios'
-import React, { useContext } from 'react'
+import React, { useContext, useEffect } from 'react'
 const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
 
 const modal_event = () => {
@@ -16,7 +16,8 @@ const modal_event = () => {
 
     // function get data event
     const getDataEvent = () => {
-        axios.get(BASE_URL + `event`)
+        const token = localStorage.getItem ('token')
+        axios.get(BASE_URL + `event`, { headers: { Authorization: `Bearer ${token}`}})
         .then (res => {
             setDataEvent (res.data.data)
         })
@@ -24,11 +25,13 @@ const modal_event = () => {
             console.log(err.message);
         })
     }
-
+    
     // function handle add and edit
     const handleSave = (e) => {
         e.preventDefault()
 
+        const token = localStorage.getItem ('token')
+        
         let form = {
             name : name,
             tanggal : date,
@@ -36,7 +39,7 @@ const modal_event = () => {
         }
 
         if (action === 'insert') {
-            axios.post (BASE_URL + `event`, form)
+            axios.post (BASE_URL + `event`, form, { headers: { Authorization: `Bearer ${token}`}})
             .then (res => {
                 setShowModalEvent (false)
                 getDataEvent ()
@@ -46,7 +49,7 @@ const modal_event = () => {
                 console.log(err.message);
             })
         } else if (action === 'update') {
-            axios.put (BASE_URL + `event/${idEvent}`, form)
+            axios.put (BASE_URL + `event/${idEvent}`, form, { headers: { Authorization: `Bearer ${token}`}})
             .then (res => {
                 setShowModalEvent (false)
                 getDataEvent ()
