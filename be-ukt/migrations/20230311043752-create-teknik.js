@@ -9,30 +9,10 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      id_siswa: {
-        type: Sequelize.INTEGER,
-        allowNull: false,
-        references: {
-          model: "siswa",
-          key: "id_siswa"
-        }
+      tipe_ukt: {
+        type: Sequelize.ENUM('UKT Jambon','UKT Hijau','UKT Putih','UKCW')
       },
-      teknik1: {
-        type: Sequelize.STRING
-      },
-      teknik2: {
-        type: Sequelize.STRING
-      },
-      teknik3: {
-        type: Sequelize.STRING
-      },
-      teknik4: {
-        type: Sequelize.STRING
-      },
-      teknik5: {
-        type: Sequelize.STRING
-      },
-      teknik6: {
+      name: {
         type: Sequelize.STRING
       },
       createdAt: {
@@ -46,6 +26,6 @@ module.exports = {
     });
   },
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable('tekniks');
+    await queryInterface.dropTable('teknik');
   }
 };

@@ -48,6 +48,9 @@ app.use("/ukt/jurus", jurus)
 //endpoint teknik
 const teknik = require('./routes/teknik');
 app.use("/ukt/teknik", teknik)
+//endpoint teknik_siswa
+const teknik_siswa = require('./routes/teknik_siswa');
+app.use("/ukt/teknik_siswa", teknik_siswa)
 
 //endpoint fisik
 const fisik = require('./routes/fisik');

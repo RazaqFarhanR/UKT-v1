@@ -16,7 +16,7 @@ const ukcw = models.ukcw;
 //endpoint ditulis disini
 
 //endpoint get data ukcw
-app.get("/", Auth, verifyRoles("admin", "super admin", "admin ranting", "pengurus cabang", "pengurus ranting", "penguji"), (req,res) => {
+app.get("/", Auth, verifyRoles("admin", "super admin", "admin ranting", "pengurus cabang", "pengurus ranting", "penguji cabang", "penguji ranting), (req,res) => {
     ukcw.findAll()
     .then(ukcw => {
         res.json({
@@ -32,7 +32,7 @@ app.get("/", Auth, verifyRoles("admin", "super admin", "admin ranting", "penguru
 })
 
 //endpoint untuk menyimpan data ukcw, METHOD POST, function create
-app.post("/", Auth, verifyRoles("admin", "super admin", "admin ranting", "pengurus cabang", "pengurus ranting", "penguji"), (req,res) =>{
+app.post("/", Auth, verifyRoles("admin", "super admin", "admin ranting", "pengurus cabang", "pengurus ranting", "penguji cabang", "penguji ranting), (req,res) =>{
     let data ={
         id_siswa: req.body.id_siswa,
         id_rayon: req.body.id_rayon,
@@ -57,7 +57,7 @@ app.post("/", Auth, verifyRoles("admin", "super admin", "admin ranting", "pengur
 }) 
 
 //endpoint untuk mengupdate data ukcw, METHOD: PUT, fuction: UPDATE
-app.put("/:id", Auth, verifyRoles("admin", "super admin", "admin ranting", "pengurus cabang", "pengurus ranting", "penguji"),(req,res) => {
+app.put("/:id", Auth, verifyRoles("admin", "super admin", "admin ranting", "pengurus cabang", "pengurus ranting", "penguji cabang", "penguji ranting),(req,res) => {
     let param = {
         id_ukcw : req.params.id
     }
@@ -85,7 +85,7 @@ app.put("/:id", Auth, verifyRoles("admin", "super admin", "admin ranting", "peng
 })
 
 //endpoint untuk menghapus data ukcw,METHOD: DELETE, function: destroy
-app.delete("/:id", Auth, verifyRoles("admin", "super admin", "admin ranting", "pengurus cabang", "pengurus ranting", "penguji"), (req,res) => {
+app.delete("/:id", Auth, verifyRoles("admin", "super admin", "admin ranting", "pengurus cabang", "pengurus ranting", "penguji cabang", "penguji ranting), (req,res) => {
     let param = {
         id_ukcw : req.params.id
     }

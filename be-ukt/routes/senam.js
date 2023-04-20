@@ -17,7 +17,7 @@ const senam = models.senam;
 //endpoint ditulis disini
 
 //endpoint get data senam
-app.get("/", Auth, verifyRoles("admin", "super admin", "admin ranting", "pengurus cabang", "pengurus ranting", "penguji"), (req,res) => {
+app.get("/", Auth, verifyRoles("admin", "super admin", "admin ranting", "pengurus cabang", "pengurus ranting", "penguji cabang", "penguji ranting), (req,res) => {
     senam.findAll()
     .then(senam => {
         res.json({
@@ -33,7 +33,7 @@ app.get("/", Auth, verifyRoles("admin", "super admin", "admin ranting", "penguru
 })
 
 //endpoint untuk menyimpan data senam, METHOD POST, function create
-app.post("/", Auth, verifyRoles("admin", "super admin", "admin ranting", "pengurus cabang", "pengurus ranting", "penguji"), (req,res) =>{
+app.post("/", Auth, verifyRoles("admin", "super admin", "admin ranting", "pengurus cabang", "pengurus ranting", "penguji cabang", "penguji ranting), (req,res) =>{
     let data ={
         id_siswa: req.body.id_siswa,
         senam69: req.body.senam69,
@@ -63,7 +63,7 @@ app.post("/", Auth, verifyRoles("admin", "super admin", "admin ranting", "pengur
 }) 
 
 //endpoint untuk mengupdate data senam, METHOD: PUT, fuction: UPDATE
-app.put("/:id", Auth, verifyRoles("admin", "super admin", "admin ranting", "pengurus cabang", "pengurus ranting", "penguji"), (req,res) => {
+app.put("/:id", Auth, verifyRoles("admin", "super admin", "admin ranting", "pengurus cabang", "pengurus ranting", "penguji cabang", "penguji ranting), (req,res) => {
     let param = {
         id_senam : req.params.id
     }
@@ -96,7 +96,7 @@ app.put("/:id", Auth, verifyRoles("admin", "super admin", "admin ranting", "peng
 })
 
 //endpoint untuk menghapus data senam,METHOD: DELETE, function: destroy
-app.delete("/:id", Auth, verifyRoles("admin", "super admin", "admin ranting", "pengurus cabang", "pengurus ranting", "penguji"), (req,res) => {
+app.delete("/:id", Auth, verifyRoles("admin", "super admin", "admin ranting", "pengurus cabang", "pengurus ranting", "penguji cabang", "penguji ranting), (req,res) => {
     let param = {
         id_senam : req.params.id
     }

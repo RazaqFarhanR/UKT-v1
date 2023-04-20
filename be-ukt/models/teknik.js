@@ -11,8 +11,8 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
-      this.belongsTo(models.siswa, {
-        foreignKey: "id_siswa",
+      this.hasMany(models.teknik_siswa, {
+        foreignKey: "id_teknik",
         as: "teknik"
       })
     }
@@ -24,13 +24,8 @@ module.exports = (sequelize, DataTypes) => {
       primaryKey: true,
       type: DataTypes.INTEGER
     },
-    id_siswa: DataTypes.INTEGER,
-    teknik1: DataTypes.STRING,
-    teknik2: DataTypes.STRING,
-    teknik3: DataTypes.STRING,
-    teknik4: DataTypes.STRING,
-    teknik5: DataTypes.STRING,
-    teknik6: DataTypes.STRING
+    tipe_ukt: DataTypes.ENUM('UKT Jambon','UKT Hijau','UKT Putih','UKCW'),
+    name: DataTypes.STRING
   }, {
     sequelize,
     modelName: 'teknik',

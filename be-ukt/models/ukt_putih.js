@@ -15,10 +15,6 @@ module.exports = (sequelize, DataTypes) => {
         foreignKey: "id_siswa",
         as: "siswa"
       })
-      this.belongsTo(models.rayon, {
-        foreignKey: "id_rayon",
-        as: "rayon"
-      })
       this.belongsTo(models.event, {
         foreignKey: "id_event",
         as: "event_putih"
@@ -34,7 +30,7 @@ module.exports = (sequelize, DataTypes) => {
     },
     id_siswa: DataTypes.INTEGER,
     id_event: DataTypes.INTEGER,
-    id_rayon: DataTypes.INTEGER,
+    rayon: DataTypes.STRING,
     keshan: DataTypes.INTEGER,
     senam: DataTypes.INTEGER,
     jurus: DataTypes.INTEGER,

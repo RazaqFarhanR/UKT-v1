@@ -19,7 +19,7 @@ const ranting = models.ranting
 //endpoint ditulis disini
 
 //endpoint get data lembar_soal
-app.get("/", Auth, verifyRoles("admin", "super admin", "admin ranting", "pengurus cabang", "pengurus ranting", "penguji"), (req,res) => {
+app.get("/", Auth, verifyRoles("admin", "super admin", "admin ranting", "pengurus cabang", "pengurus ranting", "penguji cabang", "penguji ranting), (req,res) => {
     lembar_soal.findAll({
         include: [
             {
@@ -44,7 +44,7 @@ app.get("/", Auth, verifyRoles("admin", "super admin", "admin ranting", "penguru
 })
 
 //endpoint untuk menyimpan data lembar_soal, METHOD POST, function create
-app.post("/", Auth, verifyRoles("admin", "super admin", "admin ranting", "pengurus cabang", "pengurus ranting", "penguji"), (req,res) =>{
+app.post("/", Auth, verifyRoles("admin", "super admin", "admin ranting", "pengurus cabang", "pengurus ranting", "penguji cabang", "penguji ranting), (req,res) =>{
     const id = randomUUID();
     let data ={
         id_lembar_soal: id,
@@ -65,7 +65,7 @@ app.post("/", Auth, verifyRoles("admin", "super admin", "admin ranting", "pengur
 }) 
 
 //endpoint untuk mengupdate data lembar_soal, METHOD: PUT, fuction: UPDATE
-app.put("/:id", Auth, verifyRoles("admin", "super admin", "admin ranting", "pengurus cabang", "pengurus ranting", "penguji"), (req,res) => {
+app.put("/:id", Auth, verifyRoles("admin", "super admin", "admin ranting", "pengurus cabang", "pengurus ranting", "penguji cabang", "penguji ranting), (req,res) => {
     let param = {
         id_lembar_soal : req.params.id
     }
@@ -87,7 +87,7 @@ app.put("/:id", Auth, verifyRoles("admin", "super admin", "admin ranting", "peng
 })
 
 //endpoint untuk menghapus data lembar_soal,METHOD: DELETE, function: destroy
-app.delete("/:id", Auth, verifyRoles("admin", "super admin", "admin ranting", "pengurus cabang", "pengurus ranting", "penguji"), (req,res) => {
+app.delete("/:id", Auth, verifyRoles("admin", "super admin", "admin ranting", "pengurus cabang", "pengurus ranting", "penguji cabang", "penguji ranting), (req,res) => {
     let param = {
         id_lembar_soal : req.params.id
     }
