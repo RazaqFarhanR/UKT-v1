@@ -234,15 +234,11 @@ app.post("/auth", async (req, res) => {
         const match = await bcrypt.compare(req.body.password, result[0].password);
         if (!match) return res.status(400).json({ msg: "password salah" });
         if (result[0].id_role === "penguji ranting" || "pengurus cabang") {
-          const id_user = result[0].id_user;
-          const id_role = result[0].id_role;
+          const idUser = result[0].id_penguji;
+          const role = result[0].id_role;
           const id = randomUUID();
-          let payload = JSON.stringify({
-            id_user: id_user,
-            id_role: id_role,
-          });
           // generate token based on payload and secret_key
-          let localToken = jwt.sign(payload, SECRET_KEY);
+          let localToken = jwt.sign({ idUser, role }, process.env.ACCESS_TOKEN_SECRET);
   
           const data = await pengurus.findAll({
             where: {
