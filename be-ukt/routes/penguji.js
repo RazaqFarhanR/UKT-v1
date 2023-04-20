@@ -47,7 +47,7 @@ let upload2 = multer({ storage: storage });
 
 //endpoint ditulis disini
 //endpoint get data penguji
-app.get("/", Auth, verifyRoles("admin", "super admin", "admin ranting", "pengurus cabang", "pengurus ranting", "penguji"), (req, res) => {
+app.get("/", Auth, verifyRoles("admin", "super admin", "admin ranting", "pengurus cabang", "pengurus ranting", "penguji cabang", "penguji ranting), (req, res) => {
   const imagePath = "http://localhost:8080/image/"
 
   penguji

@@ -15,10 +15,6 @@ module.exports = (sequelize, DataTypes) => {
         foreignKey: "id_role",
         as: "siswa_role"
       })
-      this.belongsTo(models.rayon, {
-        foreignKey: "id_rayon",
-        as: "siswa_rayon",
-      })
       this.belongsTo(models.ranting, {
         foreignKey: "id_ranting",
         as: "siswa_ranting"
@@ -38,10 +34,6 @@ module.exports = (sequelize, DataTypes) => {
       this.hasMany(models.fisik, {
         foreignKey: "id_siswa",
         as: "fisik"
-      })
-      this.hasMany(models.teknik, {
-        foreignKey: "id_siswa",
-        as: "teknik"
       })
       this.hasMany(models.ukcw, {
         foreignKey: "id_siswa",
@@ -79,6 +71,10 @@ module.exports = (sequelize, DataTypes) => {
         foreignKey: "id_siswa",
         as: "jurus_ukcw_siswa"
       })
+      this.hasMany(models.teknik_siswa, {
+        foreignKey: "id_siswa",
+        as: "teknik_siswa"
+      })
     }
   }
   siswa.init({
@@ -93,13 +89,10 @@ module.exports = (sequelize, DataTypes) => {
     name: DataTypes.STRING,
     id_role: DataTypes.STRING,
     jenis_kelamin: DataTypes.ENUM('pria', 'perempuan'),
-    jenis_latihan: DataTypes.ENUM('Reguler','Privat'),
+    jenis_latihan: DataTypes.ENUM('Remaja','Privat'),
     tipe_ukt: DataTypes.ENUM('UKT Jambon','UKT Hijau','UKT Putih','UKCW'),
     id_ranting: DataTypes.INTEGER,
-    id_rayon: {
-      type:DataTypes.INTEGER,
-      allowNull: true
-    },
+    rayon: DataTypes.STRING,
     tingkatan: DataTypes.STRING
   }, {
     sequelize,

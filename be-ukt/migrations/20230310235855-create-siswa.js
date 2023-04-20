@@ -48,13 +48,8 @@ module.exports = {
           key: "id_ranting"
         }
       },
-      id_rayon: {
-        type: Sequelize.INTEGER,
-        allowNull: true,
-        references: {
-          model: "rayon",
-          key: "id_rayon"
-        }
+      rayon: {
+        type: Sequelize.STRING
       },
       tingkatan: {
         type: Sequelize.STRING

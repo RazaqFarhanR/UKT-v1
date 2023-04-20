@@ -12,17 +12,17 @@ app.use(bodyParser.urlencoded({extended: true}));
 
 //import model
 const models = require('../models/index');
-const teknik = models.teknik;
+const teknik_siswa = models.teknik_siswa;
 
 //endpoint ditulis disini
 
-//endpoint get data teknik
+//endpoint get data teknik_siswa
 app.get("/", Auth, verifyRoles("admin", "super admin", "admin ranting", "pengurus cabang", "pengurus ranting", "penguji cabang", "penguji ranting"), (req,res) => {
-    teknik.findAll()
-    .then(teknik => {
+    teknik_siswa.findAll()
+    .then(teknik_siswa => {
         res.json({
-            count: teknik.length,
-            data: teknik
+            count: teknik_siswa.length,
+            data: teknik_siswa
         })
     })
     .catch(error => {
@@ -32,13 +32,14 @@ app.get("/", Auth, verifyRoles("admin", "super admin", "admin ranting", "penguru
     })    
 })
 
-//endpoint untuk menyimpan data teknik, METHOD POST, function create
+//endpoint untuk menyimpan data teknik_siswa, METHOD POST, function create
 app.post("/", Auth, verifyRoles("admin", "super admin", "admin ranting", "pengurus cabang", "pengurus ranting", "penguji cabang", "penguji ranting"), (req,res) =>{
-    let data ={        
-        tipe_ukt: req.body.tipe_ukt,
-        name: req.body.name
+    let data ={     
+        id_teknik: req.body.id_teknik,
+        id_siswa: req.body.id_siswa,
+        predikat: req.body.predikat
     }
-    teknik.create(data)
+    teknik_siswa.create(data)
     .then(result => {
         res.json({
             message: "data has been inserted"
@@ -51,16 +52,17 @@ app.post("/", Auth, verifyRoles("admin", "super admin", "admin ranting", "pengur
     })
 }) 
 
-//endpoint untuk mengupdate data teknik, METHOD: PUT, fuction: UPDATE
+//endpoint untuk mengupdate data teknik_siswa, METHOD: PUT, fuction: UPDATE
 app.put("/:id", Auth, verifyRoles("admin", "super admin", "admin ranting", "pengurus cabang", "pengurus ranting", "penguji cabang", "penguji ranting"), (req,res) => {
     let param = {
-        id_teknik : req.params.id
+        id_teknik_siswa : req.params.id
     }
-    let data ={        
-        tipe_ukt: req.body.tipe_ukt,
-        name: req.body.name
+    let data ={     
+        id_teknik: req.body.id_teknik,
+        id_siswa: req.body.id_siswa,
+        predikat: req.body.predikat
     }
-    teknik.update(data, {where: param})
+    teknik_siswa.update(data, {where: param})
     .then(result => {
         res.json({
             message : "data has been updated"
@@ -73,12 +75,12 @@ app.put("/:id", Auth, verifyRoles("admin", "super admin", "admin ranting", "peng
     })
 })
 
-//endpoint untuk menghapus data teknik,METHOD: DELETE, function: destroy
+//endpoint untuk menghapus data teknik_siswa,METHOD: DELETE, function: destroy
 app.delete("/:id", Auth, verifyRoles("admin", "super admin", "admin ranting", "pengurus cabang", "pengurus ranting", "penguji cabang", "penguji ranting"), (req,res) => {
     let param = {
-        id_teknik : req.params.id
+        id_teknik_siswa : req.params.id
     }
-    teknik.destroy({where: param})
+    teknik_siswa.destroy({where: param})
     .then(result => {
         res.json({
             massege : "data has been deleted"
