@@ -50,6 +50,38 @@ app.get("/", Auth, verifyRoles("admin", "super admin", "admin ranting", "penguru
         })
     })    
 })
+app.get("/event/:id", Auth, verifyRoles("admin", "super admin", "admin ranting", "pengurus cabang", "pengurus ranting", "penguji cabang", "penguji ranting"), (req,res) => {
+    siswa.findAll({       
+        where: {
+            id_event: req.params.id
+        }, 
+        include: [
+            {
+                model: ranting,
+                as: "siswa_ranting",
+                attributes: ['name'],
+                required: false,
+            },
+            {
+                model: event,
+                as: "siswa_event",
+                attributes: ['name'],
+                required: false
+            },
+        ]
+    })
+    .then(siswa => {
+        res.json({
+            count: siswa.length,
+            data: siswa
+        })
+    })
+    .catch(error => {
+        res.json({
+            message: error.message
+        })
+    })    
+})
 
 app.get("/ranting/:id", Auth, verifyRoles("admin", "super admin", "admin ranting", "pengurus cabang", "pengurus ranting", "penguji cabang", "penguji ranting"), (req,res) => {
     const id_ranting = req.params.id;

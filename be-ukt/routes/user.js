@@ -146,7 +146,7 @@ app.post("/", Auth, verifyRoles("super admin", "admin"), upload2.single("foto"),
   const hash = await bcrypt.hash(req.body.password, salt);
 
   let data = {
-    NIW: req.body.niw,
+    NIW: req.body.NIW,
     username: req.body.username,
     name: req.body.name,
     id_role: req.body.id_role,
@@ -189,7 +189,7 @@ app.put("/:id", Auth, verifyRoles("admin", "super admin", "admin ranting"), uplo
         no_wa: req.body.no_wa,
       };
       if (req.file) {
-        const imagePath = "C:/Users/RAFI DUTA/Documents/KODING/REACT JS/UKT/be-ukt/image/" + result[0].foto;
+        const imagePath = "D:/Project/UKT/be-ukt/image" + result[0].foto;
         fs.unlink(imagePath, (err) => {
           if (err) {
             console.error(err);

@@ -25,7 +25,8 @@ app.get(
     "admin ranting",
     "pengurus cabang",
     "pengurus ranting",
-    "penguji"
+    "penguji cabang",
+    "penguji ranting"
   ),
   (req, res) => {
     standar_fisik
