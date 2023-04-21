@@ -17,7 +17,7 @@ module.exports = (sequelize, DataTypes) => {
       })
       this.belongsTo(models.teknik, {
         foreignKey: "id_teknik",
-        as: "teknik"
+        as: "siswa_teknik"
       })
     }
   }

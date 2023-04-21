@@ -34,7 +34,7 @@ module.exports = (sequelize, DataTypes) => {
       id_ranting: DataTypes.INTEGER,
       foto: DataTypes.STRING,
       password: DataTypes.STRING,
-      no_wa: DataTypes.INTEGER
+      no_wa: DataTypes.STRING
     },
     {
       sequelize,
