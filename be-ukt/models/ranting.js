@@ -27,10 +27,6 @@ module.exports = (sequelize, DataTypes) => {
         foreignKey: "id_ranting",
         as: "siswa_ranting"
       })
-      this.hasMany(models.rayon, {
-        foreignKey: "id_ranting",
-        as: "rayon_ranting"
-      })
       this.hasMany(models.lembar_soal, {
         foreignKey: "id_ranting",
         as: "lembar_ranting"

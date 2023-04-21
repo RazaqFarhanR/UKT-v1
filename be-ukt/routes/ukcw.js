@@ -35,7 +35,7 @@ app.get("/", Auth, verifyRoles("admin", "super admin", "admin ranting", "penguru
 app.post("/", Auth, verifyRoles("admin", "super admin", "admin ranting", "pengurus cabang", "pengurus ranting", "penguji cabang", "penguji ranting"), (req,res) =>{
     let data ={
         id_siswa: req.body.id_siswa,
-        id_rayon: req.body.id_rayon,
+        rayon: req.body.rayon,
         keshan: req.body.keshan,
         senam: req.body.senam,
         jurus: req.body.jurus,
@@ -63,7 +63,7 @@ app.put("/:id", Auth, verifyRoles("admin", "super admin", "admin ranting", "peng
     }
     let data = {
         id_siswa: req.body.id_siswa,
-        id_rayon: req.body.id_rayon,
+        rayon: req.body.rayon,
         keshan: req.body.keshan,
         senam: req.body.senam,
         jurus: req.body.jurus,

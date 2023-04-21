@@ -25,13 +25,9 @@ module.exports = {
           key: "id_event"
         }
       },
-      id_rayon: {
-        type: Sequelize.INTEGER,
+      rayon: {
+        type: Sequelize.STRING,
         allowNull: false,
-        references: {
-          model: "rayon",
-          key: "id_rayon"
-        }
       },
       keshan: {
         type: Sequelize.INTEGER

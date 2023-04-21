@@ -47,7 +47,7 @@ module.exports = (sequelize, DataTypes) => {
     username: DataTypes.STRING,
     foto: DataTypes.STRING,
     password: DataTypes.STRING,
-    no_wa: DataTypes.INTEGER
+    no_wa: DataTypes.STRING
   }, {
     sequelize,
     modelName: 'pengurus',

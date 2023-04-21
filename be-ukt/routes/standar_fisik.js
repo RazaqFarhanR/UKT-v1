@@ -25,7 +25,8 @@ app.get(
     "admin ranting",
     "pengurus cabang",
     "pengurus ranting",
-    "penguji"
+    "penguji cabang",
+    "penguji ranting"
   ),
   (req, res) => {
     standar_fisik
@@ -63,158 +64,58 @@ app.get("/jenis_latihan/:id", Auth,
         },
       })
       .then((standar_fisik) => {
-        const data = [];
-        const mft = [];
-        const push_up = [];
-        const spir_perut_atas = [];
-        const spir_perut_bawah = [];
-        const spir_dada = [];
-        const plank = [];
-
-        let mftPeserta = [
-          {
-            tipe_peserta: "mft_remaja_laki_laki",
-          },
-          {
-            tipe_peserta: "mft_remaja_perempuan",
-          },
-          {
-            tipe_peserta: "mft_privat_laki_laki",
-          },
-          {
-            tipe_peserta: "mft_privat_perempuan",
-          },
-        ]
-        let pushUpPeserta = [
-          {
-            tipe_peserta: "pushup_remaja_laki_laki",
-          },
-          {
-            tipe_peserta: "pushup_remaja_perempuan",
-          },
-          {
-            tipe_peserta: "pushup_privat_laki_laki",
-          },
-          {
-            tipe_peserta: "pushup_privat_perempuan",
-          },
-        ]
-        let spirPerutAtasPeserta = [
-          {
-            tipe_peserta: "spirperutatas_remaja_laki_laki",
-          },
-          {
-            tipe_peserta: "spirperutatas_remaja_perempuan",
-          },
-          {
-            tipe_peserta: "spirperutatas_privat_laki_laki",
-          },
-          {
-            tipe_peserta: "spirperutatas_privat_perempuan",
-          },
-        ]
-        let spirPerutBawahPeserta = [
-          {
-            tipe_peserta: "spirperutbawah_remaja_laki_laki",
-          },
-          {
-            tipe_peserta: "spirperutbawah_remaja_perempuan",
-          },
-          {
-            tipe_peserta: "spirperutbawah_privat_laki_laki",
-          },
-          {
-            tipe_peserta: "spirperutbawah_privat_perempuan",
-          },
-        ]
-        let spirDadaPeserta = [
-          {
-            tipe_peserta: "spirdada_remaja_laki_laki",
-          },
-          {
-            tipe_peserta: "spirdada_remaja_perempuan",
-          },
-          {
-            tipe_peserta: "spirdada_privat_laki_laki",
-          },
-          {
-            tipe_peserta: "spirdada_privat_perempuan",
-          },
-        ]
-        let plankPeserta = [
-          {
-            tipe_peserta: "plank_remaja_laki_laki",
-          },
-          {
-            tipe_peserta: "plank_remaja_perempuan",
-          },
-          {
-            tipe_peserta: "plank_privat_laki_laki",
-          },
-          {
-            tipe_peserta: "plank_privat_perempuan",
-          },
-        ]
-        for (let i = 0; i < 4; i++) {
-          console.log(standar_fisik[i].mft);
-          const mft_peserta = mftPeserta[i].tipe_peserta;
-          const push_up_peserta = pushUpPeserta[i].tipe_peserta;
-          const spir_perut_atas_peserta = spirPerutAtasPeserta[i].tipe_peserta;
-          const spir_perut_bawah_peserta = spirPerutBawahPeserta[i].tipe_peserta;
-          const spir_dada_peserta = spirDadaPeserta[i].tipe_peserta;
-          const plank_peserta = plankPeserta[i].tipe_peserta;
-
-          const newMft = {};
-          const newPushUp = {};
-          const newSpirPerutAtas = {};
-          const newSpirPerutBawah = {};
-          const newSpirDada = {};
-          const newPlank = {};
-
-          newMft[mft_peserta] = standar_fisik[i].mft;
-          newPushUp[push_up_peserta] = standar_fisik[i].push_up;
-          newSpirPerutAtas[spir_perut_atas_peserta] = standar_fisik[i].spir_perut_atas;
-          newSpirPerutBawah[spir_perut_bawah_peserta] = standar_fisik[i].spir_perut_bawah;
-          newSpirDada[spir_dada_peserta] = standar_fisik[i].spir_dada;
-          newPlank[plank_peserta] = standar_fisik[i].plank;
-          
-          data.push(newMft);
-          data.push(newPushUp);
-          data.push(newSpirPerutAtas);
-          data.push(newSpirPerutBawah);
-          data.push(newSpirDada);
-          data.push(newPlank);
+        let mft = {
+          jenis: "mft",
+          Remaja_lk: standar_fisik[0].mft,
+          Remaja_prpn: standar_fisik[1].mft,
+          Privat_lk: standar_fisik[2].mft,
+          Privat_prpn: standar_fisik[3].mft,
+        }
+        let pushUp = {
+          jenis: "push_up",
+          Remaja_lk: standar_fisik[0].push_up ,
+          Remaja_prpn: standar_fisik[1].push_up,
+          Privat_lk: standar_fisik[2].push_up,
+          Privat_prpn: standar_fisik[3].push_up,
+        }
+        let spirPerutAtas = {
+          jenis: "spir_perut_atas",
+          Remaja_lk: standar_fisik[0].spir_perut_atas ,
+          Remaja_prpn: standar_fisik[1].spir_perut_atas,
+          Privat_lk: standar_fisik[2].spir_perut_atas,
+          Privat_prpn: standar_fisik[3].spir_perut_atas,
+        }
+        let spirPerutBawah = {
+          jenis: "spir_perut_bawah",
+          Remaja_lk: standar_fisik[0].spir_perut_bawah,
+          Remaja_prpn: standar_fisik[1].spir_perut_bawah,
+          Privat_lk: standar_fisik[2].spir_perut_bawah,
+          Privat_prpn: standar_fisik[3].spir_perut_bawah,
+        }
+        let spirDada = {
+          jenis: "spir_dada",
+          Remaja_lk: standar_fisik[0].spir_dada,
+          Remaja_prpn: standar_fisik[1].spir_dada,
+          Privat_lk: standar_fisik[2].spir_dada,
+          Privat_prpn: standar_fisik[3].spir_dada,
+        }
+        let plank = {
+          jenis: "plank",
+          Remaja_lk: standar_fisik[0].plank,
+          Remaja_prpn: standar_fisik[1].plank,
+          Privat_lk: standar_fisik[2].plank,
+          Privat_prpn: standar_fisik[3].plank,
         }
         const response = {
             mft: mft,
-            push_up: push_up,
-            spir_perut_atas: spir_perut_atas,
-            spir_perut_bawah: spir_perut_bawah,
-            spir_dada: spir_dada,
+            push_up: pushUp,
+            spir_perut_atas: spirPerutAtas,
+            spir_perut_bawah: spirPerutBawah,
+            spir_dada: spirDada,
             plank: plank,
         }
-        const order = [
-            'mft',
-            'pushup',
-            'spirperutatas',
-            'spirperutbawah',
-            'spirdada',
-            'plank'
-          ];
           
-          // define a custom sort function
-          const customSort = (a, b) => {
-            const aKey = Object.keys(a)[0];
-            const bKey = Object.keys(b)[0];
-            return order.indexOf(aKey.split('_')[0]) - order.indexOf(bKey.split('_')[0]);
-          };
-          
-          // sort the data array using the custom sort function
-          
-        res.json({
-          count: standar_fisik.length,
-          data: data.sort(customSort)
-        });
+        res.json(response);
       })
       .catch((error) => {
         res.json({
@@ -272,7 +173,8 @@ app.put(
     "admin ranting",
     "pengurus cabang",
     "pengurus ranting",
-    "penguji"
+    "penguji cabang",
+    "penguji ranting"
   ),
   (req, res) => {
     let data = [
@@ -327,7 +229,8 @@ app.put(
     "admin ranting",
     "pengurus cabang",
     "pengurus ranting",
-    "penguji"
+    "penguji cabang",
+    "penguji ranting"
   ),
   (req, res) => {
     let data = [
@@ -382,7 +285,8 @@ app.put(
     "admin ranting",
     "pengurus cabang",
     "pengurus ranting",
-    "penguji"
+    "penguji cabang",
+    "penguji ranting"
   ),
   (req, res) => {
     let data = [
@@ -437,7 +341,8 @@ app.put(
     "admin ranting",
     "pengurus cabang",
     "pengurus ranting",
-    "penguji"
+    "penguji cabang",
+    "penguji ranting"
   ),
   (req, res) => {
     let data = [
@@ -492,7 +397,8 @@ app.put(
     "admin ranting",
     "pengurus cabang",
     "pengurus ranting",
-    "penguji"
+    "penguji cabang",
+    "penguji ranting"
   ),
   (req, res) => {
     let data = [
@@ -547,7 +453,8 @@ app.put(
     "admin ranting",
     "pengurus cabang",
     "pengurus ranting",
-    "penguji"
+    "penguji cabang",
+    "penguji ranting"
   ),
   (req, res) => {
     let data = [
@@ -602,7 +509,8 @@ app.put(
     "admin ranting",
     "pengurus cabang",
     "pengurus ranting",
-    "penguji"
+    "penguji cabang",
+    "penguji ranting"
   ),
   (req, res) => {
     let param = {
@@ -643,7 +551,8 @@ app.delete(
     "admin ranting",
     "pengurus cabang",
     "pengurus ranting",
-    "penguji"
+    "penguji cabang",
+    "penguji ranting"
   ),
   (req, res) => {
     let param = {

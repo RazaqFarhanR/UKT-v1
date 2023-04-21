@@ -2,12 +2,20 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable('ukcw', {
-      id_ukcw: {
+    await queryInterface.createTable('jurus_siswa', {
+      id_jurus_siswa: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
         type: Sequelize.INTEGER
+      },
+      id_jurus: {
+        type: Sequelize.INTEGER,
+        allowNull: false,
+        references: {
+          model: "jurus",
+          key: "id_jurus"
+        }
       },
       id_siswa: {
         type: Sequelize.INTEGER,
@@ -17,35 +25,8 @@ module.exports = {
           key: "id_siswa"
         }
       },
-      id_event: {
-        type: Sequelize.INTEGER,
-        allowNull: false,
-        references: {
-          model: "event",
-          key: "id_event"
-        }
-      },
-      rayon: {
-        type: Sequelize.STRING,
-        allowNull: false,
-      },
-      keshan: {
-        type: Sequelize.INTEGER
-      },
-      senam: {
-        type: Sequelize.INTEGER
-      },
-      jurus: {
-        type: Sequelize.INTEGER
-      },
-      fisik: {
-        type: Sequelize.INTEGER
-      },
-      teknik: {
-        type: Sequelize.INTEGER
-      },
-      sambung: {
-        type: Sequelize.INTEGER
+      predikat: {
+        type: Sequelize.BOOLEAN
       },
       createdAt: {
         allowNull: false,
@@ -58,6 +39,6 @@ module.exports = {
     });
   },
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable('ukcw');
+    await queryInterface.dropTable('jurus_siswa');
   }
 };
