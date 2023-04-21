@@ -181,10 +181,12 @@ app.put("/:id", Auth, verifyRoles("admin", "super admin", "admin ranting"), uplo
     });
     if (result.length > 0) {
       let data = {
+        NIW: req.body.niw,
         username: req.body.username,
         name: req.body.name,
         id_role: req.body.id_role,
         id_ranting: req.body.id_ranting,
+        foto: req.file.filename,
         password: hash,
         no_wa: req.body.no_wa,
       };

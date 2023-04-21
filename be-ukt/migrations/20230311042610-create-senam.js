@@ -9,49 +9,11 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      id_siswa: {
-        type: Sequelize.INTEGER,
-        allowNull: false,
-        references: {
-          model: "siswa",
-          key: "id_siswa"
-        }
+      tipe_ukt: {
+        type: Sequelize.ENUM('UKT Jambon','UKT Hijau','UKT Putih','UKCW')
       },
-      senam69: {
-        type: Sequelize.BOOLEAN
-      },
-      senam23: {
-        type: Sequelize.BOOLEAN
-      },
-      senam14: {
-        type: Sequelize.BOOLEAN
-      },
-      senam90: {
-        type: Sequelize.BOOLEAN
-      },
-      senam61: {
-        type: Sequelize.BOOLEAN
-      },
-      senam49: {
-        type: Sequelize.BOOLEAN
-      },
-      senam59: {
-        type: Sequelize.BOOLEAN
-      },
-      senam64: {
-        type: Sequelize.BOOLEAN
-      },
-      senam12: {
-        type: Sequelize.BOOLEAN
-      },
-      senam33: {
-        type: Sequelize.BOOLEAN
-      },
-      senam44: {
-        type: Sequelize.BOOLEAN
-      },
-      senam11: {
-        type: Sequelize.BOOLEAN
+      name: {
+        type: Sequelize.STRING
       },
       createdAt: {
         allowNull: false,

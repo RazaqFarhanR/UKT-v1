@@ -199,7 +199,7 @@ app.put("/:id", Auth, verifyRoles("admin", "super admin", "admin ranting", "peng
         jenis_latihan: req.body.jenis_latihan,
         jenis_kelamin: req.body.jenis_kelamin,
         id_ranting: req.body.id_ranting,
-        id_rayon: req.body.id_rayon,
+        rayon: req.body.rayon,
         tingkatan: req.body.tingkatan,
     }
     siswa.update(data, {where: param})

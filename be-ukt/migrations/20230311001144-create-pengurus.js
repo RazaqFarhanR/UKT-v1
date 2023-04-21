@@ -48,7 +48,7 @@ module.exports = {
         allowNull: true
       },
       no_wa: {
-        type: Sequelize.INTEGER
+        type: Sequelize.STRING
       },
       createdAt: {
         allowNull: false,

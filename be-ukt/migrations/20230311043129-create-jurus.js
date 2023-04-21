@@ -9,16 +9,11 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      id_siswa: {
-        type: Sequelize.INTEGER,
-        allowNull: false,
-        references: {
-          model: "siswa",
-          key: "id_siswa"
-        }
+      tipe_ukt: {
+        type: Sequelize.ENUM('UKT Jambon','UKT Hijau','UKT Putih','UKCW')
       },
-      jurus1A: {
-        type: Sequelize.BOOLEAN
+      name: {
+        type: Sequelize.STRING
       },
       createdAt: {
         allowNull: false,
