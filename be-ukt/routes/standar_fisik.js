@@ -62,6 +62,7 @@ app.get("/jenis_latihan/:id", Auth,
         where: {
           tipe_ukt: req.params.id,
         },
+        order: [["peserta", "ASC"]],
       })
       .then((standar_fisik) => {
         let mft = {
@@ -116,6 +117,216 @@ app.get("/jenis_latihan/:id", Auth,
         }
           
         res.json(response);
+      })
+      .catch((error) => {
+        res.json({
+          message: error.message,
+        });
+        });
+    }
+);
+app.get("/jenis_latihan/mft/:id", Auth,
+  verifyRoles(
+    "admin",
+    "super admin",
+    "admin ranting",
+    "pengurus cabang",
+    "pengurus ranting",
+    "penguji cabang",
+    "penguji ranting"
+  ),
+  (req, res) => {
+    standar_fisik
+      .findAll({
+        where: {
+          tipe_ukt: req.params.id,
+        },
+        order: [["peserta", "ASC"]],
+        attributes: ['mft']
+      })
+      .then((standar_fisik) => { 
+        res.json({
+          jenis: "mft",
+          Remaja_lk: standar_fisik[0].mft,
+          Remaja_prpn: standar_fisik[1].mft,
+          Privat_lk: standar_fisik[2].mft,
+          Privat_prpn: standar_fisik[3].mft,
+        });
+      })
+      .catch((error) => {
+        res.json({
+          message: error.message,
+        });
+        });
+    }
+);
+app.get("/jenis_latihan/push_up/:id", Auth,
+  verifyRoles(
+    "admin",
+    "super admin",
+    "admin ranting",
+    "pengurus cabang",
+    "pengurus ranting",
+    "penguji cabang",
+    "penguji ranting"
+  ),
+  (req, res) => {
+    standar_fisik
+      .findAll({
+        where: {
+          tipe_ukt: req.params.id,
+        },
+        order: [["peserta", "ASC"]],
+        attributes: ['push_up']
+      })
+      .then((standar_fisik) => { 
+        res.json({
+          jenis: "push_up",
+          Remaja_lk: standar_fisik[0].push_up ,
+          Remaja_prpn: standar_fisik[1].push_up,
+          Privat_lk: standar_fisik[2].push_up,
+          Privat_prpn: standar_fisik[3].push_up,
+        });
+      })
+      .catch((error) => {
+        res.json({
+          message: error.message,
+        });
+        });
+    }
+);
+app.get("/jenis_latihan/spir_perut_atas/:id", Auth,
+  verifyRoles(
+    "admin",
+    "super admin",
+    "admin ranting",
+    "pengurus cabang",
+    "pengurus ranting",
+    "penguji cabang",
+    "penguji ranting"
+  ),
+  (req, res) => {
+    standar_fisik
+      .findAll({
+        where: {
+          tipe_ukt: req.params.id,
+        },
+        order: [["peserta", "ASC"]],
+        attributes: ['spir_perut_atas']
+      })
+      .then((standar_fisik) => { 
+        res.json({
+          jenis: "spir_perut_atas",
+          Remaja_lk: standar_fisik[0].spir_perut_atas ,
+          Remaja_prpn: standar_fisik[1].spir_perut_atas,
+          Privat_lk: standar_fisik[2].spir_perut_atas,
+          Privat_prpn: standar_fisik[3].spir_perut_atas,
+        });
+      })
+      .catch((error) => {
+        res.json({
+          message: error.message,
+        });
+        });
+    }
+);
+app.get("/jenis_latihan/spir_perut_bawah/:id", Auth,
+  verifyRoles(
+    "admin",
+    "super admin",
+    "admin ranting",
+    "pengurus cabang",
+    "pengurus ranting",
+    "penguji cabang",
+    "penguji ranting"
+  ),
+  (req, res) => {
+    standar_fisik
+      .findAll({
+        where: {
+          tipe_ukt: req.params.id,
+        },
+        order: [["peserta", "ASC"]],
+        attributes: ['spir_perut_bawah']
+      })
+      .then((standar_fisik) => { 
+        res.json({
+          jenis: "spir_perut_bawah",
+          Remaja_lk: standar_fisik[0].spir_perut_bawah,
+          Remaja_prpn: standar_fisik[1].spir_perut_bawah,
+          Privat_lk: standar_fisik[2].spir_perut_bawah,
+          Privat_prpn: standar_fisik[3].spir_perut_bawah,
+        });
+      })
+      .catch((error) => {
+        res.json({
+          message: error.message,
+        });
+        });
+    }
+);
+app.get("/jenis_latihan/spir_dada/:id", Auth,
+  verifyRoles(
+    "admin",
+    "super admin",
+    "admin ranting",
+    "pengurus cabang",
+    "pengurus ranting",
+    "penguji cabang",
+    "penguji ranting"
+  ),
+  (req, res) => {
+    standar_fisik
+      .findAll({
+        where: {
+          tipe_ukt: req.params.id,
+        },
+        order: [["peserta", "ASC"]],
+        attributes: ['spir_dada']
+      })
+      .then((standar_fisik) => { 
+        res.json({
+          jenis: "spir_dada",
+          Remaja_lk: standar_fisik[0].spir_dada,
+          Remaja_prpn: standar_fisik[1].spir_dada,
+          Privat_lk: standar_fisik[2].spir_dada,
+          Privat_prpn: standar_fisik[3].spir_dada,
+        });
+      })
+      .catch((error) => {
+        res.json({
+          message: error.message,
+        });
+        });
+    }
+);
+app.get("/jenis_latihan/plank/:id", Auth,
+  verifyRoles(
+    "admin",
+    "super admin",
+    "admin ranting",
+    "pengurus cabang",
+    "pengurus ranting",
+    "penguji cabang",
+    "penguji ranting"
+  ),
+  (req, res) => {
+    standar_fisik
+      .findAll({
+        where: {
+          tipe_ukt: req.params.id,
+        },
+        order: [["peserta", "ASC"]],
+        attributes: ['plank']
+      })
+      .then((standar_fisik) => { 
+        res.json({
+          jenis: "plank",
+          Remaja_lk: standar_fisik[0].plank,
+          Remaja_prpn: standar_fisik[1].plank,
+          Privat_lk: standar_fisik[2].plank,
+          Privat_prpn: standar_fisik[3].plank,
+        });
       })
       .catch((error) => {
         res.json({
