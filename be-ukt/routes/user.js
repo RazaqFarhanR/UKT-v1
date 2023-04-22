@@ -136,7 +136,8 @@ app.post("/", Auth, verifyRoles("super admin", "admin"), upload2.single("foto"),
 
 //endpoint untuk mengupdate data user, METHOD: PUT, fuction: UPDATE
 app.put("/:id", Auth, verifyRoles("admin", "super admin", "admin ranting"), upload2.single("foto"), async (req, res) => {
-  const hash = await bcrypt.hash(req.body.password, salt);
+  const password = req.body.password != null ? req.body.password : "freestyle"
+  const hash = await bcrypt.hash(password, salt);
   try {
     let param = {
       id_user: req.params.id,
@@ -155,8 +156,17 @@ app.put("/:id", Auth, verifyRoles("admin", "super admin", "admin ranting"), uplo
         password: hash,
         no_wa: req.body.no_wa,
       };
+      let dataNoPsw = {
+        NIW: req.body.niw,
+        username: req.body.username,
+        name: req.body.name,
+        id_role: req.body.id_role,
+        id_ranting: req.body.id_ranting,
+        foto: req.file.filename,
+        no_wa: req.body.no_wa,
+      };
       if (req.file) {
-        const imagePath = "C:/Users/RAFI DUTA/Documents/KODING/REACT JS/UKT/be-ukt/image/" + result[0].foto;
+        const imagePath = localStorage + "/" +  result[0].foto;
         fs.unlink(imagePath, (err) => {
           if (err) {
             console.error(err);
@@ -167,7 +177,7 @@ app.put("/:id", Auth, verifyRoles("admin", "super admin", "admin ranting"), uplo
         data.foto = req.file.filename;
       }
       user
-        .update(data, { where: param })
+        .update(password != null ? data : dataNoPsw, { where: param })
         .then((result) => {
           res.json({
             message: "data has been updated",
