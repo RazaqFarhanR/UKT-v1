@@ -30,7 +30,7 @@ const localStorage = process.env.LOCAL_STORAGE
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
     // set file storage
-    cb(null, localStorage);
+    cb(null, "D:/Project/UKT/be-ukt/image");
   },
   filename: (req, file, cb) => {
     // generate file name
@@ -106,12 +106,47 @@ app.get("/:id", Auth, verifyRoles("super admin", "admin"),(req, res) => {
     });
 });
 
+// endpoint get data user by id
+app.get("/:id", Auth, verifyRoles("super admin", "admin"),(req, res) => {
+  const imagePath = "http://localhost:8080/image/";
+  user
+    .findAll({
+      where:{
+        id_user: req.params.id
+      },
+      include: [
+        {
+          model: ranting,
+          as: "user_ranting",
+          attributes: ['name'],
+          required: false,
+        }
+      ]
+    })
+    .then((user) => {
+      // Map over the tipe_kamar array and add the image URL to each object
+      const user_with_image_url = user.map((tk) => ({
+        ...tk.toJSON(),
+        image: `${imagePath}${tk.foto}`,
+      }));
+      res.json({
+        count: user_with_image_url.length,
+        data: user_with_image_url,
+      });
+    })
+    .catch((error) => {
+      res.json({
+        message: error.message,
+      });
+    }); 
+});
+
 //endpoint untuk menyimpan data user, METHOD POST, function create
 app.post("/", Auth, verifyRoles("super admin", "admin"), upload2.single("foto"), async (req, res) => {
   const hash = await bcrypt.hash(req.body.password, salt);
 
   let data = {
-    NIW: req.body.niw,
+    NIW: req.body.NIW,
     username: req.body.username,
     name: req.body.name,
     id_role: req.body.id_role,
@@ -167,6 +202,7 @@ app.put("/:id", Auth, verifyRoles("admin", "super admin", "admin ranting"), uplo
       };
       if (req.file) {
         const imagePath = localStorage + "/" +  result[0].foto;
+
         fs.unlink(imagePath, (err) => {
           if (err) {
             console.error(err);

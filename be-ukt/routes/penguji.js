@@ -32,7 +32,10 @@ const ranting = models.ranting;
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
     // set file storage
-    cb(null, localStorage);
+    cb(
+      null,
+      "D:/Project/UKT/be-ukt/image"
+    );
   },
   filename: (req, file, cb) => {
     // generate file name
