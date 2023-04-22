@@ -83,6 +83,45 @@ app.get("/", Auth, verifyRoles("admin", "super admin", "admin ranting", "penguru
     });
 });
 
+// endpoint get data penguji by id
+app.get("/:id", Auth, verifyRoles("super admin", "admin", "penguji cabang", "penguji ranting"),(req, res) => {
+  const imagePath = "http://localhost:8080/image/";
+  penguji
+    .findAll({
+      where:{
+        id_penguji: req.params.id
+      },
+      include: [
+        {
+          model: cabang,
+          as: "penguji_cabang",
+          attributes: ['name']
+        },
+        {
+          model: ranting,
+          as: "penguji_ranting",
+          attributes: ['name']
+        }
+      ]
+    })
+    .then((penguji) => {
+      // Map over the tipe_kamar array and add the image URL to each object
+      const penguji_with_image_url = penguji.map((tk) => ({
+        ...tk.toJSON(),
+        image: `${imagePath}${tk.foto}`,
+      }));
+      res.json({
+        count: penguji_with_image_url.length,
+        data: penguji_with_image_url,
+      });
+    })
+    .catch((error) => {
+      res.json({
+        message: error.message,
+      });
+    });
+});
+
 //endpoint get data penguji cabang berdasarkan nama dan ranting
 app.post("/name_dan_ranting", Auth, verifyRoles("admin", "super admin", "admin ranting", "pengurus cabang", "pengurus ranting", "penguji ranting"), (req, res) => {
   const name = req.body.name;
@@ -183,7 +222,7 @@ app.post("/", Auth, verifyRoles("admin", "super admin", "admin ranting", "pengur
 });
 
 //endpoint untuk mengupdate data user, METHOD: PUT, fuction: UPDATE
-app.put("/:id", Auth, verifyRoles("admin", "super admin", "admin ranting", "pengurus cabang", "pengurus ranting"), upload2.single("foto"), async (req, res) => {
+app.put("/:id", Auth, verifyRoles("admin", "super admin", "admin ranting", "pengurus cabang", "pengurus ranting", "penguji cabang", "penguji ranting"), upload2.single("foto"), async (req, res) => {
   const hash = await bcrypt.hash(req.body.password, salt);
   try {
     let param = {
