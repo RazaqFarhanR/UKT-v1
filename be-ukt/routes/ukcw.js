@@ -30,11 +30,69 @@ app.get("/", Auth, verifyRoles("admin", "super admin", "admin ranting", "penguru
         })
     })    
 })
+//endpoint get data ukcw
+app.get("/:id", Auth, verifyRoles("admin", "super admin", "admin ranting", "pengurus cabang", "pengurus ranting", "penguji cabang", "penguji ranting"), (req,res) => {
+    ukcw.findAll({
+        where: {
+            id_ukcw: req.params.id
+        }
+    })
+    .then(ukcw => {
+        res.json({
+            count: ukcw.length,
+            data: ukcw
+        })
+    })
+    .catch(error => {
+        res.json({
+            message: error.message
+        })
+    })    
+})
+//endpoint get data ukcw by id event
+app.get("/event/:id", Auth, verifyRoles("admin", "super admin", "admin ranting", "pengurus cabang", "pengurus ranting", "penguji cabang", "penguji ranting"), (req,res) => {
+    ukcw.findAll({
+        where: {
+            id_event: req.params.id
+        }
+    })
+    .then(ukcw => {
+        res.json({
+            count: ukcw.length,
+            data: ukcw
+        })
+    })
+    .catch(error => {
+        res.json({
+            message: error.message
+        })
+    })    
+})
+//endpoint get data ukcw by rayon
+app.get("/rayon/:id", Auth, verifyRoles("admin", "super admin", "admin ranting", "pengurus cabang", "pengurus ranting", "penguji cabang", "penguji ranting"), (req,res) => {
+    ukcw.findAll({
+        where: {
+            rayon: req.params.id
+        }
+    })
+    .then(ukcw => {
+        res.json({
+            count: ukcw.length,
+            data: ukcw
+        })
+    })
+    .catch(error => {
+        res.json({
+            message: error.message
+        })
+    })    
+})
 
 //endpoint untuk menyimpan data ukcw, METHOD POST, function create
 app.post("/", Auth, verifyRoles("admin", "super admin", "admin ranting", "pengurus cabang", "pengurus ranting", "penguji cabang", "penguji ranting"), (req,res) =>{
     let data ={
         id_siswa: req.body.id_siswa,
+        id_event: req.body.id_event,
         rayon: req.body.rayon,
         keshan: req.body.keshan,
         senam: req.body.senam,
@@ -63,6 +121,7 @@ app.put("/:id", Auth, verifyRoles("admin", "super admin", "admin ranting", "peng
     }
     let data = {
         id_siswa: req.body.id_siswa,
+        id_event: req.body.id_event,
         rayon: req.body.rayon,
         keshan: req.body.keshan,
         senam: req.body.senam,
