@@ -25,7 +25,9 @@ const ukt_hijau = () => {
 
     // function get data event
     const getDataEvent = () => {
-        axios.get (BASE_URL + `event`)
+        const token = localStorage.getItem ('tokenPenguji')
+
+        axios.get (BASE_URL + `event`, { headers: { Authorization: `Bearer ${token}`}})
         .then (res => {
             setDataEvent (res.data.data)
         })
