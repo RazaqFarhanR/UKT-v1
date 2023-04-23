@@ -35,7 +35,7 @@ module.exports = {
         type: Sequelize.STRING
       },
       jenis_kelamin: {
-        type: Sequelize.ENUM('pria', 'perempuan')
+        type: Sequelize.ENUM('Laki laki', 'Perempuan')
       },
       tipe_ukt: {
         type: Sequelize.ENUM('UKT Jambon','UKT Hijau','UKT Putih','UKCW')

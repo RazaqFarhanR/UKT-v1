@@ -32,6 +32,28 @@ app.get("/", Auth, verifyRoles("admin", "super admin", "admin ranting", "penguru
     })    
 })
 
+//endpoint get data teknik by tipe_ukt
+app.get("/ukt/:id", Auth, verifyRoles("admin", "super admin", "admin ranting", "pengurus cabang", "pengurus ranting", "penguji cabang", "penguji ranting"), (req,res) => {
+    teknik.findAll({
+        where: {
+            tipe_ukt: req.params.id
+        },
+        attributes: ['id_teknik','name']
+    })
+    .then(teknik => {
+        res.json({
+            count: teknik.length,
+            tipe_ukt: req.params.id,
+            data: teknik
+        })
+    })
+    .catch(error => {
+        res.json({
+            message: error.message
+        })
+    })    
+})
+
 //endpoint untuk menyimpan data teknik, METHOD POST, function create
 app.post("/", Auth, verifyRoles("admin", "super admin", "admin ranting", "pengurus cabang", "pengurus ranting", "penguji cabang", "penguji ranting"), (req,res) =>{
     let data ={        

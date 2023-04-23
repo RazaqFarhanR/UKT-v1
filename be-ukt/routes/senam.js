@@ -37,11 +37,13 @@ app.get("/:id", Auth, verifyRoles("admin", "super admin", "admin ranting", "peng
     senam.findAll({
         where: {
             tipe_ukt: req.params.id
-        }
+        },
+        attributes: ['id_senam','name']
     })
     .then(senam => {
         res.json({
             count: senam.length,
+            tipe_ukt: req.params.id,
             data: senam
         })
     })
