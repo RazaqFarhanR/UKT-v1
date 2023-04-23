@@ -48,7 +48,7 @@ const fisik = () => {
                         <div className="grid grid-cols-2 gap-5">
 
                             {/* card ukt jambon */}
-                            <Link href={'./detail_fisik'} className="bg-navy hover:bg-gradient-to-r from-[#16D4FC] to-[#9A4BE9] rounded-md p-0.5">
+                            <Link href={'./detail_fisik_jambon'} className="bg-navy hover:bg-gradient-to-r from-[#16D4FC] to-[#9A4BE9] rounded-md p-0.5">
 
                                 {/* inner bg */}
                                 <div className="bg-navy p-5 rounded-md space-y-5">
@@ -67,7 +67,7 @@ const fisik = () => {
                             </Link>
 
                             {/* card ukt hijau */}
-                            <Link href={'./ukt_hijau'} className="bg-navy hover:bg-gradient-to-r from-[#16D4FC] to-[#9A4BE9] rounded-md p-0.5">
+                            <Link href={'detail_fisik_hijau'} className="bg-navy hover:bg-gradient-to-r from-[#16D4FC] to-[#9A4BE9] rounded-md p-0.5">
 
                                 {/* inner bg */}
                                 <div className="bg-navy p-5 rounded-md space-y-5">
@@ -86,7 +86,7 @@ const fisik = () => {
                             </Link>
 
                             {/* card ukt putih */}
-                            <Link href={'./ukt_putih'} className="bg-navy hover:bg-gradient-to-r from-[#16D4FC] to-[#9A4BE9] rounded-md p-0.5">
+                            <Link href={'detail_fisik_putih'} className="bg-navy hover:bg-gradient-to-r from-[#16D4FC] to-[#9A4BE9] rounded-md p-0.5">
 
                                 {/* inner bg */}
                                 <div className="bg-navy p-5 rounded-md space-y-5">
@@ -105,7 +105,7 @@ const fisik = () => {
                             </Link>
 
                             {/* card ukcw */}
-                            <Link href={'./ukcw'} className="bg-navy hover:bg-gradient-to-r from-[#16D4FC] to-[#9A4BE9] rounded-md p-0.5">
+                            <Link href={'detail_fisik_ukcw'} className="bg-navy hover:bg-gradient-to-r from-[#16D4FC] to-[#9A4BE9] rounded-md p-0.5">
 
                                 {/* inner bg */}
                                 <div className="bg-navy p-5 rounded-md space-y-5">
