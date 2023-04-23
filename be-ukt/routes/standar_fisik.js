@@ -37,76 +37,59 @@ app.get(
         const data = {};
         for (let i=0; i<4; i++){ 
           b = 0;
-          const tipe_ukt = ['ukt_jambon','ukt_hijau', 'ukt_putih', 'ukcw']
-          if(i > 0){
+          if (i > 0){
             b = i * 4;
-          };     
-          console.log(b);
-          let mft = {
-            tipe_ukt: standar_fisik[0 + b].tipe_ukt,
-            jenis: "mft",
-            Remaja_lk: standar_fisik[0 + b].mft,
-            Remaja_prpn: standar_fisik[1 + b].mft,
-            Privat_lk: standar_fisik[2 + b].mft,
-            Privat_prpn: standar_fisik[3+ b].mft,
           }
-          data[`mft_${tipe_ukt[i]}`] = mft;
-          let pushUp = {
-            tipe_ukt: standar_fisik[0 + b].tipe_ukt,
-            jenis: "push_up",
-            Remaja_lk: standar_fisik[0 + b].push_up ,
-            Remaja_prpn: standar_fisik[1 + b].push_up,
-            Privat_lk: standar_fisik[2 + b].push_up,
-            Privat_prpn: standar_fisik[3 + b].push_up,
-          }
-          data[`push_up_${tipe_ukt[i]}`] = pushUp;
-          let spirPerutAtas = {
-            tipe_ukt: standar_fisik[0 + b].tipe_ukt,
-            jenis: "spir_perut_atas",
-            Remaja_lk: standar_fisik[0 + b].spir_perut_atas ,
-            Remaja_prpn: standar_fisik[1 + b].spir_perut_atas,
-            Privat_lk: standar_fisik[2 + b].spir_perut_atas,
-            Privat_prpn: standar_fisik[3 + b].spir_perut_atas,
-          }
-          data[`spa_${tipe_ukt[i]}`] = spirPerutAtas;
-          let spirPerutBawah = {
-            tipe_ukt: standar_fisik[0 + b].tipe_ukt,
-            jenis: "spir_perut_bawah",
-            Remaja_lk: standar_fisik[0 + b].spir_perut_bawah,
-            Remaja_prpn: standar_fisik[1 + b].spir_perut_bawah,
-            Privat_lk: standar_fisik[2 + b].spir_perut_bawah,
-            Privat_prpn: standar_fisik[3 + b].spir_perut_bawah,
-          }
-          data[`spb_${tipe_ukt[i]}`] = spirPerutBawah;
-          let spirDada = {
-            tipe_ukt: standar_fisik[0 + b].tipe_ukt,
-            jenis: "spir_dada",
-            Remaja_lk: standar_fisik[0 + b].spir_dada,
-            Remaja_prpn: standar_fisik[1 + b].spir_dada,
-            Privat_lk: standar_fisik[2 + b].spir_dada,
-            Privat_prpn: standar_fisik[3 + b].spir_dada,
-          }
-          data[`sd_${tipe_ukt[i]}`] = spirDada;
-          let plank = {
-            tipe_ukt: standar_fisik[0 + b].tipe_ukt,
-            jenis: "plank",
-            Remaja_lk: standar_fisik[0 + b].plank,
-            Remaja_prpn: standar_fisik[1 + b].plank,
-            Privat_lk: standar_fisik[2 + b].plank,
-            Privat_prpn: standar_fisik[3 + b].plank,
-          }
-          data[`plank_${tipe_ukt[i]}`] = plank;
+          const tipe_ukt = ['ukt_jambon','ukt_hijau', 'ukt_putih', 'ukcw']  
+          for(let j=0; j<4; j++) {
+            const response = {
+              tipe_ukt: standar_fisik[j + b].tipe_ukt,
+              peserta: standar_fisik[j + b].peserta,
+              mft: standar_fisik[j + b].mft,
+              push_up: standar_fisik[j + b].push_Up,
+              spir_perut_atas: standar_fisik[j + b].spir_perut_atas,
+              spir_perut_bawah: standar_fisik[j + b].spir_perut_bawah,
+              spir_dada: standar_fisik[j + b].spir_dada,
+              plank: standar_fisik[j + b].plank,
+            }
+            console.log("j+b = "+ (j + b));
+            const peserta = ['remaja_lk','remaja_prpn','privat_lk','privat_prpn']       
+            data[tipe_ukt[i]+'_'+ peserta[j]] = response;
+            console.log(j);
+          }   
         }
-        // const response = {
-        //     mft: mft,
-        //     push_up: pushUp,
-        //     spir_perut_atas: spirPerutAtas,
-        //     spir_perut_bawah: spirPerutBawah,
-        //     spir_dada: spirDada,
-        //     plank: plank,
-        // }
-          console.log(data);
         res.json(data);
+      })
+      .catch((error) => {
+        res.json({
+          message: error.message,
+        });
+      });
+  }
+);
+app.post(
+  "/peserta",
+  Auth,
+  verifyRoles(
+    "admin",
+    "super admin",
+    "admin ranting",
+    "pengurus cabang",
+    "pengurus ranting",
+    "penguji cabang",
+    "penguji ranting"
+  ),
+  (req, res) => {
+    standar_fisik
+      .findOne({
+        where: {
+          tipe_ukt: req.body.tipe_ukt,
+          peserta: `${req.body.jenis_latihan} - ${req.body.jenis_kelamin}`
+        },
+        order: [['tipe_ukt', 'ASC'], ['peserta','ASC']],
+      })
+      .then((standar_fisik) => {
+        res.json(standar_fisik);
       })
       .catch((error) => {
         res.json({

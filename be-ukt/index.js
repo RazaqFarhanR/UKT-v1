@@ -45,6 +45,9 @@ app.use("/ukt/senam_siswa", senam_siswa)
 const jurus = require('./routes/jurus');
 app.use("/ukt/jurus", jurus)
 
+const jurus_siswa = require('./routes/jurus_siswa');
+app.use("/ukt/jurus_siswa", jurus_siswa)
+
 //endpoint teknik
 const teknik = require('./routes/teknik');
 app.use("/ukt/teknik", teknik)

@@ -32,11 +32,33 @@ app.get("/", Auth, verifyRoles("admin", "super admin", "admin ranting", "penguru
     })    
 })
 
+//endpoint get data jurus by tipe_ukt
+app.get("/ukt/:id", Auth, verifyRoles("admin", "super admin", "admin ranting", "pengurus cabang", "pengurus ranting", "penguji cabang", "penguji ranting"), (req,res) => {
+    jurus.findAll({
+        where: {
+            tipe_ukt: req.params.id
+        },
+        attributes: ['id_jurus','name']
+    })
+    .then(jurus => {
+        res.json({
+            count: jurus.length,
+            tipe_ukt: req.params.id,
+            data: jurus
+        })
+    })
+    .catch(error => {
+        res.json({
+            message: error.message
+        })
+    })    
+})
+
 //endpoint untuk menyimpan data jurus, METHOD POST, function create
 app.post("/", Auth, verifyRoles("admin", "super admin", "admin ranting", "pengurus cabang", "pengurus ranting", "penguji cabang", "penguji ranting"), (req,res) =>{
-    let data ={
-        id_siswa: req.body.id_siswa,
-        jurus1A: req.body.jurus1A
+    let data ={        
+        tipe_ukt: req.body.tipe_ukt,
+        name: req.body.name
     }
     jurus.create(data)
     .then(result => {
@@ -56,7 +78,8 @@ app.put("/:id", Auth, verifyRoles("admin", "super admin", "admin ranting", "peng
     let param = {
         id_jurus : req.params.id
     }
-    let data = {
+    let data ={        
+        tipe_ukt: req.body.tipe_ukt,
         name: req.body.name
     }
     jurus.update(data, {where: param})
