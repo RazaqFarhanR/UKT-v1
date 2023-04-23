@@ -1,8 +1,22 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import Link from 'next/link'
 import Header from './components/header'
 
 const jurus = () => {
+
+    // state
+    const [dataSiswa, setDataSiswa] = useState ([])
+
+    // function get data siswa
+    const getDataSiswa = () => {
+        const dataSiswa = JSON.parse (localStorage.getItem ('dataSiswa'))
+        setDataSiswa (dataSiswa)
+    }
+
+    useEffect (() => {
+        getDataSiswa ()
+    }, [])
+
     return (
         <>
             <div className="font-lato">
@@ -25,13 +39,19 @@ const jurus = () => {
                         </div>
 
                         {/* senam list */}
-                        <div className="grid grid-cols-2 items-center">
-                            <h1 className='text-white text-xl font-semibold'>Jurus 1</h1>
-                            <div className="flex gap-x-2">
-                                <button className='bg-white text-purple py-1.5 rounded-md w-full'>Benar</button>
-                                <button className='bg-white text-purple py-1.5 rounded-md w-full'>Salah</button>
-                            </div>
-                        </div>
+                        {(() => {
+                            if (dataSiswa.tipe_ukt === 'UKT Jambon') {
+                                return (
+                                    <div className="grid grid-cols-2 items-center">
+                                        <h1 className='text-white text-xl font-semibold'>Jurus 1</h1>
+                                        <div className="flex gap-x-2">
+                                            <button className='bg-white text-purple py-1.5 rounded-md w-full'>Benar</button>
+                                            <button className='bg-white text-purple py-1.5 rounded-md w-full'>Salah</button>
+                                        </div>
+                                    </div>
+                                )
+                            }
+                        })}
                     </div>
                 </div>
             </div>
