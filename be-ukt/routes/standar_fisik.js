@@ -84,7 +84,7 @@ app.post(
       .findOne({
         where: {
           tipe_ukt: req.body.tipe_ukt,
-          peserta: `${req.body.jenis_latihan} - ${req.body.jenis_kelamin}`
+          peserta: req.body.peserta
         },
         order: [['tipe_ukt', 'ASC'], ['peserta','ASC']],
       })

@@ -30,7 +30,7 @@ const localStorage = process.env.LOCAL_STORAGE
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
     // set file storage
-    cb(null, "D:/Project/UKT/be-ukt/image");
+    cb(null, localStorage);
   },
   filename: (req, file, cb) => {
     // generate file name
@@ -146,7 +146,7 @@ app.post("/", Auth, verifyRoles("super admin", "admin"), upload2.single("foto"),
   const hash = await bcrypt.hash(req.body.password, salt);
 
   let data = {
-    NIW: req.body.NIW,
+    NIW: req.body.niw,
     username: req.body.username,
     name: req.body.name,
     id_role: req.body.id_role,
@@ -202,7 +202,6 @@ app.put("/:id", Auth, verifyRoles("admin", "super admin", "admin ranting"), uplo
       };
       if (req.file) {
         const imagePath = localStorage + "/" +  result[0].foto;
-
         fs.unlink(imagePath, (err) => {
           if (err) {
             console.error(err);

@@ -91,8 +91,8 @@ app.get("/kosong", Auth, verifyRoles("admin", "super admin", "admin ranting", "p
         })
     })    
 })
-//endpoint get data soal
-app.get("/:id", Auth, verifyRoles("admin", "super admin", "admin ranting", "pengurus cabang", "pengurus ranting", "penguji cabang", "penguji ranting"), (req,res) => {
+//endpoint get data soal by id_lembar_soal
+app.get("/lembar_soal/:id", Auth, verifyRoles("admin", "super admin", "admin ranting", "pengurus cabang", "pengurus ranting", "penguji cabang", "penguji ranting"), (req,res) => {
     soal.findAll({
         where: {
             id_lembar_soal: req.params.id

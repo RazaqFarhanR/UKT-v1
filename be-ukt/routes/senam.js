@@ -3,6 +3,8 @@ const express = require('express');
 const bodyParser = require('body-parser');
 require('dotenv').config();
 const Auth = require('../middleware/Auth.js');
+const Sequelize = require('sequelize');
+const { sequelize, Op } = require("sequelize");
 const verifyRoles = require("../middleware/verifyRoles");
 
 //implementasi
@@ -33,16 +35,30 @@ app.get("/", Auth, verifyRoles("admin", "super admin", "admin ranting", "penguru
 })
 
 //endpoint get data senam by tipe_ukt
-app.get("/:id", Auth, verifyRoles("admin", "super admin", "admin ranting", "pengurus cabang", "pengurus ranting", "penguji cabang", "penguji ranting"), (req,res) => {
+app.get("/ukt/:id", Auth, verifyRoles("admin", "super admin", "admin ranting", "pengurus cabang", "pengurus ranting", "penguji cabang", "penguji ranting"), (req,res) => {
+    let limitSenam = 0;
+    if(req.params.id === "UKT Jambon"){
+        limitSenam = 15
+    } else if(req.params.id === "UKT Hijau"){
+        limitSenam = 30;
+    } else if(req.params.id === "UKT Putih"){
+        limitSenam = 35;
+    } else if(req.params.id === "UKCW"){
+        limitSenam = 45
+    }
     senam.findAll({
         where: {
             tipe_ukt: req.params.id
         },
-        attributes: ['id_senam','name']
+        order: [
+            Sequelize.fn('RAND')
+        ],
+        attributes: ['id_senam','name'],
+        limit: limitSenam
     })
     .then(senam => {
         res.json({
-            count: senam.length,
+            limit: limitSenam,
             tipe_ukt: req.params.id,
             data: senam
         })

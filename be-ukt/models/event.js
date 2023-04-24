@@ -42,7 +42,7 @@ module.exports = (sequelize, DataTypes) => {
     },
     name: DataTypes.STRING,
     tanggal: DataTypes.DATE,
-    tipe: DataTypes.ENUM('UKT Jambon','UKT Hijau','UKT Putih','UKCW'),
+    tipe_ukt: DataTypes.ENUM('UKT Jambon','UKT Hijau','UKT Putih','UKCW'),
   }, {
     sequelize,
     modelName: 'event',

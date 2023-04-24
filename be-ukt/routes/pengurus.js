@@ -30,18 +30,15 @@ const SECRET_KEY = "BelajarNodeJSItuMenyengankan";
 const localStorage = process.env.LOCAL_STORAGE
 //konfigurasi proses upload file
 const storage = multer.diskStorage({
-    destination: (req, file, cb) => {
-      // set file storage
-      cb(
-        null,
-        "D:/Project/UKT/be-ukt/image"
-      );
-    },
-    filename: (req, file, cb) => {
-      // generate file name
-      cb(null, "foto-" + Date.now() + path.extname(file.originalname));
-    },
-  });
+  destination: (req, file, cb) => {
+    // set file storage
+    cb(null, localStorage);
+  },
+  filename: (req, file, cb) => {
+    // generate file name
+    cb(null, "foto-" + Date.now() + path.extname(file.originalname));
+  },
+});
   
   let upload2 = multer({ storage: storage });
 

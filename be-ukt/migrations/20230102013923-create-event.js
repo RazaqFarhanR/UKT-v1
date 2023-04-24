@@ -15,8 +15,8 @@ module.exports = {
       tanggal: {
         type: Sequelize.DATE
       },
-      tipe: {
-        type: Sequelize.ENUM('ukcw','ukt_jambon','ukt_hijau','ukt_putih')
+      tipe_ukt: {
+        type: Sequelize.ENUM('UKT Jambon','UKT Hijau','UKT Putih','UKCW')
       },
       createdAt: {
         allowNull: false,
