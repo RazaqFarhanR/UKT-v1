@@ -119,6 +119,7 @@ app.get("/siswa/:id", Auth, verifyRoles("admin", "super admin", "admin ranting",
 //endpoint untuk menyimpan data senam_siswa, METHOD POST, function create
 app.post("/", Auth, verifyRoles("admin", "super admin", "admin ranting", "pengurus cabang", "pengurus ranting", "penguji cabang", "penguji ranting"), (req,res) =>{
     let data ={
+        id_event: req.body.id_event,
         id_siswa: req.body.id_siswa,
         id_senam: req.body.id_senam,
         predikat: req.body.predikat
@@ -142,6 +143,7 @@ app.put("/:id", Auth, verifyRoles("admin", "super admin", "admin ranting", "peng
         id_senam_siswa : req.params.id
     }
     let data ={
+        id_event: req.body.id_event,
         tipe_ukt: req.body.tipe_ukt,
         name: req.body.name
     }

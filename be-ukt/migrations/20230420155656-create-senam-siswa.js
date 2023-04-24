@@ -17,6 +17,14 @@ module.exports = {
           key: "id_senam"
         }
       },
+      id_event: {
+        type: Sequelize.INTEGER,
+        allowNull: false,
+        references: {
+          model: "event",
+          key: "id_event"
+        }
+      },
       id_siswa: {
         type: Sequelize.INTEGER,
         allowNull: false,

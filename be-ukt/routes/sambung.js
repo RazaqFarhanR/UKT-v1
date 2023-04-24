@@ -71,10 +71,12 @@ app.post(
     "admin ranting",
     "pengurus cabang",
     "pengurus ranting",
-    "penguji"
+    "penguji cabang",
+    "penguji ranting"
   ),
   (req, res) => {
     let data = {
+      id_event: req.body.id_event,
       id_penguji: req.body.id_penguji,
     };
     sambung

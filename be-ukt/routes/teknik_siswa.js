@@ -101,6 +101,7 @@ app.get("/siswa/:id", Auth, verifyRoles("admin", "super admin", "admin ranting",
 app.post("/", Auth, verifyRoles("admin", "super admin", "admin ranting", "pengurus cabang", "pengurus ranting", "penguji cabang", "penguji ranting"), (req,res) =>{
     let data ={     
         id_teknik: req.body.id_teknik,
+        id_event: req.body.id_event,
         id_siswa: req.body.id_siswa,
         predikat: req.body.predikat
     }
@@ -124,6 +125,7 @@ app.put("/:id", Auth, verifyRoles("admin", "super admin", "admin ranting", "peng
     }
     let data ={     
         id_teknik: req.body.id_teknik,
+        id_event: req.body.id_event,
         id_siswa: req.body.id_siswa,
         predikat: req.body.predikat
     }

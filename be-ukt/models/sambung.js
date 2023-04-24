@@ -24,6 +24,7 @@ module.exports = (sequelize, DataTypes) => {
       primaryKey: true,
       type: DataTypes.INTEGER
     },
+    id_event: DataTypes.INTEGER,
     id_penguji: DataTypes.INTEGER
   }, {
     sequelize,
