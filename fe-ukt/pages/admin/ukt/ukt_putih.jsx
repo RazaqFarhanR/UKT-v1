@@ -25,7 +25,9 @@ const ukt_putih = () => {
 
     // function get data event
     const getDataEvent = () => {
-        axios.get (BASE_URL + `event`)
+        const token = localStorage.getItem ('token')
+
+        axios.get (BASE_URL + `event`, { headers: { Authorization: `Bearer ${token}`}})
         .then (res => {
             setDataEvent (res.data.data)
         })

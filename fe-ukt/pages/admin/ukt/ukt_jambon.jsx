@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 import Link from 'next/link'
 import { globalState } from '@/context/context'
 import axios from 'axios'
+import { useRouter } from 'next/router'
 import Sidebar from '../components/sidebar'
 import Header from '../components/header'
 import Footer from '../components/footer'
@@ -10,6 +11,9 @@ import Modal_delete from '../components/modal_delete'
 const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
 
 const ukt_jambon = () => {
+
+    // deklarasi router
+    const router = useRouter ()
 
     // state modal
     const [showModalEvent, setShowModalEvent] = useState (false)
@@ -25,7 +29,9 @@ const ukt_jambon = () => {
 
     // function get data event
     const getDataEvent = () => {
-        axios.get (BASE_URL + `event`)
+        const token = localStorage.getItem ('token')
+
+        axios.get (BASE_URL + `event`, { headers: { Authorization: `Bearer ${token}`}})
         .then (res => {
             setDataEvent (res.data.data)
         })
@@ -58,6 +64,18 @@ const ukt_jambon = () => {
         setShowModalDelete (true)
         setAction ('deleteEvent')
         setIdEvent (selectedId)
+    }
+
+    // function to rekap nilai
+    const toRekapNilai = (item) => {
+        localStorage.setItem ('event', JSON.stringify (item))
+        router.push ('./rekap_nilai_ukt_jambon')
+    }
+
+    // function to detail nilai
+    const toDetailNilai = (item) => {
+        localStorage.setItem ('event', JSON.stringify (item))
+        router.push ('./detail_nilai_ukt_jambon')
     }
 
     useEffect (() => {
@@ -144,8 +162,8 @@ const ukt_jambon = () => {
         
                                         {/* action button */}
                                         <div className=" space-x-2 w-full flex justify-center text-white text-center">
-                                            <Link href={'./rekap_nilai_ukt_jambon'} className='bg-purple hover:bg-white hover:text-purple duration-300 p-2 rounded-md w-full'>Lihat Nilai</Link>
-                                            <Link href={'./lihat_nilai_ukt_jambon'} className='bg-purple hover:bg-white hover:text-purple duration-300 p-2 rounded-md w-full'>Detail Nilai</Link>
+                                            <button onClick={() => toRekapNilai (item)} className='bg-purple hover:bg-white hover:text-purple duration-300 p-2 rounded-md w-full'>Lihat Nilai</button>
+                                            <button onClick={() => toDetailNilai (item)} href={'./detail_nilai_ukt_jambon'} className='bg-purple hover:bg-white hover:text-purple duration-300 p-2 rounded-md w-full'>Detail Nilai</button>
                                         </div>
                                     </div>
                                 </div>
