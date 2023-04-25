@@ -31,11 +31,8 @@ module.exports = {
           key: "id_role"
         }
       },
-      jenis_latihan: {
-        type: Sequelize.STRING
-      },
-      jenis_kelamin: {
-        type: Sequelize.ENUM('Laki laki', 'Perempuan')
+      peserta: {
+        type: Sequelize.ENUM('Remaja - Laki laki','Remaja - Perempuan','Privat - Laki laki','Privat - Perempuan')
       },
       tipe_ukt: {
         type: Sequelize.ENUM('UKT Jambon','UKT Hijau','UKT Putih','UKCW')

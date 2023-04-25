@@ -1,15 +1,41 @@
 import React, { useEffect, useState } from 'react'
+import axios from 'axios'
 import Header from './components/header'
+const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
 
 const sambung = () => {
 
     // state
     const [dataSiswa, setDataSiswa] = useState ([])
+    const [nilai1, setNilai1] = useState(60);
+    const [nilai2, setNilai2] = useState(60);
 
     // function get data siswa from local storage
     const getDataSiswa = () => {
         const dataSiswa = JSON.parse (localStorage.getItem ('dataSiswa'))
         setDataSiswa (dataSiswa)
+    }
+
+    const postDataSambung = () => {
+        const token = localStorage.getItem('tokenPenguji')
+        const penguji = JSON.parse (localStorage.getItem('penguji'));
+        console.log(penguji);
+        const id_penguji = penguji.id_penguji
+        const data = {
+            id_event: dataSiswa.id_event,
+            id_penguji: id_penguji,
+            id_siswa1: dataSiswa.id_siswa,
+            id_siswa2: 4,
+            nilai1: nilai1,
+            nilai2: nilai2
+        }
+          axios.post(BASE_URL + `sambung`, data, { headers: { Authorization: `Bearer ${token}` } },)
+          .then((res) => {
+              console.log(res);
+            })
+            .catch((error) => {
+              console.log(error.message);
+            });
     }
 
     useEffect (() => {
@@ -52,17 +78,21 @@ const sambung = () => {
                                 <div className="grid grid-cols-3 gap-x-3 items-center">
 
                                     {/* button minus */}
-                                    <button className='bg-red rounded-md text-center text-2xl font-bold'>
+                                    <button className='bg-red rounded-md text-center text-2xl font-bold'
+                                    onClick={() => nilai1 > 60 ? setNilai1( nilai1 - 1) : []}>
                                         -
                                     </button>
 
                                     {/* score indicator */}
                                     <div className="outline outline-purple rounded-md h-full flex items-center justify-center">
-                                        <h1 className='text-xl font-semibold'>80</h1>
+                                        <h1 className='text-xl font-semibold'>{ nilai1 }</h1>
                                     </div>
 
                                     {/* button plus */}
-                                    <button className='bg-purple rounded-md text-center text-2xl font-bold'>
+                                    <button className='bg-purple rounded-md text-center text-2xl font-bold'
+                                    onClick={() => nilai1 > 99 ? '' : setNilai1( nilai1 + 1)}>
+                                        <h1 className='text-xl font-semibold'>80</h1>
+                                    </div>
                                         +
                                     </button>
                                 </div>
@@ -91,23 +121,26 @@ const sambung = () => {
                                 <div className="grid grid-cols-3 gap-x-3 items-center">
 
                                     {/* button minus */}
-                                    <button className='bg-red rounded-md text-center text-2xl font-bold'>
+                                    <button className='bg-red rounded-md text-center text-2xl font-bold'
+                                    onClick={() => nilai2 > 60 ? setNilai2( nilai2 - 1) : []}>
                                         -
                                     </button>
 
                                     {/* score indicator */}
                                     <div className="outline outline-purple rounded-md h-full flex items-center justify-center">
-                                        <h1 className='text-xl font-semibold'>80</h1>
+                                        <h1 className='text-xl font-semibold'>{ nilai2 }</h1>
                                     </div>
 
                                     {/* button plus */}
-                                    <button className='bg-purple rounded-md text-center text-2xl font-bold'>
+                                    <button className='bg-purple rounded-md text-center text-2xl font-bold'
+                                    onClick={() => nilai2 > 99 ? '' : setNilai2( nilai2 + 1)}>
                                         +
                                     </button>
                                 </div>
                             </div>
                         </div>
-
+                        <div className='bg-yellow rounded-md p-3 text-white mb-8 shadow shadow-slate-700 text-center'
+                        onClick={postDataSambung}>Selesai</div>
                     </div>
                 </div>
             </div>

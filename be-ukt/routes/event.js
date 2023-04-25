@@ -30,13 +30,32 @@ app.get("/", Auth, verifyRoles("admin", "super admin", "admin ranting", "penguru
         })
     })    
 })
+//endpoint get data event by ukt
+app.get("/ukt/:id", Auth, verifyRoles("admin", "super admin", "admin ranting", "pengurus cabang", "pengurus ranting", "penguji cabang", "penguji ranting"), (req,res) => {
+    event.findAll({
+        where: {
+            tipe_ukt: req.params.id
+        }
+    })
+    .then(event => {
+        res.json({
+            count: event.length,
+            data: event
+        })
+    })
+    .catch(error => {
+        res.json({
+            message: error.message
+        })
+    })    
+})
 
 //endpoint untuk menyimpan data event, METHOD POST, function create
 app.post("/", Auth, verifyRoles("admin", "super admin", "admin ranting", "pengurus cabang", "pengurus ranting", "penguji cabang", "penguji ranting"), (req,res) =>{
     let data ={
         name: req.body.name,
         tanggal: req.body.tanggal,
-        tipe: req.body.tipe
+        tipe_ukt: req.body.tipe
     }
     event.create(data)
     .then(result => {

@@ -15,6 +15,10 @@ module.exports = (sequelize, DataTypes) => {
         foreignKey: "id_siswa",
         as: "fisik"
       })
+      this.belongsTo(models.event, {
+        foreignKey: "id_event",
+        as: "event_fisik"
+      })
     }
   }
   fisik.init({
@@ -29,6 +33,7 @@ module.exports = (sequelize, DataTypes) => {
       primaryKey: false,
       allowNull: false
     },
+    id_event: DataTypes.INTEGER,
     tipe_ukt: DataTypes.ENUM('UKT Jambon','UKT Hijau','UKT Putih','UKCW'),
     peserta: DataTypes.ENUM('Remaja - Laki laki','Remaja - Perempuan','Privat - Laki laki','Privat - Perempuan'),
     mft: DataTypes.DOUBLE,

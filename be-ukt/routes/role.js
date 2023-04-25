@@ -56,13 +56,7 @@ app.put("/:id", Auth, verifyRoles("admin", "super admin", "admin ranting"), (req
     let param = {
         id_role : req.params.id
     }
-    let data = {
-        id_role: req.body.id_role,
-        role: req.body.id_role
-    }
-    role.update(data, {where: {
-        id_role: req.params.id
-    }})
+    role.update(param, {where: param})
     .then(result => {
         res.json({
             message : "data has been updated"

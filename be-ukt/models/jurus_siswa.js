@@ -19,6 +19,10 @@ module.exports = (sequelize, DataTypes) => {
         foreignKey: "id_jurus",
         as: "jurus"
       })
+      this.belongsTo(models.event, {
+        foreignKey: "id_event",
+        as: "event_jurus"
+      })
     }
   }
   jurus_siswa.init({
@@ -28,6 +32,7 @@ module.exports = (sequelize, DataTypes) => {
       primaryKey: true,
       allowNull: false,
     },
+    id_event: DataTypes.INTEGER,
     id_siswa: DataTypes.INTEGER,
     id_jurus: DataTypes.INTEGER,
     predikat: DataTypes.BOOLEAN

@@ -17,7 +17,7 @@ const event = () => {
     const getDataEvent = () => {
         const token = localStorage.getItem ('tokenPenguji')
 
-        axios.get (BASE_URL + `event`, { headers: { Authorization: `Bearer ${token}`}})
+        axios.get (BASE_URL + `event/ukt/UKT Hijau`, { headers: { Authorization: `Bearer ${token}`}})
         .then (res => {
             setDataEvent (res.data.data)
         })
@@ -51,7 +51,7 @@ const event = () => {
                     <div className="min-h-full bg-darkBlue px-10 py-8">
                         
                         {/* card event */}
-                        {dataEvent.filter(a => a.tipe === 'ukt_hijau').map((item, index) => (
+                        {dataEvent.map((item, index) => (
                             <button className='w-full' onClick={() => goToDetailEvent(item)} key={index + 1}>
                                 <div className="hover:scale-105 transition ease-in-out duration-500 hover:bg-gradient-to-r from-[#16D4FC] to-[#9A4BE9] rounded-md p-0.5 mb-4">
                                     <div className="bg-navy shadow drop-shadow-lg rounded-md p-5 text-center">
