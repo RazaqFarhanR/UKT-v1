@@ -3,6 +3,7 @@ import Link from 'next/link';
 import Sidebar from '../components/sidebar';
 import axios from 'axios';
 import { globalState } from '@/context/context';
+import { useRouter } from 'next/router'
 import Header from '../components/header';
 import Footer from '../components/footer';
 import Modal_event from '../components/modal_event';
@@ -10,6 +11,9 @@ import Modal_delete from '../components/modal_delete';
 const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
 
 const ukt_putih = () => {
+
+     // deklarasi router
+     const router = useRouter ()
 
     // state modal
     const [showModalEvent, setShowModalEvent] = useState (false)
@@ -25,8 +29,11 @@ const ukt_putih = () => {
 
     // function get data event
     const getDataEvent = () => {
-        axios.get (BASE_URL + `event`)
+        const token = localStorage.getItem ('token')
+
+        axios.get (BASE_URL + `event/ukt/UKT Putih`, { headers: { Authorization: `Bearer ${token}`}})
         .then (res => {
+            console.log(res.data.data);
             setDataEvent (res.data.data)
         })
         .catch (err => {
@@ -58,6 +65,18 @@ const ukt_putih = () => {
         setShowModalDelete (true)
         setAction ('deleteEvent')
         setIdEvent (selectedId)
+    }
+
+    // function to rekap nilai
+    const toRekapNilai = (item) => {
+        localStorage.setItem ('event', JSON.stringify (item))
+        router.push ('./rekap_nilai_ukt_putih')
+    }
+
+    // function to detail nilai
+    const toDetailNilai = (item) => {
+        localStorage.setItem ('event', JSON.stringify (item))
+        router.push ('./detail_nilai_ukt_putih')
     }
 
     useEffect (() => {
@@ -115,7 +134,7 @@ const ukt_putih = () => {
                         <div className="grid grid-cols-2 gap-x-5">
                             
                             {/* card event */}
-                            {dataEvent.filter(a => a.tipe === 'ukt_putih').map((item, index) => (
+                            {dataEvent.map((item, index) => (
                                 <div key={index + 1} className="bg-navy hover:bg-gradient-to-r from-[#16D4FC] to-[#9A4BE9] rounded-md p-0.5">
 
                                     {/* inner bg */}
@@ -144,8 +163,8 @@ const ukt_putih = () => {
         
                                         {/* action button */}
                                         <div className=" space-x-2 w-full flex justify-center text-white text-center">
-                                            <Link href={'./rekap_nilai_ukt_jambon'} className='bg-purple hover:bg-white hover:text-purple duration-300 p-2 rounded-md w-full'>Lihat Nilai</Link>
-                                            <Link href={'./lihat_nilai_ukt_jambon'} className='bg-purple hover:bg-white hover:text-purple duration-300 p-2 rounded-md w-full'>Detail Nilai</Link>
+                                            <button onClick={() => toRekapNilai (item)} className='bg-purple hover:bg-white hover:text-purple duration-300 p-2 rounded-md w-full'>Lihat Nilai</button>
+                                            <button onClick={() => toDetailNilai (item)} className='bg-purple hover:bg-white hover:text-purple duration-300 p-2 rounded-md w-full'>Detail Nilai</button>
                                         </div>
                                     </div>
                                 </div>

@@ -2,8 +2,7 @@ import React, { useEffect, useState } from 'react'
 import axios from 'axios';
 import Link from 'next/link'
 import { globalState } from '@/context/context';
-import Footer from './components/footer'
-import Modal_foto from './components/modal_foto';
+// import Modal_foto from './components/modal_foto';
 const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
 
 const edit_profile = () => {
@@ -16,9 +15,8 @@ const edit_profile = () => {
     const [showModalFoto, setShowModalFoto] = useState (false)
 
     // state
-    const [dataAdmin, setDataAdmin] = useState ([])
-    const [dataRanting, setDataRanting] = useState ([])
-    const [idAdmin, setIdAdmin] = useState ('')
+    const [dataPenguji, setDataPenguji] = useState ([])
+    const [idPenguji, setIdPenguji] = useState ('')
     const [name, setName] = useState ('')
     const [niw, setNiw] = useState ('')
     const [noWa, setNoWa] = useState ('')
@@ -28,32 +26,19 @@ const edit_profile = () => {
     const [role, setRole] = useState ('')
     const [foto, setFoto] = useState ()
 
-    // function get data user by id
-    const getDataAdmin = () => {
-        const dataAdmin = JSON.parse (localStorage.getItem ('admin'))
-        setIdAdmin (dataAdmin.id_user)
-        setDataAdmin (dataAdmin)
-        setNiw (dataAdmin.NIW)
-        setName (dataAdmin.name)
-        setRanting (dataAdmin.id_ranting)
-        setNoWa (dataAdmin.no_wa)
-        setUsername (dataAdmin.username)
-        setPassword (dataAdmin.password)
-        setRole (dataAdmin.id_role)
-        setFoto (dataAdmin.foto)
-    }
-
-    // function get data ranting
-    const getDataRanting = () => {
-        const token = localStorage.getItem ('token')
-
-        axios.get (BASE_URL + `ranting`, { headers: { Authorization: `Bearer ${token}`}})
-        .then (res => {
-            setDataRanting (res.data.data)
-        })
-        .catch (err => {
-            console.log(err.message);
-        })
+    // function get data penguji by id
+    const getDataPenguji = () => {
+        const dataPenguji = JSON.parse (localStorage.getItem ('penguji'))
+        setIdPenguji (dataPenguji.id_penguji)
+        setDataPenguji (dataPenguji)
+        setNiw (dataPenguji.NIW)
+        setName (dataPenguji.name)
+        setRanting (dataPenguji.penguji_ranting.name)
+        setNoWa (dataPenguji.no_wa)
+        setUsername (dataPenguji.username)
+        setPassword (dataPenguji.password)
+        setRole (dataPenguji.id_role)
+        setFoto (dataPenguji.foto)
     }
 
     // function show hide password
@@ -75,26 +60,21 @@ const edit_profile = () => {
     // function handle edit
     const handleSave = async (e) => {
         e.preventDefault ()
-        const token = localStorage.getItem ('token')
+        const token = localStorage.getItem ('tokenPenguji')
 
         let form = new FormData()
 
-        form.append ('NIW', niw)
-        form.append ('name', name)
-        form.append ('id_ranting', ranting)
         form.append ('no_wa', noWa)
         form.append ('username', username)
         form.append ('password', password)
         form.append ('id_role', role)
         form.append ('foto', foto)
 
-        console.log(ranting);
-
-        await axios.put (BASE_URL + `user/${idAdmin}`, form, { headers: { Authorization: `Bearer ${token}`}})
+        await axios.put (BASE_URL + `penguji/${idPenguji}`, form, { headers: { Authorization: `Bearer ${token}`}})
         .then (res => {
-            axios.get (BASE_URL + `user/${idAdmin}`, { headers: { Authorization: `Bearer ${token}`}})
+            axios.get (BASE_URL + `penguji/${idPenguji}`, { headers: { Authorization: `Bearer ${token}`}})
             .then (res => {
-                localStorage.setItem (`admin`, JSON.stringify (res.data.data[0]))
+                localStorage.setItem (`penguji`, JSON.stringify (res.data.data[0]))
             })
             .catch (err => {
                 console.log(err.message);
@@ -107,8 +87,7 @@ const edit_profile = () => {
     }
 
     useEffect (() => {
-        getDataAdmin ()
-        getDataRanting ()
+        getDataPenguji ()
     }, [])
 
     return (
@@ -126,7 +105,7 @@ const edit_profile = () => {
                     {/* header */}
                     <div className="sticky top-0 z-10 header border-b bg-black w-full px-2 py-3 font-lato">
                         {/* button sidebar */}
-                        <Link href={'/admin'} className="text-slate-600 text-2xl w-10 h-10 absolute translate-y-1 px-2 group">
+                        <Link href={'/penguji'} className="text-slate-600 text-2xl w-10 h-10 absolute translate-y-1 px-2 group">
                             <svg className='stroke-white group-hover:stroke-purple duration-300' width="25" height="20" viewBox="0 0 25 20" fill="none" xmlns="http://www.w3.org/2000/svg">
                                 <path d="M23 10H2" strokeWidth="4" strokeLinecap="round" strokeLinejoin="round"/>
                                 <path d="M10 18L2 10L10 2" strokeWidth="4" strokeLinecap="round" strokeLinejoin="round"/>
@@ -150,9 +129,9 @@ const edit_profile = () => {
                             {/* wrapper foto profile */}
                             <div className="flex justify-center">
                                 <button onClick={() => editFoto ()} className="bg-gradient-to-r from-[#16D4FC] to-[#9A4BE9] w-40 h-40 rounded-full p-1 group">
-                                    <img className='group-hover:hidden object-cover h-full w-full rounded-full' src={`http://localhost:8080/image/` + dataAdmin.foto} alt="" />
+                                    <img className='group-hover:hidden object-cover h-full w-full rounded-full' src={`http://localhost:8080/image/` + dataPenguji.foto} alt="" />
                                     <div className="hidden rounded-full w-full h-full group-hover:flex flex-col justify-center items-center gap-y-2">
-                                        <img className='object-cover w-full h-full rounded-full' src={`http://localhost:8080/image/` + dataAdmin.foto} alt="" />
+                                        <img className='object-cover w-full h-full rounded-full' src={`http://localhost:8080/image/` + dataPenguji.foto} alt="" />
                                         <svg className='absolute' width="28" height="26" viewBox="0 0 28 26" fill="none" xmlns="http://www.w3.org/2000/svg">
                                             <path d="M14 20.9444C15.75 20.9444 17.2377 20.3123 18.4632 19.0479C19.6887 17.7835 20.3009 16.249 20.3 14.4444C20.3 12.6389 19.6873 11.1039 18.4618 9.83955C17.2363 8.57518 15.7491 7.94348 14 7.94444C12.25 7.94444 10.7623 8.57663 9.5368 9.841C8.31133 11.1054 7.69907 12.6399 7.7 14.4444C7.7 16.25 8.31273 17.785 9.5382 19.0493C10.7637 20.3137 12.2509 20.9454 14 20.9444ZM14 19.5L12.46 16.0333L9.1 14.4444L12.46 12.8556L14 9.38889L15.54 12.8556L18.9 14.4444L15.54 16.0333L14 19.5ZM2.8 26C2.03 26 1.3706 25.7169 0.821802 25.1507C0.273002 24.5844 -0.000930956 23.9046 2.37691e-06 23.1111V5.77778C2.37691e-06 4.98333 0.274402 4.303 0.823202 3.73678C1.372 3.17056 2.03094 2.88793 2.8 2.88889H7.21L9.8 0H18.2L20.79 2.88889H25.2C25.97 2.88889 26.6294 3.172 27.1782 3.73822C27.727 4.30444 28.0009 4.9843 28 5.77778V23.1111C28 23.9056 27.7256 24.5859 27.1768 25.1521C26.628 25.7183 25.9691 26.001 25.2 26H2.8Z" fill="white"/>
                                         </svg>
@@ -165,41 +144,31 @@ const edit_profile = () => {
                                 {/* wrapper form niw */}
                                 <div className="flex flex-col gap-y-2">
                                     <label className='text-purple text-lg tracking-wider' htmlFor="">NIW</label>
-                                    <input placeholder='Jerome J. Colman' className='rounded-md bg-navy p-2 text-white focus:outline-purple w-full' type="text" value={niw} onChange={(e) => setNiw (e.target.value)} />
+                                    <h1 className='rounded-md bg-navy p-2 text-white focus:outline-purple w-full'>{niw}</h1>
                                 </div>
 
                                 {/* wrapper form nama */}
                                 <div className="flex flex-col gap-y-2">
                                     <label className='text-purple text-lg tracking-wider' htmlFor="">Nama</label>
-                                    <input placeholder='Jerome J. Colman' className='rounded-md bg-navy p-2 text-white focus:outline-purple w-full' type="text" value={name} onChange={(e) => setName (e.target.value)} />
+                                    <h1 className='rounded-md bg-navy p-2 text-white focus:outline-purple w-full'>{name}</h1>
                                 </div>
 
                                 {/* wrapper form ranting */}
                                 <div className="flex flex-col gap-y-2">
                                     <label className='text-purple text-lg tracking-wider' htmlFor="">Ranting</label>
-                                    <select className='w-full rounded-md bg-navy p-2 text-white focus:outline-purple' 
-                                    name={ranting} value={ranting} onChange = {(e) => setRanting (e.target.value)}
-                                    >
-                                        <option></option>
-                                        {dataRanting.map((item, index) => (
-                                            <option key={index + 1}
-                                            value={item.id_ranting}
-                                            >{item.name}</option>
-                                        ))}
-                                    </select>
-                                    {/* <input placeholder='Jerome J. Colman' className='rounded-md bg-navy p-2 text-white focus:outline-purple w-full' type="text" value={ranting} onChange={(e) => setRanting (e.target.value)} /> */}
+                                    <h1 className='rounded-md bg-navy p-2 text-white focus:outline-purple w-full first-letter:uppercase'>{ranting}</h1>
                                 </div>
 
                                 {/* wrapper form no wa */}
                                 <div className="flex flex-col gap-y-2">
                                     <label className='text-purple text-lg tracking-wider' htmlFor="">No WA </label>
-                                    <input placeholder='Jerome J. Colman' className='rounded-md bg-navy p-2 text-white focus:outline-purple w-full' type="text" value={noWa} onChange={(e) => setNoWa (e.target.value)} />
+                                    <input className='rounded-md bg-navy p-2 text-white focus:outline-purple w-full' type="number" value={noWa} onChange={(e) => setNoWa (e.target.value)} />
                                 </div>
 
                                 {/* wrapper form username */}
                                 <div className="flex flex-col gap-y-2">
                                     <label className='text-purple text-lg tracking-wider' htmlFor="">Username</label>
-                                    <input placeholder='jerome' className='rounded-md bg-navy p-2 text-white focus:outline-purple w-full' type="text" value={username} onChange={(e) => setUsername (e.target.value)} />
+                                    <input className='rounded-md bg-navy p-2 text-white focus:outline-purple w-full' type="text" value={username} onChange={(e) => setUsername (e.target.value)} />
                                 </div>
 
                                 {/* wrapper form password */}
@@ -223,19 +192,14 @@ const edit_profile = () => {
                         </div>
                     </div>
                     {/* akhir konten utama */}
-
-                    {/* footer */}
-                    <Footer />
-                    {/* akhir footer */}
-
                 </div>
                 {/* akhir wrapper konten utama */}
             </div>  
 
             {/* memanggil modal */}
-            <globalState.Provider value={{ showModalFoto, setShowModalFoto, dataAdmin, setDataAdmin, foto, setFoto, idAdmin }}>
+            {/* <globalState.Provider value={{ showModalFoto, setShowModalFoto, dataAdmin, setDataAdmin, foto, setFoto, idAdmin }}>
                 <Modal_foto />
-            </globalState.Provider>
+            </globalState.Provider> */}
         </>
     )
 }

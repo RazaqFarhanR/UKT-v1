@@ -23,37 +23,25 @@ module.exports = (sequelize, DataTypes) => {
         foreignKey: "id_event",
         as: "siswa_event"
       })
-      this.hasMany(models.senam_siswa, {
+      this.hasMany(models.senam_detail, {
         foreignKey: "id_siswa",
         as: "senam_siswa"
       })
-      this.hasMany(models.jurus_siswa, {
+      this.hasMany(models.jurus_detail, {
         foreignKey: "id_siswa",
-        as: "siswa_jurus"
+        as: "jurus_siswa"
       })
-      this.hasMany(models.teknik_siswa, {
+      this.hasMany(models.teknik_detail, {
         foreignKey: "id_siswa",
-        as: "teknik_siswa"
+        as: "siswa_teknik"
       })
       this.hasMany(models.fisik, {
         foreignKey: "id_siswa",
-        as: "fisik"
+        as: "siswa_fisik"
       })
-      this.hasMany(models.ukcw, {
+      this.hasMany(models.ukt_siswa, {
         foreignKey: "id_siswa",
-        as: "ukcw"
-      })
-      this.hasMany(models.ukt_hijau, {
-        foreignKey: "id_siswa",
-        as: "ukt_hijau"
-      })
-      this.hasMany(models.ukt_jambon, {
-        foreignKey: "id_siswa",
-        as: "ukt_jambon"
-      })
-      this.hasMany(models.ukt_putih, {
-        foreignKey: "id_siswa",
-        as: "ukt_putih"
+        as: "siswa_ukt_siswa"
       })
       this.hasMany(models.detail_sambung, {
         foreignKey: "id_siswa",

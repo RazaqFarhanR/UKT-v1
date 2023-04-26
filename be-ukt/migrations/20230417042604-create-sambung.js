@@ -9,8 +9,21 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.INTEGER
       },
+      id_event: {
+        type: Sequelize.INTEGER,
+        allowNull: false,
+        references: {
+          model: "event",
+          key: "id_event"
+        }
+      },
       id_penguji: {
-        type: Sequelize.INTEGER
+        type: Sequelize.INTEGER,
+        allowNull: false,
+        references: {
+          model: "penguji",
+          key: "id_penguji"
+        }
       },
       createdAt: {
         allowNull: false,

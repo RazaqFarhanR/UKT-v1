@@ -31,12 +31,44 @@ const index = () => {
                         <h1 className='text-green'>Stevan Dean Achmad Ngunardi</h1>
                     </div>
 
-                    {/* ukt card */}
+                    {/* wrapper ukt card */}
                     <div className="border-t-2 border-white px-3">
-                        <Link href={'/penguji/event'}>
+
+                        {/* card ukt jambon */}
+                        <Link href={'/penguji/event_jambon'}>
                             <div className="hover:scale-105 transition ease-in-out duration-500 hover:bg-gradient-to-r from-[#16D4FC] to-[#9A4BE9] rounded-md p-0.5  mt-4">
                                 <div className="bg-navy shadow drop-shadow-lg rounded-md p-5 text-center">
                                     <h1 className='text-xl font-semibold text-green tracking-wide'>UKT Jambon</h1>
+                                    <h1 className='text-white tracking-wider'>30 Siswa</h1>
+                                </div>
+                            </div>
+                        </Link>
+
+                        {/* card ukt Hijau */}
+                        <Link href={'/penguji/event_hijau'}>
+                            <div className="hover:scale-105 transition ease-in-out duration-500 hover:bg-gradient-to-r from-[#16D4FC] to-[#9A4BE9] rounded-md p-0.5  mt-4">
+                                <div className="bg-navy shadow drop-shadow-lg rounded-md p-5 text-center">
+                                    <h1 className='text-xl font-semibold text-green tracking-wide'>UKT Hijau</h1>
+                                    <h1 className='text-white tracking-wider'>30 Siswa</h1>
+                                </div>
+                            </div>
+                        </Link>
+
+                        {/* card ukt Putih */}
+                        <Link href={'/penguji/event_putih'}>
+                            <div className="hover:scale-105 transition ease-in-out duration-500 hover:bg-gradient-to-r from-[#16D4FC] to-[#9A4BE9] rounded-md p-0.5  mt-4">
+                                <div className="bg-navy shadow drop-shadow-lg rounded-md p-5 text-center">
+                                    <h1 className='text-xl font-semibold text-green tracking-wide'>UKT Putih</h1>
+                                    <h1 className='text-white tracking-wider'>30 Siswa</h1>
+                                </div>
+                            </div>
+                        </Link>
+
+                        {/* card ukcw */}
+                        <Link href={'/penguji/event_ukcw'}>
+                            <div className="hover:scale-105 transition ease-in-out duration-500 hover:bg-gradient-to-r from-[#16D4FC] to-[#9A4BE9] rounded-md p-0.5  mt-4">
+                                <div className="bg-navy shadow drop-shadow-lg rounded-md p-5 text-center">
+                                    <h1 className='text-xl font-semibold text-green tracking-wide'>UKCW</h1>
                                     <h1 className='text-white tracking-wider'>30 Siswa</h1>
                                 </div>
                             </div>
