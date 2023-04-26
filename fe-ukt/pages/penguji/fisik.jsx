@@ -13,7 +13,7 @@ const fisik = () => {
     const [spirPA, setSpirPA] = useState(0);
     const [spirPB, setSpirPB] = useState(0);
     const [spirDada, setSpirDada] = useState(0);
-    const [plank, setPlank] = useState(0);tUkt] = useState ('')
+    const [plank, setPlank] = useState(0);
 
     // function get data siswa from local storage
     const getDataSiswa = () => {
@@ -33,6 +33,7 @@ const fisik = () => {
             peserta: peserta
         },{ headers: { Authorization: `Bearer ${token}`}})
         .then (res => {
+            console.log(res.data);
             setDataStandartFisik (res.data);
             setMft (res.data.mft);
             setPushUp (res.data.push_up);
@@ -47,6 +48,7 @@ const fisik = () => {
     }
     const postDataFisik = () => {
         const token = localStorage.getItem('tokenPenguji')
+        const penguji = JSON.parse (localStorage.getItem('penguji'));
         console.log(token);
         console.log(dataStandartFisik);
         const mftNew = ((mft / dataStandartFisik.mft) * 100)
@@ -56,6 +58,7 @@ const fisik = () => {
         const spirDadaNew = ((spirDada / dataStandartFisik.spir_dada) * 100)
         const plankNew = ((plank / dataStandartFisik.plank) * 100)
         const data = {
+            id_penguji: penguji.id_penguji,
             id_event: dataSiswa.id_event,
             id_siswa: dataSiswa.id_siswa,
             mft: mftNew,
@@ -109,6 +112,9 @@ const fisik = () => {
                                     <button className='bg-red rounded-md text-center text-2xl font-bold'
                                         onClick={() => setMft(mft - 1)}
                                     >
+                                        -
+                                    </button>
+
                                     {/* score indicator */}
                                     <div className="outline outline-purple rounded-md h-full flex items-center justify-center">
                                         <h1 className='text-xl font-semibold'>{mft}</h1>
@@ -121,7 +127,6 @@ const fisik = () => {
                                     </button>
                                 </div>
                             </div>
-                            
                             {/* wrapper push_up */}
                             <div className="bg-navy rounded-md p-2 text-center text-white space-y-3 mb-3">
                                 <h1 className='text-xl font-semibold tracking-wider'>Push Up</h1>
@@ -144,12 +149,10 @@ const fisik = () => {
                                     {/* button plus */}
                                     <button className='bg-purple rounded-md text-center text-2xl font-bold'
                                     onClick={() => setPushUp(pushUp + 1)}>
-
                                         +
                                     </button>
                                 </div>
                             </div>
-                            
                             {/* wrapper spir_perut_atas */}
                             <div className="bg-navy rounded-md p-2 text-center text-white space-y-3 mb-3">
                                 <h1 className='text-xl font-semibold tracking-wider'>Spir Perut Atas</h1>
@@ -176,7 +179,6 @@ const fisik = () => {
                                     </button>
                                 </div>
                             </div>
-                            
                             {/* wrapper spir_perut_bawah */}
                             <div className="bg-navy rounded-md p-2 text-center text-white space-y-3 mb-3">
                                 <h1 className='text-xl font-semibold tracking-wider'>Spir Perut Bawah</h1>
@@ -203,7 +205,6 @@ const fisik = () => {
                                     </button>
                                 </div>
                             </div>
-                            
                             {/* wrapper spir_dada */}
                             <div className="bg-navy rounded-md p-2 text-center text-white space-y-3 mb-3">
                                 <h1 className='text-xl font-semibold tracking-wider'>Spir Dada</h1>
@@ -230,7 +231,6 @@ const fisik = () => {
                                     </button>
                                 </div>
                             </div>
-                            
                             {/* wrapper plank */}
                             <div className="bg-navy rounded-md p-2 text-center text-white space-y-3 mb-3">
                                 <h1 className='text-xl font-semibold tracking-wider'>Plank</h1>

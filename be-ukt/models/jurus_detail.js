@@ -3,7 +3,7 @@ const {
   Model
 } = require('sequelize');
 module.exports = (sequelize, DataTypes) => {
-  class ukt_jambon extends Model {
+  class jurus_detail extends Model {
     /**
      * Helper method for defining associations.
      * This method is not a part of Sequelize lifecycle.
@@ -11,37 +11,39 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
-      this.belongsTo(models.ukt_jambon, {
+      this.belongsTo(models.siswa, {
         foreignKey: "id_siswa",
-        as: "ukt_jambon"
+        as: "jurus_siswa"
+      })
+      this.belongsTo(models.penguji, {
+        foreignKey: "id_penguji",
+        as: "penguji_jurus"
       })
       this.belongsTo(models.event, {
         foreignKey: "id_event",
-        as: "event_jambon"
+        as: "event_jurus"
+      })
+      this.hasMany(models.jurus_siswa, {
+        foreignKey: "id_jurus_detail",
+        as: "siswa_jurus_detail"
       })
     }
   }
-  ukt_jambon.init({
-    id_ukt_jambon:{
+  jurus_detail.init({
+    id_jurus_detail: {
       allowNull: false,
       autoIncrement: true,
       primaryKey: true,
       type: DataTypes.INTEGER
     },
+    id_penguji: DataTypes.INTEGER,
     id_siswa: DataTypes.INTEGER,
     id_event: DataTypes.INTEGER,
-    rayon: DataTypes.STRING,
-    keshan: DataTypes.INTEGER,
-    senam: DataTypes.INTEGER,
-    jurus: DataTypes.INTEGER,
-    fisik: DataTypes.INTEGER,
-    teknik: DataTypes.INTEGER,
-    sambung: DataTypes.INTEGER,
-    sambung: DataTypes.INTEGER
+    tipe_ukt: DataTypes.STRING
   }, {
     sequelize,
-    modelName: 'ukt_jambon',
-    tableName: 'ukt_jambon'
+    modelName: 'jurus_detail',
+    tableName: 'jurus_detail',
   });
-  return ukt_jambon;
+  return jurus_detail;
 };

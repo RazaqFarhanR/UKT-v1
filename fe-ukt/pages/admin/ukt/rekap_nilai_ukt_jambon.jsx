@@ -1,10 +1,29 @@
-import React from 'react'
+import React, {useEffect, useState} from 'react'
 import Link from 'next/link'
+import axios from 'axios'
 import Sidebar from '../components/sidebar'
 import Header from '../components/header'
 import Footer from '../components/footer'
+const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
 
 const rekap_nilai_ukt_jambon = () => {
+    const [dataUktJambon, setDataUktJambon] = useState([])
+    const getDataUktJambon = () => {
+        const token = localStorage.getItem ('token')
+
+        axios.get (BASE_URL + `ukt_siswa/ukt/UKT Jambon`, { headers: { Authorization: `Bearer ${token}`}})
+        .then (res => {
+            console.log(res.data.data);
+            setDataUktJambon (res.data.data)
+        })
+        .catch (err => {
+            console.log(err.message);
+        })
+    }
+
+    useEffect (() => {
+        getDataUktJambon ()
+    }, [])
     return (
         <>
             <div className="flex font-lato">
@@ -71,18 +90,20 @@ const rekap_nilai_ukt_jambon = () => {
                                     </tr>
                                 </thead>
                                 <tbody>
+                                {dataUktJambon.map((item, index) => (
                                     <tr className='text-white text-center'>
-                                        <td className='border-b-2 py-3 border-gray'>test</td>
-                                        <td className='border-b-2 border-gray'>test</td>
-                                        <td className='border-b-2 border-gray'>test</td>
-                                        <td className='border-b-2 border-gray'>test</td>
-                                        <td className='border-b-2 border-gray'>test</td>
-                                        <td className='border-b-2 border-gray'>test</td>
-                                        <td className='border-b-2 border-gray'>test</td>
-                                        <td className='border-b-2 border-gray'>test</td>
-                                        <td className='border-b-2 border-gray'>test</td>
-                                        <td className='border-b-2 border-gray'>test</td>
+                                        <td className='border-b-2 py-3 border-gray'>{item.siswa_ukt_siswa.tingkatan}</td>
+                                        <td className='border-b-2 border-gray'>{item.siswa_ukt_siswa.name}</td>
+                                        <td className='border-b-2 border-gray'>{item.siswa_ukt_siswa.siswa_ranting.name}</td>
+                                        <td className='border-b-2 border-gray'>{item.keshan}</td>
+                                        <td className='border-b-2 border-gray'>{item.senam}</td>
+                                        <td className='border-b-2 border-gray'>{item.jurus}</td>
+                                        <td className='border-b-2 border-gray'>{item.fisik}</td>
+                                        <td className='border-b-2 border-gray'>{item.teknik}</td>
+                                        <td className='border-b-2 border-gray'>{item.sambung}</td>
+                                        <td className='border-b-2 border-gray'>{((item.keshan + item.senam + item.jurus + item.fisik + item.teknik + item.sambung) / 6).toFixed(2)}</td>
                                     </tr>
+                                    ))}
                                 </tbody>
                             </table>
                         </div>

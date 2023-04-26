@@ -12,25 +12,17 @@ app.use(bodyParser.urlencoded({extended: true}));
 
 //import model
 const models = require('../models/index');
-const jurus_siswa = models.jurus_siswa;
+const jurus_detail = models.jurus_detail;
 
 //endpoint ditulis disini
 
-//endpoint get data jurus_siswa
+//endpoint get data jurus_detail
 app.get("/", Auth, verifyRoles("admin", "super admin", "admin ranting", "pengurus cabang", "pengurus ranting", "penguji cabang", "penguji ranting"), (req,res) => {
-    jurus_siswa.findAll({
-        include: [
-            {
-                model: models.jurus,
-                as: "jurus",
-                attributes: ['name']
-            }
-        ]
-    })
-    .then(jurus_siswa => {
+    jurus_detail.findAll()
+    .then(jurus_detail => {
         res.json({
-            count: jurus_siswa.length,
-            data: jurus_siswa
+            count: jurus_detail.length,
+            data: jurus_detail
         })
     })
     .catch(error => {
@@ -40,17 +32,17 @@ app.get("/", Auth, verifyRoles("admin", "super admin", "admin ranting", "penguru
     })    
 })
 
-//endpoint get data jurus_siswa by tipe_ukt
+//endpoint get data jurus_detail by tipe_ukt
 app.get("/:id", Auth, verifyRoles("admin", "super admin", "admin ranting", "pengurus cabang", "pengurus ranting", "penguji cabang", "penguji ranting"), (req,res) => {
-    jurus_siswa.findAll({
+    jurus_detail.findAll({
         where: {
             tipe_ukt: req.params.id
         }
     })
-    .then(jurus_siswa => {
+    .then(jurus_detail => {
         res.json({
-            count: jurus_siswa.length,
-            data: jurus_siswa
+            count: jurus_detail.length,
+            data: jurus_detail
         })
     })
     .catch(error => {
@@ -61,24 +53,79 @@ app.get("/:id", Auth, verifyRoles("admin", "super admin", "admin ranting", "peng
 })
 //endpoint get data jurus by tipe_ukt
 app.get("/ukt/:id", Auth, verifyRoles("admin", "super admin", "admin ranting", "pengurus cabang", "pengurus ranting", "penguji cabang", "penguji ranting"), (req,res) => {
-    jurus_siswa.findAll({
-        attributes: ['id_jurus_siswa','id_siswa','id_jurus'],
+    jurus_detail.findAll({
+        where: {
+            tipe_ukt: req.params.id
+        },
+        attributes: ['id_jurus_detail','id_event','id_siswa','tipe_ukt'],
         include: [
             {
-                model: models.jurus,
+                model: models.siswa,
                 attributes: ['name'],
-                as: "jurus",
-                where: {
-                    tipe_ukt: req.params.id
-                },
-                required: false
+                as: "jurus_siswa",
+            },
+            {
+                model: models.jurus_siswa,
+                attributes: ['id_jurus','predikat'],
+                as: "siswa_jurus_detail",
+                include: [
+                    {
+                        model: models.jurus,
+                        attributes: ['name'],
+                        as: "jurus"
+                    }
+                ]
             }
         ]
     })
     .then(jurus => {
         res.json({
             count: jurus.length,
+            data: jurus
+        })
+    })
+    .catch(error => {
+        res.json({
+            message: error.message
+        })
+    })    
+})
+//endpoint get data jurus by tipe_ukt
+app.get("/ukt/:id/:event", Auth, verifyRoles("admin", "super admin", "admin ranting", "pengurus cabang", "pengurus ranting", "penguji cabang", "penguji ranting"), (req,res) => {
+    jurus_detail.findAll({
+        where: {
             tipe_ukt: req.params.id,
+            id_event: req.params.event
+        },
+        attributes: ['id_jurus_detail','id_penguji','id_event','id_siswa','tipe_ukt'],
+        include: [
+            {
+                model: models.siswa,
+                attributes: ['name'],
+                as: "jurus_siswa",
+            },
+            {
+                model: models.penguji,
+                attributes: ['name'],
+                as: "penguji_jurus"
+            },
+            {
+                model: models.jurus_siswa,
+                attributes: ['id_jurus','predikat'],
+                as: "siswa_jurus_detail",
+                include: [
+                    {
+                        model: models.jurus,
+                        attributes: ['name'],
+                        as: "jurus"
+                    }
+                ]
+            }
+        ]
+    })
+    .then(jurus => {
+        res.json({
+            count: jurus.length,
             data: jurus
         })
     })
@@ -90,16 +137,16 @@ app.get("/ukt/:id", Auth, verifyRoles("admin", "super admin", "admin ranting", "
 })
 //endpoint get data jurus by id siswa
 app.get("/siswa/:id", Auth, verifyRoles("admin", "super admin", "admin ranting", "pengurus cabang", "pengurus ranting", "penguji cabang", "penguji ranting"), (req,res) => {
-    jurus_siswa.findAll({
-        attributes: ['id_jurus_siswa','id_jurus', 'predikat'],
+    jurus_detail.findAll({
+        attributes: ['id_jurus_detail','id_siswa','id_jurus', 'predikat'],
         where: {
             id_siswa: req.params.id
         },
         include: [
             {
                 model: models.jurus,
-                attributes: ['name', 'tipe_ukt'],
-                as: "jurus",
+                attributes: ['name','tipe_ukt'],
+                as: "siswa_jurus",
                 required: false
             }
         ]
@@ -115,7 +162,6 @@ app.get("/siswa/:id", Auth, verifyRoles("admin", "super admin", "admin ranting",
         console.log(nilai.length);
         res.json({
             count: jurus.length,
-            id_siswa: req.params.id,
             jurus_benar: nilai.length,
             data: jurus
         })
@@ -126,14 +172,15 @@ app.get("/siswa/:id", Auth, verifyRoles("admin", "super admin", "admin ranting",
         })
     })    
 })
-//endpoint untuk menyimpan data jurus_siswa, METHOD POST, function create
+//endpoint untuk menyimpan data jurus_detail, METHOD POST, function create
 app.post("/", Auth, verifyRoles("admin", "super admin", "admin ranting", "pengurus cabang", "pengurus ranting", "penguji cabang", "penguji ranting"), (req,res) =>{
     let data ={
-        id_jurus_detail: req.body.id_jurus_detail,
-        id_jurus: req.body.id_jurus,
-        predikat: req.body.predikat
+        id_penguji: req.body.id_penguji,
+        id_event: req.body.id_event,
+        id_siswa: req.body.id_siswa,
+        tipe_ukt: req.body.tipe_ukt
     }
-    jurus_siswa.create(data)
+    jurus_detail.create(data)
     .then(result => {
         res.json({
             message: "data has been inserted"
@@ -146,17 +193,18 @@ app.post("/", Auth, verifyRoles("admin", "super admin", "admin ranting", "pengur
     })
 }) 
 
-//endpoint untuk mengupdate data jurus_siswa, METHOD: PUT, fuction: UPDATE
+//endpoint untuk mengupdate data jurus_detail, METHOD: PUT, fuction: UPDATE
 app.put("/:id", Auth, verifyRoles("admin", "super admin", "admin ranting", "pengurus cabang", "pengurus ranting", "penguji cabang", "penguji ranting"), (req,res) => {
     let param = {
-        id_jurus_siswa : req.params.id
+        id_jurus_detail : req.params.id
     }
     let data ={
-        id_jurus_detail: req.body.id_jurus_detail,
-        id_jurus: req.body.id_jurus,
-        predikat: req.body.predikat
+        id_penguji: req.body.id_penguji,
+        id_event: req.body.id_event,
+        id_siswa: req.body.id_siswa,
+        tipe_ukt: req.body.tipe_ukt
     }
-    jurus_siswa.update(data, {where: param})
+    jurus_detail.update(data, {where: param})
     .then(result => {
         res.json({
             message : "data has been updated"
@@ -169,12 +217,12 @@ app.put("/:id", Auth, verifyRoles("admin", "super admin", "admin ranting", "peng
     })
 })
 
-//endpoint untuk menghapus data jurus_siswa,METHOD: DELETE, function: destroy
+//endpoint untuk menghapus data jurus_detail,METHOD: DELETE, function: destroy
 app.delete("/:id", Auth, verifyRoles("admin", "super admin", "admin ranting", "pengurus cabang", "pengurus ranting", "penguji cabang", "penguji ranting"), (req,res) => {
     let param = {
-        id_jurus_siswa : req.params.id
+        id_jurus_detail : req.params.id
     }
-    jurus_siswa.destroy({where: param})
+    jurus_detail.destroy({where: param})
     .then(result => {
         res.json({
             massege : "data has been deleted"

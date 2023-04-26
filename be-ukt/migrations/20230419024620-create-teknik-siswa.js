@@ -9,6 +9,14 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.INTEGER
       },
+      id_penguji: {
+        type: Sequelize.INTEGER,
+        allowNull: false,
+        references: {
+          model: "penguji",
+          key: "id_penguji"
+        }
+      },
       id_teknik: {
         type: Sequelize.INTEGER,
         allowNull: false,
@@ -17,20 +25,12 @@ module.exports = {
           key: "id_teknik"
         }
       },
-      id_event: {
+      id_teknik_detail: {
         type: Sequelize.INTEGER,
         allowNull: false,
         references: {
-          model: "event",
-          key: "id_event"
-        }
-      },
-      id_siswa: {
-        type: Sequelize.INTEGER,
-        allowNull: false,
-        references: {
-          model: "siswa",
-          key: "id_siswa"
+          model: "teknik_detail",
+          key: "id_teknik_detail"
         }
       },
       predikat: {

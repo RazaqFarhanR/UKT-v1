@@ -63,7 +63,8 @@ app.get("/siswa/:id", Auth, verifyRoles("admin", "super admin", "admin ranting",
                 attributes: ['name'],
                 as: "siswa_teknik"
             }
-        ]
+        ],
+        order: ['id_teknik']
     })
     .then(teknik_siswa => {
         console.log(teknik_siswa[0].predikat)
@@ -100,9 +101,8 @@ app.get("/siswa/:id", Auth, verifyRoles("admin", "super admin", "admin ranting",
 //endpoint untuk menyimpan data teknik_siswa, METHOD POST, function create
 app.post("/", Auth, verifyRoles("admin", "super admin", "admin ranting", "pengurus cabang", "pengurus ranting", "penguji cabang", "penguji ranting"), (req,res) =>{
     let data ={     
+        id_teknik_detail: req.body.id_teknik_detail,
         id_teknik: req.body.id_teknik,
-        id_event: req.body.id_event,
-        id_siswa: req.body.id_siswa,
         predikat: req.body.predikat
     }
     teknik_siswa.create(data)
@@ -124,9 +124,8 @@ app.put("/:id", Auth, verifyRoles("admin", "super admin", "admin ranting", "peng
         id_teknik_siswa : req.params.id
     }
     let data ={     
+        id_teknik_detail: req.body.id_teknik_detail,
         id_teknik: req.body.id_teknik,
-        id_event: req.body.id_event,
-        id_siswa: req.body.id_siswa,
         predikat: req.body.predikat
     }
     teknik_siswa.update(data, {where: param})

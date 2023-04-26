@@ -31,7 +31,7 @@ const ukt_jambon = () => {
     const getDataEvent = () => {
         const token = localStorage.getItem ('token')
 
-        axios.get (BASE_URL + `event`, { headers: { Authorization: `Bearer ${token}`}})
+        axios.get (BASE_URL + `event/ukt/UKT Jambon`, { headers: { Authorization: `Bearer ${token}`}})
         .then (res => {
             setDataEvent (res.data.data)
         })
@@ -133,7 +133,7 @@ const ukt_jambon = () => {
                         <div className="grid grid-cols-2 gap-x-5">
                             
                             {/* card event */}
-                            {dataEvent.filter(a => a.tipe === 'ukt_jambon').map((item, index) => (
+                            {dataEvent.map((item, index) => (
                                 <div key={index + 1} className="bg-navy hover:bg-gradient-to-r from-[#16D4FC] to-[#9A4BE9] rounded-md p-0.5">
 
                                     {/* inner bg */}
@@ -163,7 +163,7 @@ const ukt_jambon = () => {
                                         {/* action button */}
                                         <div className=" space-x-2 w-full flex justify-center text-white text-center">
                                             <button onClick={() => toRekapNilai (item)} className='bg-purple hover:bg-white hover:text-purple duration-300 p-2 rounded-md w-full'>Lihat Nilai</button>
-                                            <button onClick={() => toDetailNilai (item)} href={'./detail_nilai_ukt_jambon'} className='bg-purple hover:bg-white hover:text-purple duration-300 p-2 rounded-md w-full'>Detail Nilai</button>
+                                            <button onClick={() => toDetailNilai (item)} className='bg-purple hover:bg-white hover:text-purple duration-300 p-2 rounded-md w-full'>Detail Nilai</button>
                                         </div>
                                     </div>
                                 </div>

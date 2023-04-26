@@ -15,6 +15,14 @@ module.exports = (sequelize, DataTypes) => {
         foreignKey: "id_sambung",
         as: "detail_sambung"
       })
+      this.belongsTo(models.event, {
+        foreignKey: "id_event",
+        as: "event_sambung"
+      })
+      this.belongsTo(models.penguji, {
+        foreignKey: "id_penguji",
+        as: "penguji_sambung"
+      })
     }
   }
   sambung.init({
