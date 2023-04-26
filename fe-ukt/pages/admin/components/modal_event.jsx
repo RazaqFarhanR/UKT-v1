@@ -17,7 +17,7 @@ const modal_event = () => {
     // function get data event
     const getDataEvent = () => {
         const token = localStorage.getItem ('token')
-        axios.get(BASE_URL + `event`, { headers: { Authorization: `Bearer ${token}`}})
+        axios.get(BASE_URL + `event/ukt/${tipe}`, { headers: { Authorization: `Bearer ${token}`}})
         .then (res => {
             setDataEvent (res.data.data)
         })
