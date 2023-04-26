@@ -17,8 +17,66 @@ const ukt_jambon = models.ukt_jambon;
 //endpoint ditulis disini
 
 //endpoint get data ukt_jambon
-app.get("/", Auth, verifyRoles("admin", "super admin", "admin ranting", "pengurus cabang", "pengurus ranting", "penguji"), (req,res) => {
+app.get("/", Auth, verifyRoles("admin", "super admin", "admin ranting", "pengurus cabang", "pengurus ranting", "penguji cabang", "penguji ranting"), (req,res) => {
     ukt_jambon.findAll()
+    .then(ukt_jambon => {
+        res.json({
+            count: ukt_jambon.length,
+            data: ukt_jambon
+        })
+    })
+    .catch(error => {
+        res.json({
+            message: error.message
+        })
+    })    
+})
+//endpoint get data ukt_jambon by id ukt jambon
+app.get("/:id", Auth, verifyRoles("admin", "super admin", "admin ranting", "pengurus cabang", "pengurus ranting", "penguji cabang", "penguji ranting"), (req,res) => {
+    ukt_jambon.findAll({
+        where: {
+            id_ukt_jambon: req.params.id
+        }
+    })
+    .then(ukt_jambon => {
+        res.json({
+            count: ukt_jambon.length,
+            data: ukt_jambon
+        })
+    })
+    .catch(error => {
+        res.json({
+            message: error.message
+        })
+    })    
+})
+
+//endpoint get data ukt_jambon by id event
+app.get("/event/:id", Auth, verifyRoles("admin", "super admin", "admin ranting", "pengurus cabang", "pengurus ranting", "penguji cabang", "penguji ranting"), (req,res) => {
+    ukt_jambon.findAll({
+        where: {
+            id_event: req.params.id
+        }
+    })
+    .then(ukt_jambon => {
+        res.json({
+            count: ukt_jambon.length,
+            data: ukt_jambon
+        })
+    })
+    .catch(error => {
+        res.json({
+            message: error.message
+        })
+    })    
+})
+//endpoint get data ukt_jambon by rayon
+app.get("/rayon/:id", Auth, verifyRoles("admin", "super admin", "admin ranting", "pengurus cabang", "pengurus ranting", "penguji cabang", "penguji ranting"), (req,res) => {
+    ukt_jambon.findAll({
+        where: {
+            rayon: req.params.id
+        }
+    })
     .then(ukt_jambon => {
         res.json({
             count: ukt_jambon.length,
@@ -33,10 +91,11 @@ app.get("/", Auth, verifyRoles("admin", "super admin", "admin ranting", "penguru
 })
 
 //endpoint untuk menyimpan data ukt_jambon, METHOD POST, function create
-app.post("/", Auth, verifyRoles("admin", "super admin", "admin ranting", "pengurus cabang", "pengurus ranting", "penguji"), (req,res) =>{
+app.post("/", Auth, verifyRoles("admin", "super admin", "admin ranting", "pengurus cabang", "pengurus ranting", "penguji cabang", "penguji ranting"), (req,res) =>{
     let data ={
         id_siswa: req.body.id_siswa,
-        id_rayon: req.body.id_rayon,
+        id_event: req.body.id_event,
+        rayon: req.body.rayon,
         keshan: req.body.keshan,
         senam: req.body.senam,
         jurus: req.body.jurus,
@@ -58,13 +117,14 @@ app.post("/", Auth, verifyRoles("admin", "super admin", "admin ranting", "pengur
 }) 
 
 //endpoint untuk mengupdate data ukt_jambon, METHOD: PUT, fuction: UPDATE
-app.put("/:id", Auth, verifyRoles("admin", "super admin", "admin ranting", "pengurus cabang", "pengurus ranting", "penguji"), (req,res) => {
+app.put("/:id", Auth, verifyRoles("admin", "super admin", "admin ranting", "pengurus cabang", "pengurus ranting", "penguji cabang", "penguji ranting"), (req,res) => {
     let param = {
         id_ukt_jambon : req.params.id
     }
     let data = {
         id_siswa: req.body.id_siswa,
-        id_rayon: req.body.id_rayon,
+        id_event: req.body.id_event,
+        rayon: req.body.rayon,
         keshan: req.body.keshan,
         senam: req.body.senam,
         jurus: req.body.jurus,
@@ -86,7 +146,7 @@ app.put("/:id", Auth, verifyRoles("admin", "super admin", "admin ranting", "peng
 })
 
 //endpoint untuk menghapus data ukt_jambon,METHOD: DELETE, function: destroy
-app.delete("/:id", Auth, verifyRoles("admin", "super admin", "admin ranting", "pengurus cabang", "pengurus ranting", "penguji"), (req,res) => {
+app.delete("/:id", Auth, verifyRoles("admin", "super admin", "admin ranting", "pengurus cabang", "pengurus ranting", "penguji cabang", "penguji ranting"), (req,res) => {
     let param = {
         id_ukt_jambon : req.params.id
     }

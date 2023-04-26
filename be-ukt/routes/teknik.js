@@ -17,7 +17,7 @@ const teknik = models.teknik;
 //endpoint ditulis disini
 
 //endpoint get data teknik
-app.get("/", Auth, verifyRoles("admin", "super admin", "admin ranting", "pengurus cabang", "pengurus ranting", "penguji"), (req,res) => {
+app.get("/", Auth, verifyRoles("admin", "super admin", "admin ranting", "pengurus cabang", "pengurus ranting", "penguji cabang", "penguji ranting"), (req,res) => {
     teknik.findAll()
     .then(teknik => {
         res.json({
@@ -32,16 +32,33 @@ app.get("/", Auth, verifyRoles("admin", "super admin", "admin ranting", "penguru
     })    
 })
 
+//endpoint get data teknik by tipe_ukt
+app.get("/ukt/:id", Auth, verifyRoles("admin", "super admin", "admin ranting", "pengurus cabang", "pengurus ranting", "penguji cabang", "penguji ranting"), (req,res) => {
+    teknik.findAll({
+        where: {
+            tipe_ukt: req.params.id
+        },
+        attributes: ['id_teknik','name']
+    })
+    .then(teknik => {
+        res.json({
+            count: teknik.length,
+            tipe_ukt: req.params.id,
+            data: teknik
+        })
+    })
+    .catch(error => {
+        res.json({
+            message: error.message
+        })
+    })    
+})
+
 //endpoint untuk menyimpan data teknik, METHOD POST, function create
-app.post("/", Auth, verifyRoles("admin", "super admin", "admin ranting", "pengurus cabang", "pengurus ranting", "penguji"), (req,res) =>{
+app.post("/", Auth, verifyRoles("admin", "super admin", "admin ranting", "pengurus cabang", "pengurus ranting", "penguji cabang", "penguji ranting"), (req,res) =>{
     let data ={        
-        id_siswa: req.body.id_siswa,
-        teknik1: req.body.teknik1,
-        teknik2: req.body.teknik2,
-        teknik3: req.body.teknik3,
-        teknik4: req.body.teknik4,
-        teknik5: req.body.teknik5,
-        teknik6: req.body.teknik6,
+        tipe_ukt: req.body.tipe_ukt,
+        name: req.body.name
     }
     teknik.create(data)
     .then(result => {
@@ -57,18 +74,13 @@ app.post("/", Auth, verifyRoles("admin", "super admin", "admin ranting", "pengur
 }) 
 
 //endpoint untuk mengupdate data teknik, METHOD: PUT, fuction: UPDATE
-app.put("/:id", Auth, verifyRoles("admin", "super admin", "admin ranting", "pengurus cabang", "pengurus ranting", "penguji"), (req,res) => {
+app.put("/:id", Auth, verifyRoles("admin", "super admin", "admin ranting", "pengurus cabang", "pengurus ranting", "penguji cabang", "penguji ranting"), (req,res) => {
     let param = {
         id_teknik : req.params.id
     }
-    let data = {
-        id_siswa: req.body.id_siswa,
-        teknik1: req.body.teknik1,
-        teknik2: req.body.teknik2,
-        teknik3: req.body.teknik3,
-        teknik4: req.body.teknik4,
-        teknik5: req.body.teknik5,
-        teknik6: req.body.teknik6,
+    let data ={        
+        tipe_ukt: req.body.tipe_ukt,
+        name: req.body.name
     }
     teknik.update(data, {where: param})
     .then(result => {
@@ -84,7 +96,7 @@ app.put("/:id", Auth, verifyRoles("admin", "super admin", "admin ranting", "peng
 })
 
 //endpoint untuk menghapus data teknik,METHOD: DELETE, function: destroy
-app.delete("/:id", Auth, verifyRoles("admin", "super admin", "admin ranting", "pengurus cabang", "pengurus ranting", "penguji"), (req,res) => {
+app.delete("/:id", Auth, verifyRoles("admin", "super admin", "admin ranting", "pengurus cabang", "pengurus ranting", "penguji cabang", "penguji ranting"), (req,res) => {
     let param = {
         id_teknik : req.params.id
     }

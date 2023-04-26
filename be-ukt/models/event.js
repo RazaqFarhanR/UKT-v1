@@ -31,6 +31,22 @@ module.exports = (sequelize, DataTypes) => {
         foreignKey: "id_event",
         as: "event_jambon"
       })
+      this.hasMany(models.teknik_siswa, {
+        foreignKey: "id_event",
+        as: "event_teknik"
+      })
+      this.hasMany(models.jurus_siswa, {
+        foreignKey: "id_event",
+        as: "event_jurus"
+      })
+      this.hasMany(models.senam_siswa, {
+        foreignKey: "id_event",
+        as: "event_senam"
+      })
+      this.hasMany(models.fisik, {
+        foreignKey: "id_event",
+        as: "event_fisik"
+      })
     }
   }
   event.init({
@@ -42,7 +58,7 @@ module.exports = (sequelize, DataTypes) => {
     },
     name: DataTypes.STRING,
     tanggal: DataTypes.DATE,
-    tipe: DataTypes.ENUM('UKT Jambon','UKT Hijau','UKT Putih','UKCW'),
+    tipe_ukt: DataTypes.ENUM('UKT Jambon','UKT Hijau','UKT Putih','UKCW'),
   }, {
     sequelize,
     modelName: 'event',

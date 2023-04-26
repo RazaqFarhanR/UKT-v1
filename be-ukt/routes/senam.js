@@ -3,6 +3,8 @@ const express = require('express');
 const bodyParser = require('body-parser');
 require('dotenv').config();
 const Auth = require('../middleware/Auth.js');
+const Sequelize = require('sequelize');
+const { sequelize, Op } = require("sequelize");
 const verifyRoles = require("../middleware/verifyRoles");
 
 //implementasi
@@ -17,7 +19,7 @@ const senam = models.senam;
 //endpoint ditulis disini
 
 //endpoint get data senam
-app.get("/", Auth, verifyRoles("admin", "super admin", "admin ranting", "pengurus cabang", "pengurus ranting", "penguji"), (req,res) => {
+app.get("/", Auth, verifyRoles("admin", "super admin", "admin ranting", "pengurus cabang", "pengurus ranting", "penguji cabang", "penguji ranting"), (req,res) => {
     senam.findAll()
     .then(senam => {
         res.json({
@@ -32,22 +34,47 @@ app.get("/", Auth, verifyRoles("admin", "super admin", "admin ranting", "penguru
     })    
 })
 
+//endpoint get data senam by tipe_ukt
+app.get("/ukt/:id", Auth, verifyRoles("admin", "super admin", "admin ranting", "pengurus cabang", "pengurus ranting", "penguji cabang", "penguji ranting"), (req,res) => {
+    let limitSenam = 0;
+    if(req.params.id === "UKT Jambon"){
+        limitSenam = 15
+    } else if(req.params.id === "UKT Hijau"){
+        limitSenam = 30;
+    } else if(req.params.id === "UKT Putih"){
+        limitSenam = 35;
+    } else if(req.params.id === "UKCW"){
+        limitSenam = 45
+    }
+    senam.findAll({
+        where: {
+            tipe_ukt: req.params.id
+        },
+        order: [
+            Sequelize.fn('RAND')
+        ],
+        attributes: ['id_senam','name'],
+        limit: limitSenam
+    })
+    .then(senam => {
+        res.json({
+            limit: limitSenam,
+            tipe_ukt: req.params.id,
+            data: senam
+        })
+    })
+    .catch(error => {
+        res.json({
+            message: error.message
+        })
+    })    
+})
+
 //endpoint untuk menyimpan data senam, METHOD POST, function create
-app.post("/", Auth, verifyRoles("admin", "super admin", "admin ranting", "pengurus cabang", "pengurus ranting", "penguji"), (req,res) =>{
+app.post("/", Auth, verifyRoles("admin", "super admin", "admin ranting", "pengurus cabang", "pengurus ranting", "penguji cabang", "penguji ranting"), (req,res) =>{
     let data ={
-        id_siswa: req.body.id_siswa,
-        senam69: req.body.senam69,
-        senam23: req.body.senam23,
-        senam14: req.body.senam14,
-        senam90: req.body.senam90,
-        senam61: req.body.senam61,
-        senam49: req.body.senam49,
-        senam59: req.body.senam59,
-        senam64: req.body.senam64,
-        senam12: req.body.senam12,
-        senam33: req.body.senam33,
-        senam44: req.body.senam44,
-        senam11: req.body.senam11,
+        tipe_ukt: req.body.tipe_ukt,
+        name: req.body.name
     }
     senam.create(data)
     .then(result => {
@@ -63,24 +90,13 @@ app.post("/", Auth, verifyRoles("admin", "super admin", "admin ranting", "pengur
 }) 
 
 //endpoint untuk mengupdate data senam, METHOD: PUT, fuction: UPDATE
-app.put("/:id", Auth, verifyRoles("admin", "super admin", "admin ranting", "pengurus cabang", "pengurus ranting", "penguji"), (req,res) => {
+app.put("/:id", Auth, verifyRoles("admin", "super admin", "admin ranting", "pengurus cabang", "pengurus ranting", "penguji cabang", "penguji ranting"), (req,res) => {
     let param = {
         id_senam : req.params.id
     }
-    let data = {
-        id_siswa: req.body.id_siswa,
-        senam69: req.body.senam69,
-        senam23: req.body.senam23,
-        senam14: req.body.senam14,
-        senam90: req.body.senam90,
-        senam61: req.body.senam61,
-        senam49: req.body.senam49,
-        senam59: req.body.senam59,
-        senam64: req.body.senam64,
-        senam12: req.body.senam12,
-        senam33: req.body.senam33,
-        senam44: req.body.senam44,
-        senam11: req.body.senam11,
+    let data ={
+        tipe_ukt: req.body.tipe_ukt,
+        name: req.body.name
     }
     senam.update(data, {where: param})
     .then(result => {
@@ -96,7 +112,7 @@ app.put("/:id", Auth, verifyRoles("admin", "super admin", "admin ranting", "peng
 })
 
 //endpoint untuk menghapus data senam,METHOD: DELETE, function: destroy
-app.delete("/:id", Auth, verifyRoles("admin", "super admin", "admin ranting", "pengurus cabang", "pengurus ranting", "penguji"), (req,res) => {
+app.delete("/:id", Auth, verifyRoles("admin", "super admin", "admin ranting", "pengurus cabang", "pengurus ranting", "penguji cabang", "penguji ranting"), (req,res) => {
     let param = {
         id_senam : req.params.id
     }

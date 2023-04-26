@@ -59,7 +59,8 @@ const rekap_nilai_ukt_jambon = () => {
                                 <thead>
                                     <tr className='text-green'>
                                         <th className='py-3 w-[5%]'>Rank</th>
-                                        <th className='w-[35%]'>Nama</th>
+                                        <th className='w-[30%]'>Nama</th>
+                                        <th className='w-[15%]'>Ranting</th>
                                         <th>KESHAN</th>
                                         <th>Senam</th>
                                         <th>Jurus</th>
@@ -72,6 +73,7 @@ const rekap_nilai_ukt_jambon = () => {
                                 <tbody>
                                     <tr className='text-white text-center'>
                                         <td className='border-b-2 py-3 border-gray'>test</td>
+                                        <td className='border-b-2 border-gray'>test</td>
                                         <td className='border-b-2 border-gray'>test</td>
                                         <td className='border-b-2 border-gray'>test</td>
                                         <td className='border-b-2 border-gray'>test</td>

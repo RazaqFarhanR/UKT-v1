@@ -18,7 +18,7 @@ module.exports = {
         }
       },
       nis: {
-        type: Sequelize.INTEGER
+        type: Sequelize.STRING
       },
       name: {
         type: Sequelize.STRING
@@ -31,11 +31,8 @@ module.exports = {
           key: "id_role"
         }
       },
-      jenis_latihan: {
-        type: Sequelize.STRING
-      },
-      jenis_kelamin: {
-        type: Sequelize.ENUM('pria', 'perempuan')
+      peserta: {
+        type: Sequelize.ENUM('Remaja - Laki laki','Remaja - Perempuan','Privat - Laki laki','Privat - Perempuan')
       },
       tipe_ukt: {
         type: Sequelize.ENUM('UKT Jambon','UKT Hijau','UKT Putih','UKCW')
@@ -48,13 +45,8 @@ module.exports = {
           key: "id_ranting"
         }
       },
-      id_rayon: {
-        type: Sequelize.INTEGER,
-        allowNull: true,
-        references: {
-          model: "rayon",
-          key: "id_rayon"
-        }
+      rayon: {
+        type: Sequelize.STRING
       },
       tingkatan: {
         type: Sequelize.STRING

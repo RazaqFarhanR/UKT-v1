@@ -30,18 +30,15 @@ const SECRET_KEY = "BelajarNodeJSItuMenyengankan";
 const localStorage = process.env.LOCAL_STORAGE
 //konfigurasi proses upload file
 const storage = multer.diskStorage({
-    destination: (req, file, cb) => {
-      // set file storage
-      cb(
-        null,
-        "D:/Project/UKT/be-ukt/image"
-      );
-    },
-    filename: (req, file, cb) => {
-      // generate file name
-      cb(null, "foto-" + Date.now() + path.extname(file.originalname));
-    },
-  });
+  destination: (req, file, cb) => {
+    // set file storage
+    cb(null, localStorage);
+  },
+  filename: (req, file, cb) => {
+    // generate file name
+    cb(null, "foto-" + Date.now() + path.extname(file.originalname));
+  },
+});
   
   let upload2 = multer({ storage: storage });
 
@@ -146,7 +143,8 @@ app.post("/niw", async (req, res) => {
 
 //endpoint untuk mengupdate data user, METHOD: PUT, fuction: UPDATE
 app.put("/:id", Auth, verifyRoles("admin", "super admin", "admin ranting", "pengurus cabang"), upload2.single("foto"), async (req, res) => {
-  const hash = await bcrypt.hash(req.body.password, salt);
+  const password = req.body.password != null ? req.body.password : "freestyle"
+  const hash = await bcrypt.hash(password, salt);
   try {
     let param = {
       id_pengurus: req.params.id,
@@ -166,8 +164,19 @@ app.put("/:id", Auth, verifyRoles("admin", "super admin", "admin ranting", "peng
         password: hash,
         no_wa: req.body.no_wa,
       };
+      let dataNoPsw = {
+        NIW: req.body.niw,
+        jabatan: req.body.jabatan,
+        name: req.body.name,
+        id_role: req.body.id_role,
+        id_ranting: req.body.id_ranting,
+        id_cabang: req.body.id_cabang,
+        username: req.body.username,
+        password: hash,
+        no_wa: req.body.no_wa,
+      }
       if (req.file) {
-        const imagePath = "C:/Users/RAFI DUTA/Documents/KODING/REACT JS/UKT/be-ukt/image/" + result[0].foto;
+        const imagePath = localStorage + "/" +  result[0].foto;
         fs.unlink(imagePath, (err) => {
           if (err) {
             console.error(err);
@@ -178,7 +187,7 @@ app.put("/:id", Auth, verifyRoles("admin", "super admin", "admin ranting", "peng
         data.foto = req.file.filename;
       }
       pengurus
-        .update(data, { where: param })
+        .update(password != null ? data : dataNoPsw, { where: param })
         .then((result) => {
           res.json({
             message: "data has been updated",
@@ -234,15 +243,11 @@ app.post("/auth", async (req, res) => {
         const match = await bcrypt.compare(req.body.password, result[0].password);
         if (!match) return res.status(400).json({ msg: "password salah" });
         if (result[0].id_role === "penguji ranting" || "pengurus cabang") {
-          const id_user = result[0].id_user;
-          const id_role = result[0].id_role;
+          const idUser = result[0].id_penguji;
+          const role = result[0].id_role;
           const id = randomUUID();
-          let payload = JSON.stringify({
-            id_user: id_user,
-            id_role: id_role,
-          });
           // generate token based on payload and secret_key
-          let localToken = jwt.sign(payload, SECRET_KEY);
+          let localToken = jwt.sign({ idUser, role }, process.env.ACCESS_TOKEN_SECRET);
   
           const data = await pengurus.findAll({
             where: {

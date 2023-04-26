@@ -39,15 +39,21 @@ app.use("/ukt/penguji", penguji)
 const senam = require('./routes/senam');
 app.use("/ukt/senam", senam)
 
-const rayon = require('./routes/rayon');
-app.use("/ukt/rayon", rayon)
+const senam_siswa = require('./routes/senam_siswa');
+app.use("/ukt/senam_siswa", senam_siswa)
 
 const jurus = require('./routes/jurus');
 app.use("/ukt/jurus", jurus)
 
+const jurus_siswa = require('./routes/jurus_siswa');
+app.use("/ukt/jurus_siswa", jurus_siswa)
+
 //endpoint teknik
 const teknik = require('./routes/teknik');
 app.use("/ukt/teknik", teknik)
+//endpoint teknik_siswa
+const teknik_siswa = require('./routes/teknik_siswa');
+app.use("/ukt/teknik_siswa", teknik_siswa)
 
 //endpoint fisik
 const fisik = require('./routes/fisik');
@@ -97,19 +103,6 @@ app.use("/ukt/standar_fisik", standar_fisik)
 //endpoint Sambung
 const sambung = require('./routes/sambung');
 app.use("/ukt/sambung", sambung)
-
-//endpoint jurus_ukcw
-const jurus_ukcw = require('./routes/jurus_ukcw');
-app.use("/ukt/jurus_ukcw", jurus_ukcw)
-//endpoint jurus_putih
-const jurus_putih = require('./routes/jurus_putih');
-app.use("/ukt/jurus_putih", jurus_putih)
-//endpoint jurus_ukcw
-const jurus_hijau = require('./routes/jurus_hijau');
-app.use("/ukt/jurus_hijau", jurus_hijau)
-//endpoint jurus_ukcw
-const jurus_jambon = require('./routes/jurus_jambon');
-app.use("/ukt/jurus_jambon", jurus_jambon)
 
 //run server
 app.listen(8080, () => {

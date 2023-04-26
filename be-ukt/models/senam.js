@@ -11,9 +11,9 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
-      this.belongsTo(models.siswa, {
-        foreignKey: "id_siswa",
-        as: "senam"
+      this.belongsTo(models.senam_siswa, {
+        foreignKey: "id_senam",
+        as: "siswa_senam"
       })
     }
   }
@@ -24,19 +24,11 @@ module.exports = (sequelize, DataTypes) => {
       primaryKey: true,
       type: DataTypes.INTEGER
     },
-    id_siswa: DataTypes.INTEGER,
-    senam69: DataTypes.BOOLEAN,
-    senam23: DataTypes.BOOLEAN,
-    senam14: DataTypes.BOOLEAN,
-    senam90: DataTypes.BOOLEAN,
-    senam61: DataTypes.BOOLEAN,
-    senam49: DataTypes.BOOLEAN,
-    senam59: DataTypes.BOOLEAN,
-    senam64: DataTypes.BOOLEAN,
-    senam12: DataTypes.BOOLEAN,
-    senam33: DataTypes.BOOLEAN,
-    senam44: DataTypes.BOOLEAN,
-    senam11: DataTypes.BOOLEAN
+    tipe_ukt: DataTypes.ENUM('UKT Jambon','UKT Hijau','UKT Putih','UKCW'),
+    name: {
+      type: DataTypes.STRING,
+      allowNull: false
+    }
   }, {
     sequelize,
     modelName: 'senam',
