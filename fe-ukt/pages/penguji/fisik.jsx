@@ -33,6 +33,7 @@ const fisik = () => {
             peserta: peserta
         },{ headers: { Authorization: `Bearer ${token}`}})
         .then (res => {
+            console.log(res.data);
             setDataStandartFisik (res.data);
             setMft (res.data.mft);
             setPushUp (res.data.push_up);
@@ -47,6 +48,7 @@ const fisik = () => {
     }
     const postDataFisik = () => {
         const token = localStorage.getItem('tokenPenguji')
+        const penguji = JSON.parse (localStorage.getItem('penguji'));
         console.log(token);
         console.log(dataStandartFisik);
         const mftNew = ((mft / dataStandartFisik.mft) * 100)
@@ -56,6 +58,7 @@ const fisik = () => {
         const spirDadaNew = ((spirDada / dataStandartFisik.spir_dada) * 100)
         const plankNew = ((plank / dataStandartFisik.plank) * 100)
         const data = {
+            id_penguji: penguji.id_penguji,
             id_event: dataSiswa.id_event,
             id_siswa: dataSiswa.id_siswa,
             mft: mftNew,

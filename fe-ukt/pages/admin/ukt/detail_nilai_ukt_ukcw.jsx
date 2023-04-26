@@ -14,7 +14,7 @@ import Fisik from './content/fisik'
 import Sambung from './content/sambung'
 const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
 
-const detail_nilai_ukt_jambon = () => {
+const detail_nilai_ukt_ukcw = () => {
 
     // state set jenis
     const [active, setActive] = useState('senam')
@@ -24,7 +24,7 @@ const detail_nilai_ukt_jambon = () => {
     }
 
     let activeComponent;
-    const data = {tipe_ukt: 'UKT Jambon'}
+    const data = {tipe_ukt: 'UKCW'}
     if (active === 'senam') {
         activeComponent = <Senam data={data}/>;
     } else if (active === 'jurus'){
@@ -85,4 +85,4 @@ const detail_nilai_ukt_jambon = () => {
     )
 }
 
-export default detail_nilai_ukt_jambon
+export default detail_nilai_ukt_ukcw

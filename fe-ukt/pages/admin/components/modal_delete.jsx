@@ -17,7 +17,6 @@ const modal_delete = () => {
     const {idPengujiCabang, idPengujiRanting} = useContext (globalState)
     const {idPengurusCabang, idPengurusRanting} = useContext (globalState)
     const {setDataEvent, idEvent} = useContext (globalState)
-    const {setDataTeknik, idTeknik, ukt} = useContext (globalState)
 
     // state from local storage
     const [token, setToken] = useState ('')
@@ -105,19 +104,6 @@ const modal_delete = () => {
         })
     }
 
-    // function get data teknik
-    const getDataTeknik = () => {
-        const token = localStorage.getItem ('token')
-
-        axios.get (BASE_URL + `teknik/ukt/${ukt}`, { headers: { Authorization: `Bearer ${token}`}})
-        .then (res => {
-            setDataTeknik (res.data.data)
-        })
-        .catch (err => {
-            console.log(err.message);
-        })
-    }
-
     // function handle delete data admin cabang
     const handleDelete = () => {
         const token = localStorage.getItem ('token')
@@ -191,18 +177,6 @@ const modal_delete = () => {
             .catch (err => {
                 console.log(err.message);
             })
-        } else if (action === 'deleteTeknik') {
-            axios.delete (BASE_URL + `teknik/${idTeknik}`, { headers: { Authorization: `Bearer ${token}`}})
-            .then (res => {
-                getDataTeknik ()
-                setShowModalDelete (false)
-                console.log(res.data.message);
-            })
-            .catch (err => {
-                console.log(err.message);
-            })
-        } else {
-            console.log('gagal');
         }
     }
 

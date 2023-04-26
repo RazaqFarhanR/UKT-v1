@@ -2,20 +2,15 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable('ukt_jambon', {
-      id_ukt_jambon: {
+    await queryInterface.createTable('ukt_siswa', {
+      id_ukt_siswa: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      id_siswa: {
-        allowNull: false,
-        type: Sequelize.INTEGER,
-        references: {
-          model: "siswa",
-          key: "id_siswa"
-        }
+      tipe_ukt: {
+        type: Sequelize.ENUM('UKT Jambon','UKT Hijau','UKT Putih','UKCW')
       },
       id_event: {
         type: Sequelize.INTEGER,
@@ -25,27 +20,31 @@ module.exports = {
           key: "id_event"
         }
       },
-      rayon: {
-        type: Sequelize.STRING,
+      id_siswa: {
+        type: Sequelize.INTEGER,
         allowNull: false,
+        references: {
+          model: "siswa",
+          key: "id_siswa"
+        }
+      },
+      rayon: {
+        type: Sequelize.STRING
       },
       keshan: {
         type: Sequelize.INTEGER
       },
       senam: {
-        type: Sequelize.INTEGER
+        type: Sequelize.DOUBLE
       },
       jurus: {
-        type: Sequelize.INTEGER
+        type: Sequelize.DOUBLE
       },
       fisik: {
-        type: Sequelize.INTEGER
+        type: Sequelize.DOUBLE
       },
       teknik: {
-        type: Sequelize.INTEGER
-      },
-      sambung: {
-        type: Sequelize.INTEGER
+        type: Sequelize.DOUBLE
       },
       sambung: {
         type: Sequelize.INTEGER
@@ -61,6 +60,6 @@ module.exports = {
     });
   },
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable('ukt_jambon');
+    await queryInterface.dropTable('ukt_siswa');
   }
 };

@@ -23,6 +23,22 @@ module.exports = (sequelize, DataTypes) => {
         foreignKey: "id_cabang",
         as: "penguji_cabang"
       })
+      this.hasMany(models.senam_detail, {
+        foreignKey: "id_penguji",
+        as: "penguji_senam"
+      })
+      this.hasMany(models.fisik, {
+        foreignKey: "id_penguji",
+        as: "penguji_fisik"
+      })
+      this.hasMany(models.jurus_detail, {
+        foreignKey: "id_penguji",
+        as: "penguji_jurus"
+      })
+      this.hasMany(models.teknik_detail, {
+        foreignKey: "id_penguji",
+        as: "penguji_teknik"
+      })
     }
   }
   penguji.init({

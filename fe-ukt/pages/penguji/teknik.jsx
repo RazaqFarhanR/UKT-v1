@@ -26,8 +26,8 @@ const teknik = () => {
     // function get data event
     const getDataEvent = () => {
         const token = localStorage.getItem('tokenPenguji')
-
-        axios.get(BASE_URL + `teknik/ukt/UKT Jambon`, { headers: { Authorization: `Bearer ${token}` } })
+        const dataSiswa = JSON.parse (localStorage.getItem('dataSiswa'));
+        axios.get(BASE_URL + `teknik/ukt/${dataSiswa.tipe_ukt}`, { headers: { Authorization: `Bearer ${token}` } })
             .then(res => {
                 console.log(res.data.data);
                 setDataTeknik(res.data.data)
@@ -41,6 +41,7 @@ const teknik = () => {
     const postDataTeknik = () => {
         const token = localStorage.getItem('tokenPenguji')
         const dataSiswa = JSON.parse (localStorage.getItem('dataSiswa'));
+        const penguji = JSON.parse (localStorage.getItem('penguji'));
         const id_siswa = dataSiswa.id_siswa;
         const id_event = dataSiswa.id_event;
         console.log(token);
@@ -52,6 +53,7 @@ const teknik = () => {
           });
         for (let i=0; i<data.length; i++){
             axios.post(BASE_URL + `teknik_siswa`, {
+                id_penguji: penguji.id_penguji,
                 id_event: id_event,
                 id_teknik: data[i].id_teknik,
                 id_siswa: id_siswa,
