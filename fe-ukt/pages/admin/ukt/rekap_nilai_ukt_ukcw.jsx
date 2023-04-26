@@ -46,7 +46,6 @@ const rekap_nilai_ukt_jambon = () => {
 
                     {/* konten utama */}
                     <div className="min-h-full bg-darkBlue p-6">
-
                         {/* wrapper page name and search */}
                         <div className="flex justify-between items-center text-white mb-7">
 
@@ -72,7 +71,6 @@ const rekap_nilai_ukt_jambon = () => {
 
                         {/* wrapper table */}
                         <div className="bg-navy rounded-md py-2 px-3">
-
                             {/* table */}
                             <table className='w-full table-fixed'>
                                 <thead>
