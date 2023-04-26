@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import Link from 'next/link'
 import axios from 'axios'
 import { globalState } from '@/context/context'
@@ -42,7 +42,7 @@ const ukcw = () => {
         setAction ('insert')
         setName ('')
         setDate ('')
-        setTipe ('ukcw')
+        setTipe ('UKCW')
     }
 
     // function modal edit
@@ -52,7 +52,7 @@ const ukcw = () => {
         setIdEvent (selectedItem.id_event)
         setName (selectedItem.name)
         setDate (selectedItem.date)
-        setTipe ('ukcw')
+        setTipe ('UKCW')
     }
 
     // function modal delete
@@ -61,6 +61,10 @@ const ukcw = () => {
         setAction ('deleteEvent')
         setIdEvent (selectedId)
     }
+
+    useEffect (() => {
+        getDataEvent ()
+    }, [])
 
     return (
         <>
@@ -113,7 +117,7 @@ const ukcw = () => {
                         <div className="grid grid-cols-2 gap-x-5">
                             
                             {/* card event */}
-                            {dataEvent.filter(a => a.tipe === 'ukcw').map((item, index) => (
+                            {dataEvent.filter(a => a.tipe_ukt === 'UKCW').map((item, index) => (
                                 <div key={index + 1} className="bg-navy hover:bg-gradient-to-r from-[#16D4FC] to-[#9A4BE9] rounded-md p-0.5">
 
                                     {/* inner bg */}

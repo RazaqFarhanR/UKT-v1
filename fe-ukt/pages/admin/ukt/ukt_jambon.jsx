@@ -46,7 +46,7 @@ const ukt_jambon = () => {
         setAction ('insert')
         setName ('')
         setDate ('')
-        setTipe ('ukt_jambon')
+        setTipe ('UKT Jambon')
     }
 
     // function modal edit
@@ -56,7 +56,7 @@ const ukt_jambon = () => {
         setIdEvent (selectedItem.id_event)
         setName (selectedItem.name)
         setDate (selectedItem.tanggal)
-        setTipe ('ukt_jambon')
+        setTipe ('UKT Jambon')
     }
 
     // function modal delete
@@ -133,7 +133,7 @@ const ukt_jambon = () => {
                         <div className="grid grid-cols-2 gap-x-5">
                             
                             {/* card event */}
-                            {dataEvent.filter(a => a.tipe === 'ukt_jambon').map((item, index) => (
+                            {dataEvent.filter(a => a.tipe_ukt === 'UKT Jambon').map((item, index) => (
                                 <div key={index + 1} className="bg-navy hover:bg-gradient-to-r from-[#16D4FC] to-[#9A4BE9] rounded-md p-0.5">
 
                                     {/* inner bg */}

@@ -42,7 +42,7 @@ const ukt_putih = () => {
         setAction ('insert')
         setName ('')
         setDate ('')
-        setTipe ('ukt_putih')
+        setTipe ('UKT Putih')
     }
 
     // function modal edit
@@ -52,7 +52,7 @@ const ukt_putih = () => {
         setIdEvent (selectedItem.id_event)
         setName (selectedItem.name)
         setDate (selectedItem.date)
-        setTipe ('ukt_putih')
+        setTipe ('UKT Putih')
     }
 
     // function modal delete
@@ -117,7 +117,7 @@ const ukt_putih = () => {
                         <div className="grid grid-cols-2 gap-x-5">
                             
                             {/* card event */}
-                            {dataEvent.filter(a => a.tipe === 'ukt_putih').map((item, index) => (
+                            {dataEvent.filter(a => a.tipe_ukt === 'UKT Putih').map((item, index) => (
                                 <div key={index + 1} className="bg-navy hover:bg-gradient-to-r from-[#16D4FC] to-[#9A4BE9] rounded-md p-0.5">
 
                                     {/* inner bg */}
