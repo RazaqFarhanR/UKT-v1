@@ -48,6 +48,7 @@ const jurus = () => {
     // function handle save nilai jurus
     const handleSave = () => {
         const token = localStorage.getItem ('tokenPenguji')
+        const id_jurus_detail = localStorage.getItem ('id_jurus_detail')
 
         const data = selectedButton.map ((option) => {
             return {
@@ -57,9 +58,8 @@ const jurus = () => {
         })
         for (let i = 0; i < data.length; i++) {
             axios.post (BASE_URL + `jurus_siswa`, {
-                id_event : dataSiswa.id_event,
+                id_jurus_detail : id_jurus_detail,
                 id_jurus : data[i].id_jurus,
-                id_siswa : dataSiswa.id_siswa,
                 predikat: data[i].predikat,
             }, { headers: { Authorization: `Bearer ${token}`}})
             .then (res => {

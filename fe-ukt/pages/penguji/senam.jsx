@@ -74,6 +74,8 @@ const senam = () => {
     // function handle save nilai senam
     const handleSave = () => {
         const token = localStorage.getItem ('tokenPenguji')
+        const id_senam_detail = localStorage.getItem ('id_senam_detail')
+        console.log(id_senam_detail);
 
         const data = selectedButton.map((option) => {
             return {
@@ -83,9 +85,8 @@ const senam = () => {
         })
         for (let i = 0; i < data.length; i++) {
             axios.post (BASE_URL + `senam_siswa`, {
-                id_event : dataSiswa.id_event,
+                id_senam_detail : id_senam_detail,
                 id_senam : data[i].id_senam,
-                id_siswa : dataSiswa.id_siswa,
                 predikat : data[i].predikat,
             }, { headers: { Authorization: `Bearer ${token}` } })
             .then (res => {
