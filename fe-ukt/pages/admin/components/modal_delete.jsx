@@ -12,6 +12,7 @@ const modal_delete = () => {
     const {setDataAdminCabang, setDataAdminRanting} = useContext (globalState)
     const {setDataPengujiCabang, setDataPengujiRanting} = useContext (globalState)
     const {setDataPengurusCabang, setDataPengurusRanting} = useContext (globalState)
+    const {setDataSiswa, idSiswa} = useContext (globalState)
     const {action} = useContext (globalState)
     const {idAdminCabang, idAdminRanting} = useContext (globalState)
     const {idPengujiCabang, idPengujiRanting} = useContext (globalState)
@@ -93,6 +94,17 @@ const modal_delete = () => {
         })
     }
 
+    // function get data siswa
+    const getDataSiswa = () => {
+        axios.get (BASE_URL + `siswa`, { headers: { Authorization: `Bearer ${token}`}})
+        .then (res => {
+            setDataSiswa (res.data.data)
+        })
+        .catch (err => {
+            console.log(err.message);
+        })
+    }
+
     // function get data event
     const getDataEvent = () => {
         axios.get (BASE_URL + `event`, { headers: { Authorization: `Bearer ${token}`}})
@@ -161,6 +173,16 @@ const modal_delete = () => {
             axios.delete (BASE_URL + `pengurus/${idPengurusRanting}`, { headers: { Authorization: `Bearer ${token}`}})
             .then (res => {
                 getDataPengurusRanting ()
+                setShowModalDelete (false)
+                console.log(res.data.message);
+            })
+            .catch (err => {
+                console.log(err.message);
+            })
+        } else if (action === 'deleteSiswa') {
+            axios.delete (BASE_URL + `siswa/${idSiswa}`, { headers: { Authorization: `Bearer ${token}`}})
+            .then (res => {
+                getDataSiswa ()
                 setShowModalDelete (false)
                 console.log(res.data.message);
             })

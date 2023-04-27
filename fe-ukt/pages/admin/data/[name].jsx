@@ -26,6 +26,7 @@ const detail_siswa = () => {
     const [idSiswa, setIdSiswa] = useState ('')
     const [nis, setNis] = useState ('')
     const [siswaName, setSiswaName] = useState ('')
+    const [ranting, setRanting] = useState ('')
     const [rayon, setRayon] = useState ('')
     const [jenisKelamin, setJenisKelamin] = useState ('')
     const [jenisLatihan, setJenisLatihan] = useState ('')
@@ -35,6 +36,9 @@ const detail_siswa = () => {
     // function get data siswa
     const getDataSiswa = () => {
         const token = localStorage.getItem ('token')
+        const ranting = JSON.parse (localStorage.getItem ('ranting'))
+        setRanting (ranting.id_ranting)
+
         axios.get(BASE_URL + `siswa` , { headers: { Authorization: `Bearer ${token}`}})
         .then (res => {
             setDataSiswa (res.data.data)
@@ -50,6 +54,7 @@ const detail_siswa = () => {
         setAction ('insert')
         setNis ('')
         setSiswaName ('')
+        setRanting (ranting)
         setRayon ('')
         setJenisKelamin ('')
         setJenisLatihan ('')
@@ -64,11 +69,12 @@ const detail_siswa = () => {
         setIdSiswa (selectedItem.id_siswa)
         setNis (selectedItem.nis)
         setSiswaName (selectedItem.name)
-        setRayon (selectedItem.id_rayon)
+        setRanting (ranting)
+        setRayon (selectedItem.rayon)
         setJenisKelamin (selectedItem.jenis_kelamin)
         setJenisLatihan (selectedItem.jenis_latihan)
-        setUkt (selectedItem.ukt)
-        setEvent (selectedItem.tingkatan)
+        setUkt (selectedItem.tipe_ukt)
+        setEvent (selectedItem.id_event)
     }
 
     // function modal delete
@@ -159,11 +165,11 @@ const detail_siswa = () => {
                                             <td className='border-b-2 py-3 border-gray'>{index + 1}</td>
                                             <td className='border-b-2 border-gray'>{item.nis}</td>
                                             <td className='border-b-2 border-gray'>{item.name}</td>
-                                            <td className='border-b-2 border-gray'>{item.id_rayon}</td>
+                                            <td className='border-b-2 border-gray'>{item.rayon}</td>
                                             <td className='border-b-2 border-gray'>{item.jenis_kelamin}</td>
                                             <td className='border-b-2 border-gray'>{item.jenis_latihan}</td>
-                                            <td className='border-b-2 border-gray'>{item.ukt}</td>
-                                            <td className='border-b-2 border-gray'>{item.tingkatan}</td>
+                                            <td className='border-b-2 border-gray'>{item.tipe_ukt}</td>
+                                            <td className='border-b-2 border-gray'>{item.siswa_event?.name}</td>
                                             <td className='border-b-2 border-gray'>
                                                 <div className="flex gap-x-2">
                                                     <button onClick={() => editModal(item)} className="bg-green hover:bg-white text-white hover:text-green py-2 rounded-md w-28 flex justify-center items-center space-x-1 mx-auto group duration-300">
@@ -201,11 +207,11 @@ const detail_siswa = () => {
             </div> 
 
              {/*memanggil modal  */}
-             <globalState.Provider value={{ showModalSiswa, setShowModalSiswa, dataSiswa, setDataSiswa, action, setAction, idSiswa, setIdSiswa,nis, setNis, siswaName, setSiswaName, rayon, setRayon, jenisKelamin, setJenisKelamin, jenisLatihan, setJenisLatihan, ukt, setUkt, event, setEvent }}>
+             <globalState.Provider value={{ showModalSiswa, setShowModalSiswa, dataSiswa, setDataSiswa, action, setAction, idSiswa, setIdSiswa,nis, setNis, siswaName, setSiswaName, ranting, setRanting, rayon, setRayon, jenisKelamin, setJenisKelamin, jenisLatihan, setJenisLatihan, ukt, setUkt, event, setEvent }}>
                 <Modal_siswa />
              </globalState.Provider>
 
-             <globalState.Provider value={{ showModalDelete, setShowModalDelete, setDataSiswa }}>
+             <globalState.Provider value={{ showModalDelete, setShowModalDelete, action, setDataSiswa, idSiswa }}>
                 <Modal_delete />
              </globalState.Provider>
         </>
