@@ -12,7 +12,6 @@ const jurus = (props) => {
 
         axios.get(BASE_URL + `jurus_detail/ukt/${props.data.tipe_ukt}/${event.id_event}`, { headers: { Authorization: `Bearer ${token}` } })
             .then(res => {
-                console.log(res.data.data[0].siswa_jurus_detail.length);
                 setDataJurus(res.data.data)
             })
             .catch(err => {
