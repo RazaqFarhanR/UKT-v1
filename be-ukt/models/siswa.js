@@ -60,6 +60,8 @@ module.exports = (sequelize, DataTypes) => {
     nis: DataTypes.STRING,
     name: DataTypes.STRING,
     id_role: DataTypes.STRING,
+    jenis_kelamin: DataTypes.ENUM('Laki laki','Perempuan'),
+    jenis_latihan: DataTypes.ENUM('Remaja','Privat'),
     peserta: DataTypes.ENUM('Remaja - Laki laki','Remaja - Perempuan','Privat - Laki laki','Privat - Perempuan'),
     tipe_ukt: DataTypes.ENUM('UKT Jambon','UKT Hijau','UKT Putih','UKCW'),
     id_ranting: DataTypes.INTEGER,

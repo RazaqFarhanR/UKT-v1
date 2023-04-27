@@ -51,6 +51,25 @@ app.get("/:id", Auth, verifyRoles("admin", "super admin", "admin ranting", "peng
         })
     })    
 })
+//endpoint get data senam_siswa by tipe_ukt
+app.get("/ranting/:id", Auth, verifyRoles("admin", "super admin", "admin ranting", "pengurus cabang", "pengurus ranting", "penguji cabang", "penguji ranting"), (req,res) => {
+    senam_siswa.findAll({
+        where: {
+            ranting: req.params.id
+        }
+    })
+    .then(senam_siswa => {
+        res.json({
+            count: senam_siswa.length,
+            data: senam_siswa
+        })
+    })
+    .catch(error => {
+        res.json({
+            message: error.message
+        })
+    })    
+})
 //endpoint get data senam by tipe_ukt
 app.get("/ukt/:id", Auth, verifyRoles("admin", "super admin", "admin ranting", "pengurus cabang", "pengurus ranting", "penguji cabang", "penguji ranting"), (req,res) => {
     senam_siswa.findAll({

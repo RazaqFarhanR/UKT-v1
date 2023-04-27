@@ -57,12 +57,17 @@ app.get("/ukt/:id", Auth, verifyRoles("admin", "super admin", "admin ranting", "
         where: {
             tipe_ukt: req.params.id
         },
-        attributes: ['id_teknik_detail','id_event','id_siswa','tipe_ukt'],
+        attributes: ['id_teknik_detail','id_penguji','id_event','id_siswa','tipe_ukt'],
         include: [
             {
                 model: models.siswa,
                 attributes: ['name'],
                 as: "teknik_siswa",
+            },
+            {
+                model: models.penguji,
+                attributes: ['name'],
+                as: "penguji_teknik"
             },
             {
                 model: models.teknik_siswa,
@@ -183,7 +188,8 @@ app.post("/", Auth, verifyRoles("admin", "super admin", "admin ranting", "pengur
     teknik_detail.create(data)
     .then(result => {
         res.json({
-            message: "data has been inserted"
+            message: "data has been inserted",
+            data: result,
         })
     })
     .catch(error =>{

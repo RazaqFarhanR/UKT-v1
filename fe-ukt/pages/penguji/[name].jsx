@@ -20,9 +20,9 @@ const detail_event = () => {
 
     // function get data siswa
     const getDataSiswa = () => {
-        const token = localStorage.getItem ('tokenPenguji')
         const dataEvent = JSON.parse (localStorage.getItem ('event'))
         const dataPenguji = JSON.parse (localStorage.getItem ('penguji'))
+        const token = localStorage.getItem ('tokenPenguji')
 
         setDataPenguji (dataPenguji)
         let IdEvent = (dataEvent.id_event)
@@ -43,6 +43,33 @@ const detail_event = () => {
 
     // function go to penilaian page
     const goToNilai = (item) => {
+        const dataPenguji = JSON.parse (localStorage.getItem ('penguji'))
+        const token = localStorage.getItem ('tokenPenguji')
+        const data = {
+            id_penguji: dataPenguji.id_penguji,
+            id_siswa: item.id_siswa,
+            id_event: item.id_event,
+            tipe_ukt: item.tipe_ukt
+        }
+        console.log(data);
+        if(active === 'senam'){
+            axios.post(BASE_URL + `senam_detail`, data, { headers: { Authorization: `Bearer ${token}`}})
+            .then(res => {
+                console.log(res.data.data)
+                localStorage.setItem ('id_senam_detail', JSON.stringify (res.data.data.id_senam_detail))
+            })
+        } else if(active === 'jurus'){
+            axios.post(BASE_URL + `jurus_detail`, data, { headers: { Authorization: `Bearer ${token}`}})
+            .then(res => {
+                localStorage.setItem ('id_jurus_detail', JSON.stringify (res.data.data.id_jurus_detail))
+            })
+        } else if(active === 'teknik'){
+            axios.post(BASE_URL + `teknik_detail`, data, { headers: { Authorization: `Bearer ${token}`}})
+            .then(res => {
+                console.log(res.data.data)
+                localStorage.setItem ('id_teknik_detail', JSON.stringify (res.data.data.id_teknik_detail))
+            })
+        }
         router.push ('./' + active)
         localStorage.setItem ('dataSiswa', JSON.stringify (item))
     }

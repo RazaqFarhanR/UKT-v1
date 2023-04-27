@@ -183,7 +183,8 @@ app.post("/", Auth, verifyRoles("admin", "super admin", "admin ranting", "pengur
     jurus_detail.create(data)
     .then(result => {
         res.json({
-            message: "data has been inserted"
+            message: "data has been inserted",
+            data: result,
         })
     })
     .catch(error =>{

@@ -21,11 +21,11 @@ const teknik = () => {
         SetSelectedButton(updatedOptions);
     }
 
-    console.log(selectedButton);
-
+    
     // function get data event
     const getDataEvent = () => {
         const token = localStorage.getItem('tokenPenguji')
+        
         const dataSiswa = JSON.parse (localStorage.getItem('dataSiswa'));
         axios.get(BASE_URL + `teknik/ukt/${dataSiswa.tipe_ukt}`, { headers: { Authorization: `Bearer ${token}` } })
             .then(res => {
@@ -40,10 +40,8 @@ const teknik = () => {
     // function post data teknik
     const postDataTeknik = () => {
         const token = localStorage.getItem('tokenPenguji')
-        const dataSiswa = JSON.parse (localStorage.getItem('dataSiswa'));
-        const penguji = JSON.parse (localStorage.getItem('penguji'));
-        const id_siswa = dataSiswa.id_siswa;
-        const id_event = dataSiswa.id_event;
+        const id_teknik_detail = localStorage.getItem('id_teknik_detail');
+    console.log(id_teknik_detail)
         console.log(token);
         const data = selectedButton.map((option) => {
             return {
@@ -51,21 +49,19 @@ const teknik = () => {
               predikat: option.selectedOption,
             };
           });
-        for (let i=0; i<data.length; i++){
-            axios.post(BASE_URL + `teknik_siswa`, {
-                id_penguji: penguji.id_penguji,
-                id_event: id_event,
-                id_teknik: data[i].id_teknik,
-                id_siswa: id_siswa,
-                predikat: data[i].predikat
-            }, { headers: { Authorization: `Bearer ${token}` } },)
-            .then((res) => {
-                console.log(res);
-              })
-              .catch((error) => {
-                console.log(error.message);
-              });
-        }
+          for (let i=0; i<data.length; i++){
+              axios.post(BASE_URL + `teknik_siswa`, {
+                  id_teknik_detail: id_teknik_detail,
+                  id_teknik: data[i].id_teknik,
+                  predikat: data[i].predikat
+              }, { headers: { Authorization: `Bearer ${token}` } },)
+              .then((res) => {
+                  console.log(res);
+                })
+                .catch((error) => {
+                  console.log(error.message);
+                });
+          }
     }
 
     useEffect(() => {
