@@ -91,7 +91,7 @@ const penguji_cabang = () => {
                                 </tr>
                             </thead>
                             <tbody>
-                                {dataPengujiCabang.filter(a => a.id_role === 'penguji cabang').map ((item, index) => (
+                            {dataPengujiCabang.filter(a => a.id_role === 'penguji cabang').map ((item, index) => (
                                     <tr key={index + 1} className='text-white text-center'>
                                         <td className='border-b-2 py-3 border-gray'>{index + 1}</td>
                                         <td className='border-b-2 border-gray'>{item.NIW}</td>
