@@ -22,9 +22,7 @@ const teknik = (props) => {
 
     function ThComponent({ items }) {
         let limit = 0;
-        if(props.data.tipe_ukt === 'UKT Jambon'){
-            limit = 15;
-        }
+        limit = items.length;
         let banding = 1;
         let id = 1
         banding < limit;

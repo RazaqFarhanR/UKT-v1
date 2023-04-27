@@ -100,7 +100,7 @@ app.get("/ukt/:id/:event", Auth, verifyRoles("admin", "super admin", "admin rant
     senam_detail.findAll({
         where: {
             tipe_ukt: req.params.id,
-            event: req.params.event
+            id_event: req.params.event
         },
         attributes: ['id_senam_detail','id_penguji','id_event','id_siswa','tipe_ukt'],
         include: [
@@ -188,7 +188,8 @@ app.post("/", Auth, verifyRoles("admin", "super admin", "admin ranting", "pengur
     senam_detail.create(data)
     .then(result => {
         res.json({
-            message: "data has been inserted"
+            message: "data has been inserted",
+            data: result,
         })
     })
     .catch(error =>{

@@ -103,12 +103,6 @@ app.get("/ranting/:id", Auth, verifyRoles("admin", "super admin", "admin ranting
             attributes: ['name'],
             required: false
         },
-        {
-            model: rayon,
-            as: "siswa_rayon",
-            attributes: ['name'],
-            required: false
-        }
     ]
     })
     .then((siswa) => {
@@ -167,7 +161,9 @@ app.post("/", Auth, verifyRoles("admin", "super admin", "admin ranting", "pengur
         nomor_urut: req.body.nomor_urut,
         name: req.body.name,
         id_role: req.body.id_role,
-        peserta: req.body.peserta,
+        jenis_kelamin: req.body.jenis_kelamin,
+        jenis_latihan: req.body.jenis_latihan,
+        peserta: req.body.jenis_latihan+" - "+req.body.jenis_kelamin,
         tipe_ukt: req.body.tipe_ukt,
         id_ranting: req.body.id_ranting,
         rayon: req.body.rayon,
@@ -191,11 +187,16 @@ app.put("/:id", Auth, verifyRoles("admin", "super admin", "admin ranting", "peng
     let param = {
         id_siswa : req.params.id
     }
-    let data = {
+    let data ={
+        id_event: req.body.id_event,
         nis: req.body.nis,
+        nomor_urut: req.body.nomor_urut,
         name: req.body.name,
         id_role: req.body.id_role,
-        peserta: req.body.peserta,
+        jenis_kelamin: req.body.jenis_kelamin,
+        jenis_latihan: req.body.jenis_latihan,
+        peserta: req.body.jenis_latihan+" - "+req.body.jenis_kelamin,
+        tipe_ukt: req.body.tipe_ukt,
         id_ranting: req.body.id_ranting,
         rayon: req.body.rayon,
         tingkatan: req.body.tingkatan,
