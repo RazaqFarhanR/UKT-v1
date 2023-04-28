@@ -36,37 +36,41 @@ app.use("/ukt/pengurus", pengurus)
 const penguji = require('./routes/penguji');
 app.use("/ukt/penguji", penguji)
 
-const senam = require('./routes/senam');
+const senam = require('./routes/ukt/senam/senam');
 app.use("/ukt/senam", senam)
 
-const senam_siswa = require('./routes/senam_siswa');
+const senam_siswa = require('./routes/ukt/senam/senam_siswa');
 app.use("/ukt/senam_siswa", senam_siswa)
 
-const senam_detail = require('./routes/senam_detail');
+const senam_detail = require('./routes/ukt/senam/senam_detail');
 app.use("/ukt/senam_detail", senam_detail)
 
-const jurus = require('./routes/jurus');
+const jurus = require('./routes/ukt/jurus/jurus');
 app.use("/ukt/jurus", jurus)
 
-const jurus_siswa = require('./routes/jurus_siswa');
+const jurus_siswa = require('./routes/ukt/jurus/jurus_siswa');
 app.use("/ukt/jurus_siswa", jurus_siswa)
 
-const jurus_detail = require('./routes/jurus_detail');
+const jurus_detail = require('./routes/ukt/jurus/jurus_detail');
 app.use("/ukt/jurus_detail", jurus_detail)
 
 //endpoint teknik
-const teknik = require('./routes/teknik');
+const teknik = require('./routes/ukt/teknik/teknik');
 app.use("/ukt/teknik", teknik)
 //endpoint teknik_siswa
-const teknik_siswa = require('./routes/teknik_siswa');
+const teknik_siswa = require('./routes/ukt/teknik/teknik_siswa');
 app.use("/ukt/teknik_siswa", teknik_siswa)
 //endpoint teknik_detail
-const teknik_detail = require('./routes/teknik_detail');
+const teknik_detail = require('./routes/ukt/teknik/teknik_detail');
 app.use("/ukt/teknik_detail", teknik_detail)
 
 //endpoint fisik
-const fisik = require('./routes/fisik');
+const fisik = require('./routes/ukt/fisik/fisik');
 app.use("/ukt/fisik", fisik)
+
+//endpoint Standar Fisik
+const standar_fisik = require('./routes/ukt/fisik/standar_fisik');
+app.use("/ukt/standar_fisik", standar_fisik)
 
 //endpoint ukt_siswa
 const ukt_siswa = require('./routes/ukt_siswa');
@@ -95,11 +99,9 @@ app.use("/ukt/event", event)
 //endpoint Ukt
 const ukt = require('./routes/ukt');
 app.use("/ukt/ukt", ukt)
-//endpoint Standar Fisik
-const standar_fisik = require('./routes/standar_fisik');
-app.use("/ukt/standar_fisik", standar_fisik)
+
 //endpoint Sambung
-const sambung = require('./routes/sambung');
+const sambung = require('./routes/ukt/sambung/sambung');
 app.use("/ukt/sambung", sambung)
 
 //run server

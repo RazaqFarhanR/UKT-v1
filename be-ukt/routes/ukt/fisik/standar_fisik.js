@@ -2,15 +2,15 @@
 const express = require("express");
 const bodyParser = require("body-parser");
 require("dotenv").config();
-const Auth = require("../middleware/Auth.js");
-const verifyRoles = require("../middleware/verifyRoles");
+const Auth = require('../../../middleware/Auth');
+const verifyRoles = require("../../../middleware/verifyRoles.js");
 //implementasi
 const app = express();
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
-//import model
-const models = require("../models/index");
+//import model  
+const models = require('../../../models/index');
 const standar_fisik = models.standar_fisik;
 
 

@@ -9,6 +9,14 @@ module.exports = {
         autoIncrement: true,
         allowNull: false,
       },
+      id_penguji: {
+        type: Sequelize.INTEGER,
+        allowNull: false,
+        references: {
+          model: "penguji",
+          key: "id_penguji"
+        }
+      },
       id_event: {
         type: Sequelize.INTEGER,
         allowNull: false,

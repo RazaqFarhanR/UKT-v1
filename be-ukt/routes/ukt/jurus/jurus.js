@@ -2,10 +2,8 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 require('dotenv').config();
-const Auth = require('../middleware/Auth.js');
-const Sequelize = require('sequelize');
-const { sequelize, Op } = require("sequelize");
-const verifyRoles = require("../middleware/verifyRoles");
+const Auth = require('../../../middleware/Auth.js');
+const verifyRoles = require("../../../middleware/verifyRoles.js");
 
 //implementasi
 const app = express();
@@ -13,20 +11,18 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: true}));
 
 //import model
-const models = require('../models/index');
-const senam = models.senam;
+const models = require('../../../models/index');
+const jurus = models.jurus;
 
 //endpoint ditulis disini
 
-//endpoint get data senam
+//endpoint get data jurus
 app.get("/", Auth, verifyRoles("admin", "super admin", "admin ranting", "pengurus cabang", "pengurus ranting", "penguji cabang", "penguji ranting"), (req,res) => {
-    senam.findAll({
-        attributes: ['tipe_ukt','id_senam','name'],
-    })
-    .then(senam => {
+    jurus.findAll()
+    .then(jurus => {
         res.json({
-            count: senam.length,
-            data: senam
+            count: jurus.length,
+            data: jurus
         })
     })
     .catch(error => {
@@ -36,33 +32,19 @@ app.get("/", Auth, verifyRoles("admin", "super admin", "admin ranting", "penguru
     })    
 })
 
-//endpoint get data senam by tipe_ukt
+//endpoint get data jurus by tipe_ukt
 app.get("/ukt/:id", Auth, verifyRoles("admin", "super admin", "admin ranting", "pengurus cabang", "pengurus ranting", "penguji cabang", "penguji ranting"), (req,res) => {
-    let limitSenam = 0;
-    if(req.params.id === "UKT Jambon"){
-        limitSenam = 15
-    } else if(req.params.id === "UKT Hijau"){
-        limitSenam = 30;
-    } else if(req.params.id === "UKT Putih"){
-        limitSenam = 35;
-    } else if(req.params.id === "UKCW"){
-        limitSenam = 45
-    }
-    senam.findAll({
+    jurus.findAll({
         where: {
             tipe_ukt: req.params.id
         },
-        order: [
-            Sequelize.fn('RAND')
-        ],
-        attributes: ['id_senam','name'],
-        limit: limitSenam
+        attributes: ['id_jurus','name']
     })
-    .then(senam => {
+    .then(jurus => {
         res.json({
-            limit: limitSenam,
+            count: jurus.length,
             tipe_ukt: req.params.id,
-            data: senam
+            data: jurus
         })
     })
     .catch(error => {
@@ -72,13 +54,13 @@ app.get("/ukt/:id", Auth, verifyRoles("admin", "super admin", "admin ranting", "
     })    
 })
 
-//endpoint untuk menyimpan data senam, METHOD POST, function create
+//endpoint untuk menyimpan data jurus, METHOD POST, function create
 app.post("/", Auth, verifyRoles("admin", "super admin", "admin ranting", "pengurus cabang", "pengurus ranting", "penguji cabang", "penguji ranting"), (req,res) =>{
-    let data ={
+    let data ={        
         tipe_ukt: req.body.tipe_ukt,
         name: req.body.name
     }
-    senam.create(data)
+    jurus.create(data)
     .then(result => {
         res.json({
             message: "data has been inserted"
@@ -91,16 +73,16 @@ app.post("/", Auth, verifyRoles("admin", "super admin", "admin ranting", "pengur
     })
 }) 
 
-//endpoint untuk mengupdate data senam, METHOD: PUT, fuction: UPDATE
+//endpoint untuk mengupdate data jurus, METHOD: PUT, fuction: UPDATE
 app.put("/:id", Auth, verifyRoles("admin", "super admin", "admin ranting", "pengurus cabang", "pengurus ranting", "penguji cabang", "penguji ranting"), (req,res) => {
     let param = {
-        id_senam : req.params.id
+        id_jurus : req.params.id
     }
-    let data ={
+    let data ={        
         tipe_ukt: req.body.tipe_ukt,
         name: req.body.name
     }
-    senam.update(data, {where: param})
+    jurus.update(data, {where: param})
     .then(result => {
         res.json({
             message : "data has been updated"
@@ -113,12 +95,12 @@ app.put("/:id", Auth, verifyRoles("admin", "super admin", "admin ranting", "peng
     })
 })
 
-//endpoint untuk menghapus data senam,METHOD: DELETE, function: destroy
+//endpoint untuk menghapus data jurus,METHOD: DELETE, function: destroy
 app.delete("/:id", Auth, verifyRoles("admin", "super admin", "admin ranting", "pengurus cabang", "pengurus ranting", "penguji cabang", "penguji ranting"), (req,res) => {
     let param = {
-        id_senam : req.params.id
+        id_jurus : req.params.id
     }
-    senam.destroy({where: param})
+    jurus.destroy({where: param})
     .then(result => {
         res.json({
             massege : "data has been deleted"

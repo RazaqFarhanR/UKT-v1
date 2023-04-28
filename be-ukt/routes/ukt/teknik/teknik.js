@@ -2,8 +2,8 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 require('dotenv').config();
-const Auth = require('../middleware/Auth.js');
-const verifyRoles = require("../middleware/verifyRoles");
+const Auth = require('../../../middleware/Auth.js');
+const verifyRoles = require("../../../middleware/verifyRoles.js");
 
 //implementasi
 const app = express();
@@ -11,18 +11,18 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: true}));
 
 //import model
-const models = require('../models/index');
-const jurus = models.jurus;
+const models = require('../../../models/index');
+const teknik = models.teknik;
 
 //endpoint ditulis disini
 
-//endpoint get data jurus
+//endpoint get data teknik
 app.get("/", Auth, verifyRoles("admin", "super admin", "admin ranting", "pengurus cabang", "pengurus ranting", "penguji cabang", "penguji ranting"), (req,res) => {
-    jurus.findAll()
-    .then(jurus => {
+    teknik.findAll()
+    .then(teknik => {
         res.json({
-            count: jurus.length,
-            data: jurus
+            count: teknik.length,
+            data: teknik
         })
     })
     .catch(error => {
@@ -32,19 +32,19 @@ app.get("/", Auth, verifyRoles("admin", "super admin", "admin ranting", "penguru
     })    
 })
 
-//endpoint get data jurus by tipe_ukt
+//endpoint get data teknik by tipe_ukt
 app.get("/ukt/:id", Auth, verifyRoles("admin", "super admin", "admin ranting", "pengurus cabang", "pengurus ranting", "penguji cabang", "penguji ranting"), (req,res) => {
-    jurus.findAll({
+    teknik.findAll({
         where: {
             tipe_ukt: req.params.id
         },
-        attributes: ['id_jurus','name']
+        attributes: ['id_teknik','name']
     })
-    .then(jurus => {
+    .then(teknik => {
         res.json({
-            count: jurus.length,
+            count: teknik.length,
             tipe_ukt: req.params.id,
-            data: jurus
+            data: teknik
         })
     })
     .catch(error => {
@@ -54,13 +54,13 @@ app.get("/ukt/:id", Auth, verifyRoles("admin", "super admin", "admin ranting", "
     })    
 })
 
-//endpoint untuk menyimpan data jurus, METHOD POST, function create
+//endpoint untuk menyimpan data teknik, METHOD POST, function create
 app.post("/", Auth, verifyRoles("admin", "super admin", "admin ranting", "pengurus cabang", "pengurus ranting", "penguji cabang", "penguji ranting"), (req,res) =>{
     let data ={        
         tipe_ukt: req.body.tipe_ukt,
         name: req.body.name
     }
-    jurus.create(data)
+    teknik.create(data)
     .then(result => {
         res.json({
             message: "data has been inserted"
@@ -73,16 +73,16 @@ app.post("/", Auth, verifyRoles("admin", "super admin", "admin ranting", "pengur
     })
 }) 
 
-//endpoint untuk mengupdate data jurus, METHOD: PUT, fuction: UPDATE
+//endpoint untuk mengupdate data teknik, METHOD: PUT, fuction: UPDATE
 app.put("/:id", Auth, verifyRoles("admin", "super admin", "admin ranting", "pengurus cabang", "pengurus ranting", "penguji cabang", "penguji ranting"), (req,res) => {
     let param = {
-        id_jurus : req.params.id
+        id_teknik : req.params.id
     }
     let data ={        
         tipe_ukt: req.body.tipe_ukt,
         name: req.body.name
     }
-    jurus.update(data, {where: param})
+    teknik.update(data, {where: param})
     .then(result => {
         res.json({
             message : "data has been updated"
@@ -95,12 +95,12 @@ app.put("/:id", Auth, verifyRoles("admin", "super admin", "admin ranting", "peng
     })
 })
 
-//endpoint untuk menghapus data jurus,METHOD: DELETE, function: destroy
+//endpoint untuk menghapus data teknik,METHOD: DELETE, function: destroy
 app.delete("/:id", Auth, verifyRoles("admin", "super admin", "admin ranting", "pengurus cabang", "pengurus ranting", "penguji cabang", "penguji ranting"), (req,res) => {
     let param = {
-        id_jurus : req.params.id
+        id_teknik : req.params.id
     }
-    jurus.destroy({where: param})
+    teknik.destroy({where: param})
     .then(result => {
         res.json({
             massege : "data has been deleted"

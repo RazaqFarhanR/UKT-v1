@@ -2,8 +2,8 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 require('dotenv').config();
-const Auth = require('../middleware/Auth.js');
-const verifyRoles = require("../middleware/verifyRoles");
+const Auth = require('../../../middleware/Auth.js');
+const verifyRoles = require("../../../middleware/verifyRoles.js");
 
 //implementasi
 const app = express();
@@ -11,26 +11,18 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: true}));
 
 //import model
-const models = require('../models/index');
-const jurus_siswa = models.jurus_siswa;
+const models = require('../../../models/index');
+const senam_siswa = models.senam_siswa;
 
 //endpoint ditulis disini
 
-//endpoint get data jurus_siswa
+//endpoint get data senam_siswa
 app.get("/", Auth, verifyRoles("admin", "super admin", "admin ranting", "pengurus cabang", "pengurus ranting", "penguji cabang", "penguji ranting"), (req,res) => {
-    jurus_siswa.findAll({
-        include: [
-            {
-                model: models.jurus,
-                as: "jurus",
-                attributes: ['name']
-            }
-        ]
-    })
-    .then(jurus_siswa => {
+    senam_siswa.findAll()
+    .then(senam_siswa => {
         res.json({
-            count: jurus_siswa.length,
-            data: jurus_siswa
+            count: senam_siswa.length,
+            data: senam_siswa
         })
     })
     .catch(error => {
@@ -40,17 +32,17 @@ app.get("/", Auth, verifyRoles("admin", "super admin", "admin ranting", "penguru
     })    
 })
 
-//endpoint get data jurus_siswa by tipe_ukt
+//endpoint get data senam_siswa by tipe_ukt
 app.get("/:id", Auth, verifyRoles("admin", "super admin", "admin ranting", "pengurus cabang", "pengurus ranting", "penguji cabang", "penguji ranting"), (req,res) => {
-    jurus_siswa.findAll({
+    senam_siswa.findAll({
         where: {
             tipe_ukt: req.params.id
         }
     })
-    .then(jurus_siswa => {
+    .then(senam_siswa => {
         res.json({
-            count: jurus_siswa.length,
-            data: jurus_siswa
+            count: senam_siswa.length,
+            data: senam_siswa
         })
     })
     .catch(error => {
@@ -59,27 +51,42 @@ app.get("/:id", Auth, verifyRoles("admin", "super admin", "admin ranting", "peng
         })
     })    
 })
-//endpoint get data jurus by tipe_ukt
+//endpoint get data senam_siswa by tipe_ukt
+app.get("/ranting/:id", Auth, verifyRoles("admin", "super admin", "admin ranting", "pengurus cabang", "pengurus ranting", "penguji cabang", "penguji ranting"), (req,res) => {
+    senam_siswa.findAll({
+        where: {
+            ranting: req.params.id
+        }
+    })
+    .then(senam_siswa => {
+        res.json({
+            count: senam_siswa.length,
+            data: senam_siswa
+        })
+    })
+    .catch(error => {
+        res.json({
+            message: error.message
+        })
+    })    
+})
+//endpoint get data senam by tipe_ukt
 app.get("/ukt/:id", Auth, verifyRoles("admin", "super admin", "admin ranting", "pengurus cabang", "pengurus ranting", "penguji cabang", "penguji ranting"), (req,res) => {
-    jurus_siswa.findAll({
-        attributes: ['id_jurus_siswa','id_siswa','id_jurus'],
+    senam_siswa.findAll({
+        attributes: ['id_senam_siswa','id_senam_detail'],
         include: [
             {
-                model: models.jurus,
-                attributes: ['name'],
-                as: "jurus",
-                where: {
-                    tipe_ukt: req.params.id
-                },
+                model: models.senam_detail,
+                attributes: ['name','tipe_ukt'],
+                as: "siswa_senam",
                 required: false
             }
         ]
     })
-    .then(jurus => {
+    .then(senam => {
         res.json({
-            count: jurus.length,
-            tipe_ukt: req.params.id,
-            data: jurus
+            count: senam.length,
+            data: senam
         })
     })
     .catch(error => {
@@ -88,36 +95,35 @@ app.get("/ukt/:id", Auth, verifyRoles("admin", "super admin", "admin ranting", "
         })
     })    
 })
-//endpoint get data jurus by id siswa
+//endpoint get data senam by id siswa
 app.get("/siswa/:id", Auth, verifyRoles("admin", "super admin", "admin ranting", "pengurus cabang", "pengurus ranting", "penguji cabang", "penguji ranting"), (req,res) => {
-    jurus_siswa.findAll({
-        attributes: ['id_jurus_siswa','id_jurus', 'predikat'],
+    senam_siswa.findAll({
+        attributes: ['id_senam_siswa','id_siswa','id_senam', 'predikat'],
         where: {
             id_siswa: req.params.id
         },
         include: [
             {
-                model: models.jurus,
-                attributes: ['name', 'tipe_ukt'],
-                as: "jurus",
+                model: models.senam,
+                attributes: ['name','tipe_ukt'],
+                as: "siswa_senam",
                 required: false
             }
         ]
     })
-    .then(jurus => {
-        console.log(jurus[0].predikat)
+    .then(senam => {
+        console.log(senam[0].predikat)
         const nilai = []
-        for(let i=0; i < jurus.length; i++) {
-            if(jurus[i].predikat == true){
+        for(let i=0; i < senam.length; i++) {
+            if(senam[i].predikat == true){
               nilai.push('true');
             }
         }
         console.log(nilai.length);
         res.json({
-            count: jurus.length,
-            id_siswa: req.params.id,
-            jurus_benar: nilai.length,
-            data: jurus
+            count: senam.length,
+            senam_benar: nilai.length,
+            data: senam
         })
     })
     .catch(error => {
@@ -126,14 +132,14 @@ app.get("/siswa/:id", Auth, verifyRoles("admin", "super admin", "admin ranting",
         })
     })    
 })
-//endpoint untuk menyimpan data jurus_siswa, METHOD POST, function create
+//endpoint untuk menyimpan data senam_siswa, METHOD POST, function create
 app.post("/", Auth, verifyRoles("admin", "super admin", "admin ranting", "pengurus cabang", "pengurus ranting", "penguji cabang", "penguji ranting"), (req,res) =>{
     let data ={
-        id_jurus_detail: req.body.id_jurus_detail,
-        id_jurus: req.body.id_jurus,
+        id_senam_detail: req.body.id_senam_detail,
+        id_senam: req.body.id_senam,
         predikat: req.body.predikat
     }
-    jurus_siswa.create(data)
+    senam_siswa.create(data)
     .then(result => {
         res.json({
             message: "data has been inserted"
@@ -146,17 +152,17 @@ app.post("/", Auth, verifyRoles("admin", "super admin", "admin ranting", "pengur
     })
 }) 
 
-//endpoint untuk mengupdate data jurus_siswa, METHOD: PUT, fuction: UPDATE
+//endpoint untuk mengupdate data senam_siswa, METHOD: PUT, fuction: UPDATE
 app.put("/:id", Auth, verifyRoles("admin", "super admin", "admin ranting", "pengurus cabang", "pengurus ranting", "penguji cabang", "penguji ranting"), (req,res) => {
     let param = {
-        id_jurus_siswa : req.params.id
+        id_senam_siswa : req.params.id
     }
     let data ={
-        id_jurus_detail: req.body.id_jurus_detail,
-        id_jurus: req.body.id_jurus,
+        id_senam_detail: req.body.id_senam_detail,
+        id_senam: req.body.id_senam,
         predikat: req.body.predikat
     }
-    jurus_siswa.update(data, {where: param})
+    senam_siswa.update(data, {where: param})
     .then(result => {
         res.json({
             message : "data has been updated"
@@ -169,12 +175,12 @@ app.put("/:id", Auth, verifyRoles("admin", "super admin", "admin ranting", "peng
     })
 })
 
-//endpoint untuk menghapus data jurus_siswa,METHOD: DELETE, function: destroy
+//endpoint untuk menghapus data senam_siswa,METHOD: DELETE, function: destroy
 app.delete("/:id", Auth, verifyRoles("admin", "super admin", "admin ranting", "pengurus cabang", "pengurus ranting", "penguji cabang", "penguji ranting"), (req,res) => {
     let param = {
-        id_jurus_siswa : req.params.id
+        id_senam_siswa : req.params.id
     }
-    jurus_siswa.destroy({where: param})
+    senam_siswa.destroy({where: param})
     .then(result => {
         res.json({
             massege : "data has been deleted"
