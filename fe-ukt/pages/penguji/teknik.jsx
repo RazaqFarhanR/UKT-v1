@@ -3,6 +3,8 @@ import axios from 'axios';
 import Header from './components/header'
 
 const teknik = () => {
+
+    const [dataSiswa, setDataSiswa] = useState([])
     const [dataTeknik, setDataTeknik] = useState([]);
     const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
 
@@ -21,12 +23,16 @@ const teknik = () => {
         SetSelectedButton(updatedOptions);
     }
 
-    
+    const getDataSiswa = () => {
+        const dataSiswa = JSON.parse(localStorage.getItem('dataSiswa'))
+        setDataSiswa(dataSiswa)
+    }
+
     // function get data event
     const getDataEvent = () => {
         const token = localStorage.getItem('tokenPenguji')
-        
-        const dataSiswa = JSON.parse (localStorage.getItem('dataSiswa'));
+
+        const dataSiswa = JSON.parse(localStorage.getItem('dataSiswa'));
         axios.get(BASE_URL + `teknik/ukt/${dataSiswa.tipe_ukt}`, { headers: { Authorization: `Bearer ${token}` } })
             .then(res => {
                 console.log(res.data.data);
@@ -39,32 +45,75 @@ const teknik = () => {
 
     // function post data teknik
     const postDataTeknik = () => {
+        // -- data detail -- //
+        const uktSiswa = JSON.parse(localStorage.getItem('dataUktSiswa'))
         const token = localStorage.getItem('tokenPenguji')
-        const id_teknik_detail = localStorage.getItem('id_teknik_detail');
-    console.log(id_teknik_detail)
-        console.log(token);
-        const data = selectedButton.map((option) => {
-            return {
-              id_teknik: option.id_teknik,
-              predikat: option.selectedOption,
-            };
-          });
-          for (let i=0; i<data.length; i++){
-              axios.post(BASE_URL + `teknik_siswa`, {
-                  id_teknik_detail: id_teknik_detail,
-                  id_teknik: data[i].id_teknik,
-                  predikat: data[i].predikat
-              }, { headers: { Authorization: `Bearer ${token}` } },)
-              .then((res) => {
-                  console.log(res);
-                })
-                .catch((error) => {
-                  console.log(error.message);
+        const dataPenguji = JSON.parse(localStorage.getItem('penguji'))
+        const dataDetail = {
+            id_penguji: dataPenguji.id_penguji,
+            id_siswa: dataSiswa.id_siswa,
+            id_event: dataSiswa.id_event,
+            tipe_ukt: dataSiswa.tipe_ukt
+        }
+        
+
+        axios.post(BASE_URL + `teknik_detail`, dataDetail, { headers: { Authorization: `Bearer ${token}` } })
+            .then(async res => {
+                console.log(res.data.data)
+
+                const id_teknik_detail = res.data.data.id_teknik_detail;
+                const data = selectedButton.map((option) => {
+                    return {
+                        id_teknik: option.id_teknik,
+                        predikat: option.selectedOption,
+                    };
                 });
-          }
+
+                let baik = []
+                let cukup = []
+                let kurang = []
+                for (let i = 0; i < data.length; i++) {
+                    // -- push nilai -- //
+                    if (data[i].predikat == 'BAIK') {
+                        baik.push('1');
+                    } else if (data[i].predikat == 'CUKUP') {
+                        cukup.push('1');
+                    } else if (data[i].predikat == 'KURANG') {
+                        kurang.push('1');
+                    }
+                    
+                    axios.post(BASE_URL + `teknik_siswa`, {
+                        id_teknik_detail: id_teknik_detail,
+                        id_teknik: data[i].id_teknik,
+                        predikat: data[i].predikat
+                    }, { headers: { Authorization: `Bearer ${token}` } },)
+                        .then((res) => {
+                            console.log(res);
+                        })
+                        .catch((error) => {
+                            console.log(error.message);
+                        });
+                }
+                // -- redefine nilai -- //
+                const newBaik = baik.length * 3;
+                const newCukup = cukup.length * 2;
+                const newKurang = kurang.length;
+                // -- ukt siswa  -- //
+                const nilaiUkt = newBaik + newCukup + newKurang;
+                await axios.put(BASE_URL + `ukt_siswa/${uktSiswa.id_ukt_siswa}`, {
+                    teknik: nilaiUkt
+                }, { headers: { Authorization: `Bearer ${token}` } })
+                    .then(res => {
+                        console.log(res)
+                    })
+                    .catch(err => {
+                        console.log(err.message);
+                    })
+            })
     }
 
     useEffect(() => {
+        getDataSiswa();
         getDataEvent();
     }, [])
     return (
@@ -98,7 +147,7 @@ const teknik = () => {
 
                                     {/* button kurang */}
                                     <button className={selectedButton.find(
-                                        (option) => 
+                                        (option) =>
                                             option.id_teknik == item.id_teknik &&
                                             option.selectedOption == "KURANG"
                                     ) ? "font-semibold bg-purple rounded-md text-white py-1.5" : "font-semibold bg-navy border-2 border-purple rounded-md text-purple py-1.5"}
@@ -106,15 +155,15 @@ const teknik = () => {
 
                                     {/* button cukup */}
                                     <button className={selectedButton.find(
-                                        (option) => 
+                                        (option) =>
                                             option.id_teknik == item.id_teknik &&
                                             option.selectedOption == "CUKUP"
-                                    ) ? "font-semibold bg-purple rounded-md text-white py-1.5": "font-semibold bg-navy border-2 border-purple rounded-md text-purple py-1.5"}
+                                    ) ? "font-semibold bg-purple rounded-md text-white py-1.5" : "font-semibold bg-navy border-2 border-purple rounded-md text-purple py-1.5"}
                                         onClick={() => handleButtonClick(item.id_teknik, 'CUKUP')}>Cukup</button>
 
                                     {/* button baik */}
                                     <button className={selectedButton.find(
-                                        (option) => 
+                                        (option) =>
                                             option.id_teknik == item.id_teknik &&
                                             option.selectedOption == "BAIK"
                                     ) ? "font-semibold bg-purple rounded-md text-white py-1.5" : "font-semibold bg-navy border-2 border-purple rounded-md text-purple py-1.5"}
@@ -123,7 +172,12 @@ const teknik = () => {
                             </div>
                         ))}
 
+
+                        <div className='bg-yellow rounded-md p-3 text-white mb-8 shadow shadow-slate-700'
+                            onClick={postDataTeknik}>Selesai</div>
+
                         <div className='bg-yellow hover:bg-white rounded-md p-3 text-center text-xl text-white hover:text-yellow font-semibold shadow shadow-slate-700 duration-300' onClick={() => postDataTeknik()}>Selesai</div>
+
                     </div>
                 </div>
             </div>

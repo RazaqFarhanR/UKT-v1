@@ -47,6 +47,60 @@ const jurus = () => {
 
     // function handle save nilai jurus
     const handleSave = () => {
+
+        // -- data detail -- //
+        const uktSiswa = JSON.parse(localStorage.getItem('dataUktSiswa'))
+        const token = localStorage.getItem('tokenPenguji')
+        const dataPenguji = JSON.parse(localStorage.getItem('penguji'))
+        const dataDetail = {
+            id_penguji: dataPenguji.id_penguji,
+            id_siswa: dataSiswa.id_siswa,
+            id_event: dataSiswa.id_event,
+            tipe_ukt: dataSiswa.tipe_ukt
+        }
+
+        axios.post(BASE_URL + `jurus_detail`, dataDetail, { headers: { Authorization: `Bearer ${token}`}})
+        .then(async res => {
+                const data = selectedButton.map ((option) => {
+                    return {
+                        id_jurus : option.id_jurus,
+                        predikat : option.selectedOption,
+                    }
+                })
+
+                const id_jurus_detail = res.data.data.id_jurus_detail
+
+                let nilai = [];
+
+                for (let i = 0; i < data.length; i++) {
+                    if(data[i].predikat === 'true'){
+                        nilai.push('1')
+                    }
+                    axios.post (BASE_URL + `jurus_siswa`, {
+                        id_jurus_detail : id_jurus_detail,
+                        id_jurus : data[i].id_jurus,
+                        predikat: data[i].predikat,
+                    }, { headers: { Authorization: `Bearer ${token}`}})
+                    .then (res => {
+                        console.log(res.data.message);
+                    })
+                    .catch (err => {
+                        console.log(err.message);
+                    })
+                }
+
+                const nilaiUkt = ((nilai.length / data.length) * 100).toFixed(2)
+                console.log("nilai" + nilai)
+                await axios.put(BASE_URL + `ukt_siswa/${uktSiswa.id_ukt_siswa}`, {
+                    jurus: nilaiUkt
+                }, { headers: { Authorization: `Bearer ${token}` } })
+                    .then(res => {
+                        console.log(res)
+                    })
+                    .catch(err => {
+                        console.log(err.message);
+                    })
+            })
         const token = localStorage.getItem ('tokenPenguji')
         const id_jurus_detail = localStorage.getItem ('id_jurus_detail')
 
