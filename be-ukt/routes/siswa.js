@@ -4,6 +4,10 @@ const bodyParser = require('body-parser');
 require('dotenv').config();
 const Auth = require('../middleware/Auth.js');
 const verifyRoles = require("../middleware/verifyRoles");
+const multer = require("multer");
+const path = require("path");
+const fs = require("fs");
+const csv = require('csv-parser');
 
 //implementasi
 const app = express();
@@ -13,11 +17,24 @@ app.use(bodyParser.urlencoded({extended: true}));
 //import model
 const models = require('../models/index');
 const { sequelize, Op } = require("sequelize");
+const localStorage = process.env.LOCAL_STORAGE_GENERAL + "csv/"
 const siswa = models.siswa;
 const ranting = models.ranting
 const event = models.event;
 const rayon = models.rayon;
 
+const storage = multer.diskStorage({
+    destination: (req, file, cb) => {
+      // set file storage
+      cb(null, localStorage);
+    },
+    filename: (req, file, cb) => {
+        // generate file name
+        cb(null, "csv" + Date.now() + path.extname(file.originalname));
+      },
+  });
+
+let upload2 = multer({ storage: storage });
 //endpoint ditulis disini
 
 //endpoint get data siswa
@@ -158,7 +175,6 @@ app.post("/", Auth, verifyRoles("admin", "super admin", "admin ranting", "pengur
     let data ={
         id_event: req.body.id_event,
         nis: req.body.nis,
-        nomor_urut: req.body.nomor_urut,
         name: req.body.name,
         id_role: req.body.id_role,
         jenis_kelamin: req.body.jenis_kelamin,
@@ -182,6 +198,51 @@ app.post("/", Auth, verifyRoles("admin", "super admin", "admin ranting", "pengur
     })
 }) 
 
+app.post('/csv', Auth, verifyRoles('admin', 'super admin', 'admin ranting', 'pengurus cabang', 'pengurus ranting', 'penguji cabang', 'penguji ranting'),upload2.single("csvFile"), (req, res) => {
+    const results = []
+  
+    fs.createReadStream(localStorage + req.file.filename)
+      .pipe(csv())
+      .on('data', (data) => results.push(data))
+      .on('end', () => {
+        const promises = []
+        for (const data of results) {
+            console.log("data")
+            console.log(data)
+          const newData = {
+            id_event: req.body.id_event,
+            nis: data.nis,
+            name: data.name,
+            id_role: data.id_role,
+            jenis_kelamin: data.jenis_kelamin,
+            jenis_latihan: data.jenis_latihan,
+            peserta: data.jenis_latihan + ' - ' + data.jenis_kelamin,
+            tipe_ukt: req.body.tipe_ukt,
+            id_ranting: data.id_ranting,
+            rayon: data.rayon,
+            tingkatan: data.tingkatan
+          }
+          promises.push(siswa.create(newData))
+        }
+  
+        Promise.all(promises)
+          .then(() => {
+              const csvPath = localStorage + req.file.filename; 
+              fs.unlink(csvPath, (err) => {
+                  if (err) {
+                      console.error(err);
+                      return;
+                    }
+                    console.log('csv deleted successfully');
+                })
+                res.json({ message: 'Data has been inserted' })
+          })
+          .catch((error) => {
+            res.json({ message: error.message })
+          })
+      })
+  })
+
 //endpoint untuk meng UPDATE data siswa, METHOD: PUT, fuction: UPDATE
 app.put("/:id", Auth, verifyRoles("admin", "super admin", "admin ranting", "pengurus cabang", "pengurus ranting", "penguji cabang", "penguji ranting"), (req,res) => {
     let param = {
@@ -190,7 +251,6 @@ app.put("/:id", Auth, verifyRoles("admin", "super admin", "admin ranting", "peng
     let data ={
         id_event: req.body.id_event,
         nis: req.body.nis,
-        nomor_urut: req.body.nomor_urut,
         name: req.body.name,
         id_role: req.body.id_role,
         jenis_kelamin: req.body.jenis_kelamin,

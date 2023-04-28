@@ -66,42 +66,14 @@ app.get("/ukt/:id", Auth, verifyRoles("admin", "super admin", "admin ranting", "
 })
 //endpoint get data ukt_siswa by tipe id siswa
 app.get("/siswa/:id", Auth, verifyRoles("admin", "super admin", "admin ranting", "pengurus cabang", "pengurus ranting", "penguji cabang", "penguji ranting"), (req,res) => {
-    ukt_siswa.findAll({
+    ukt_siswa.findOne({
         where: {
             id_siswa: req.params.id
-        },
-        attributes: ['id_teknik','predikat'],
-        include: [
-            {
-                model: models.teknik,
-                attributes: ['name'],
-                as: "siswa_teknik"
-            }
-        ],
-        order: ['id_teknik']
+        }
     })
     .then(ukt_siswa => {
-        console.log(ukt_siswa[0].predikat)
-        const baik = []
-        const cukup = []
-        const kurang = []
-        for(let i=0; i < ukt_siswa.length; i++) {
-            if(ukt_siswa[i].predikat == 'BAIK'){
-                baik.push('1');
-            } else if (ukt_siswa[i].predikat == 'CUKUP') {
-                cukup.push('1');
-            } else if (ukt_siswa[i].predikat == 'KURANG'){
-                kurang.push('1');
-            }
-        }
-        const newBaik = baik.length * 3;
-        const newCukup = cukup.length * 2;
-        const newKurang = kurang.length;
-        const nilai = newBaik + newCukup + newKurang;
         res.json({
             count: ukt_siswa.length,
-            id_siswa: req.params.id,
-            nilai: nilai,
             data: ukt_siswa
         })
     })
@@ -115,15 +87,22 @@ app.get("/siswa/:id", Auth, verifyRoles("admin", "super admin", "admin ranting",
 //endpoint untuk menyimpan data ukt_siswa, METHOD POST, function create
 app.post("/", Auth, verifyRoles("admin", "super admin", "admin ranting", "pengurus cabang", "pengurus ranting", "penguji cabang", "penguji ranting"), (req,res) =>{
     let data ={     
-        id_teknik: req.body.id_teknik,
+        tipe_ukt: req.body.tipe_ukt,
         id_event: req.body.id_event,
         id_siswa: req.body.id_siswa,
-        predikat: req.body.predikat
+        rayon: req.body.rayon,
+        keshan: req.body.keshan,
+        senam: req.body.senam,
+        jurus: req.body.jurus,
+        fisik: req.body.fisik,
+        teknik: req.body.teknik,
+        sambung: req.body.sambung
     }
     ukt_siswa.create(data)
     .then(result => {
         res.json({
-            message: "data has been inserted"
+            message: "data has been inserted",
+            data: result
         })
     })
     .catch(error =>{
@@ -139,10 +118,16 @@ app.put("/:id", Auth, verifyRoles("admin", "super admin", "admin ranting", "peng
         id_ukt_siswa : req.params.id
     }
     let data ={     
-        id_teknik: req.body.id_teknik,
+        tipe_ukt: req.body.tipe_ukt,
         id_event: req.body.id_event,
         id_siswa: req.body.id_siswa,
-        predikat: req.body.predikat
+        rayon: req.body.rayon,
+        keshan: req.body.keshan,
+        senam: req.body.senam,
+        jurus: req.body.jurus,
+        fisik: req.body.fisik,
+        teknik: req.body.teknik,
+        sambung: req.body.sambung
     }
     ukt_siswa.update(data, {where: param})
     .then(result => {
