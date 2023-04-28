@@ -11,18 +11,15 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
-      this.belongsTo(models.siswa, {
-        foreignKey: "id_siswa",
-        as: "senam_siswa"
-      })
       this.belongsTo(models.senam, {
         foreignKey: "id_senam",
         as: "siswa_senam"
       })
-      this.belongsTo(models.event, {
-        foreignKey: "id_event",
-        as: "event_senam"
+      this.belongsTo(models.senam_detail, {
+        foreignKey: "id_senam_detail",
+        as: "siswa_senam_detail"
       })
+      
     }
   }
   senam_siswa.init({
@@ -32,8 +29,7 @@ module.exports = (sequelize, DataTypes) => {
       primaryKey: true,
       allowNull: false,
     },
-    id_event: DataTypes.INTEGER,
-    id_siswa: DataTypes.INTEGER,
+    id_senam_detail: DataTypes.INTEGER,
     id_senam: DataTypes.INTEGER,
     predikat: DataTypes.BOOLEAN
   }, {

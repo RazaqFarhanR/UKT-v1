@@ -11,18 +11,15 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
-      this.belongsTo(models.siswa, {
-        foreignKey: "id_siswa",
-        as: "teknik_siswa"
-      })
       this.belongsTo(models.teknik, {
         foreignKey: "id_teknik",
         as: "siswa_teknik"
       })
-      this.belongsTo(models.event, {
-        foreignKey: "id_event",
-        as: "event_teknik"
+      this.belongsTo(models.teknik_detail, {
+        foreignKey: "id_teknik_detail",
+        as: "siswa_teknik_detail"
       })
+      
     }
   }
   teknik_siswa.init({
@@ -33,8 +30,7 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false
     },
     id_teknik: DataTypes.INTEGER,
-    id_event: DataTypes.INTEGER,
-    id_siswa: DataTypes.INTEGER,
+    id_teknik_detail: DataTypes.INTEGER,
     predikat: DataTypes.ENUM('KURANG','CUKUP','BAIK')
   }, {
     sequelize,

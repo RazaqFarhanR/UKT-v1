@@ -33,32 +33,7 @@ app.get(
         order: [['tipe_ukt', 'ASC'], ['peserta','ASC']],
       })
       .then((standar_fisik) => {
-        
-        const data = {};
-        for (let i=0; i<4; i++){ 
-          b = 0;
-          if (i > 0){
-            b = i * 4;
-          }
-          const tipe_ukt = ['ukt_jambon','ukt_hijau', 'ukt_putih', 'ukcw']  
-          for(let j=0; j<4; j++) {
-            const response = {
-              tipe_ukt: standar_fisik[j + b].tipe_ukt,
-              peserta: standar_fisik[j + b].peserta,
-              mft: standar_fisik[j + b].mft,
-              push_up: standar_fisik[j + b].push_Up,
-              spir_perut_atas: standar_fisik[j + b].spir_perut_atas,
-              spir_perut_bawah: standar_fisik[j + b].spir_perut_bawah,
-              spir_dada: standar_fisik[j + b].spir_dada,
-              plank: standar_fisik[j + b].plank,
-            }
-            console.log("j+b = "+ (j + b));
-            const peserta = ['remaja_lk','remaja_prpn','privat_lk','privat_prpn']       
-            data[tipe_ukt[i]+'_'+ peserta[j]] = response;
-            console.log(j);
-          }   
-        }
-        res.json(data);
+        res.json(standar_fisik);
       })
       .catch((error) => {
         res.json({

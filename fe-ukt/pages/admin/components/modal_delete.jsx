@@ -12,12 +12,12 @@ const modal_delete = () => {
     const {setDataAdminCabang, setDataAdminRanting} = useContext (globalState)
     const {setDataPengujiCabang, setDataPengujiRanting} = useContext (globalState)
     const {setDataPengurusCabang, setDataPengurusRanting} = useContext (globalState)
+    const {setDataSiswa, idSiswa} = useContext (globalState)
     const {action} = useContext (globalState)
     const {idAdminCabang, idAdminRanting} = useContext (globalState)
     const {idPengujiCabang, idPengujiRanting} = useContext (globalState)
     const {idPengurusCabang, idPengurusRanting} = useContext (globalState)
     const {setDataEvent, idEvent} = useContext (globalState)
-    const {setDataTeknik, idTeknik, ukt} = useContext (globalState)
 
     // state from local storage
     const [token, setToken] = useState ('')
@@ -94,24 +94,22 @@ const modal_delete = () => {
         })
     }
 
-    // function get data event
-    const getDataEvent = () => {
-        axios.get (BASE_URL + `event`, { headers: { Authorization: `Bearer ${token}`}})
+    // function get data siswa
+    const getDataSiswa = () => {
+        axios.get (BASE_URL + `siswa`, { headers: { Authorization: `Bearer ${token}`}})
         .then (res => {
-            setDataEvent (res.data.data)
+            setDataSiswa (res.data.data)
         })
         .catch (err => {
             console.log(err.message);
         })
     }
 
-    // function get data teknik
-    const getDataTeknik = () => {
-        const token = localStorage.getItem ('token')
-
-        axios.get (BASE_URL + `teknik/ukt/${ukt}`, { headers: { Authorization: `Bearer ${token}`}})
+    // function get data event
+    const getDataEvent = () => {
+        axios.get (BASE_URL + `event`, { headers: { Authorization: `Bearer ${token}`}})
         .then (res => {
-            setDataTeknik (res.data.data)
+            setDataEvent (res.data.data)
         })
         .catch (err => {
             console.log(err.message);
@@ -181,6 +179,16 @@ const modal_delete = () => {
             .catch (err => {
                 console.log(err.message);
             })
+        } else if (action === 'deleteSiswa') {
+            axios.delete (BASE_URL + `siswa/${idSiswa}`, { headers: { Authorization: `Bearer ${token}`}})
+            .then (res => {
+                getDataSiswa ()
+                setShowModalDelete (false)
+                console.log(res.data.message);
+            })
+            .catch (err => {
+                console.log(err.message);
+            })
         } else if (action === 'deleteEvent') {
             axios.delete (BASE_URL + `event/${idEvent}`, { headers: { Authorization: `Bearer ${token}`}})
             .then (res => {
@@ -191,18 +199,6 @@ const modal_delete = () => {
             .catch (err => {
                 console.log(err.message);
             })
-        } else if (action === 'deleteTeknik') {
-            axios.delete (BASE_URL + `teknik/${idTeknik}`, { headers: { Authorization: `Bearer ${token}`}})
-            .then (res => {
-                getDataTeknik ()
-                setShowModalDelete (false)
-                console.log(res.data.message);
-            })
-            .catch (err => {
-                console.log(err.message);
-            })
-        } else {
-            console.log('gagal');
         }
     }
 

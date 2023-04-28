@@ -20,7 +20,9 @@ const senam = models.senam;
 
 //endpoint get data senam
 app.get("/", Auth, verifyRoles("admin", "super admin", "admin ranting", "pengurus cabang", "pengurus ranting", "penguji cabang", "penguji ranting"), (req,res) => {
-    senam.findAll()
+    senam.findAll({
+        attributes: ['tipe_ukt','id_senam','name'],
+    })
     .then(senam => {
         res.json({
             count: senam.length,

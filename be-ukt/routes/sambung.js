@@ -61,6 +61,119 @@ app.get(
   }
 );
 
+// -- GET BY TIPE_UKT -- /
+app.get(
+  "/ukt/:id",
+  Auth,
+  verifyRoles(
+    "admin",
+    "super admin",
+    "admin ranting",
+    "pengurus cabang",
+    "pengurus ranting",
+    "penguji"
+  ),
+  (req, res) => {
+    sambung
+      .findAll({
+        include: [
+          {
+            model: detail_sambung,
+            as: "detail_sambung",
+            attributes: ["posisi", "id_siswa", "nilai"],
+            include: [
+              {
+                model: siswa,
+                as: "sambung_siswa",
+                attributes: ["name"],
+              },
+            ],
+          },
+          {
+            model: models.penguji,
+            as: "penguji_sambung",
+            attributes: ['name']
+          },
+          {
+            model: models.event,
+            as: "event_sambung",
+            attributes: ['name','tipe_ukt'],
+            where: {
+              tipe_ukt: req.params.id
+            }
+          }
+        ],
+      })
+      .then((sambung) => {
+        res.json({
+          count: sambung.length,
+          data: sambung,
+        });
+      })
+      .catch((error) => {
+        res.json({
+          message: error.message,
+        });
+      });
+  }
+);
+app.get(
+  "/ukt/:id/:event",
+  Auth,
+  verifyRoles(
+    "admin",
+    "super admin",
+    "admin ranting",
+    "pengurus cabang",
+    "pengurus ranting",
+    "penguji"
+  ),
+  (req, res) => {
+    sambung
+      .findAll({
+        include: [
+          {
+            model: detail_sambung,
+            as: "detail_sambung",
+            attributes: ["posisi", "id_siswa", "nilai"],
+            include: [
+              {
+                model: siswa,
+                as: "sambung_siswa",
+                attributes: ["name"],
+              },
+            ],
+          },
+          {
+            model: models.penguji,
+            as: "penguji_sambung",
+            attributes: ['name']
+          },
+          {
+            model: models.event,
+            as: "event_sambung",
+            attributes: ['name','tipe_ukt'],
+            where: {
+              id_event: req.params.event,
+              tipe_ukt: req.params.id
+            }
+          }
+        ],
+      })
+      .then((sambung) => {
+        res.json({
+          count: sambung.length,
+          data: sambung,
+        });
+      })
+      .catch((error) => {
+        res.json({
+          message: error.message,
+        });
+      });
+  }
+);
+
 //endpoint untuk menyimpan data sambung, METHOD POST, function create
 app.post(
   "/",

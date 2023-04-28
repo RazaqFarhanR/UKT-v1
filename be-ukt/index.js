@@ -42,11 +42,17 @@ app.use("/ukt/senam", senam)
 const senam_siswa = require('./routes/senam_siswa');
 app.use("/ukt/senam_siswa", senam_siswa)
 
+const senam_detail = require('./routes/senam_detail');
+app.use("/ukt/senam_detail", senam_detail)
+
 const jurus = require('./routes/jurus');
 app.use("/ukt/jurus", jurus)
 
 const jurus_siswa = require('./routes/jurus_siswa');
 app.use("/ukt/jurus_siswa", jurus_siswa)
+
+const jurus_detail = require('./routes/jurus_detail');
+app.use("/ukt/jurus_detail", jurus_detail)
 
 //endpoint teknik
 const teknik = require('./routes/teknik');
@@ -54,26 +60,18 @@ app.use("/ukt/teknik", teknik)
 //endpoint teknik_siswa
 const teknik_siswa = require('./routes/teknik_siswa');
 app.use("/ukt/teknik_siswa", teknik_siswa)
+//endpoint teknik_detail
+const teknik_detail = require('./routes/teknik_detail');
+app.use("/ukt/teknik_detail", teknik_detail)
 
 //endpoint fisik
 const fisik = require('./routes/fisik');
 app.use("/ukt/fisik", fisik)
 
-//endpoint UKCW
-const ukcw = require('./routes/ukcw');
-app.use("/ukt/ukcw", ukcw)
+//endpoint ukt_siswa
+const ukt_siswa = require('./routes/ukt_siswa');
+app.use("/ukt/ukt_siswa", ukt_siswa)
 
-//endpoint UKT_JAMBON
-const ukt_jambon = require('./routes/ukt_jambon');
-app.use("/ukt/ukt_jambon", ukt_jambon)
-
-//endpoint UKT_HIJAU
-const ukt_hijau = require('./routes/ukt_hijau');
-app.use("/ukt/ukt_hijau", ukt_hijau)
-
-//endpoint UKT_PUTIH
-const ukt_putih = require('./routes/ukt_putih');
-app.use("/ukt/ukt_putih", ukt_putih)
 
 //endpoint Soal
 const soal = require('./routes/soal');

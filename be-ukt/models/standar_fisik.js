@@ -22,7 +22,7 @@ module.exports = (sequelize, DataTypes) => {
     },
     tipe_ukt: DataTypes.ENUM('UKT Jambon','UKT Hijau','UKT Putih','UKCW'),
     peserta: DataTypes.ENUM('Remaja - Laki laki','Remaja - Perempuan','Privat - Laki laki','Privat - Perempuan'),
-    mft: DataTypes.DOUBLE,
+    mft: DataTypes.INTEGER,
     push_up: DataTypes.INTEGER,
     spir_perut_atas: DataTypes.INTEGER,
     spir_perut_bawah: DataTypes.INTEGER,

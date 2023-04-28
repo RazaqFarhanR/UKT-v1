@@ -1,6 +1,7 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import Link from 'next/link'
 import axios from 'axios'
+import { useRouter } from 'next/router'
 import { globalState } from '@/context/context'
 import Sidebar from '../components/sidebar'
 import Header from '../components/header'
@@ -11,6 +12,9 @@ const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
 
 const ukcw = () => {
 
+    // deklarasi router
+    const router = useRouter ()
+    
     // state modal
     const [showModalEvent, setShowModalEvent] = useState (false)
     const [showModalDelete, setShowModalDelete] = useState (false)
@@ -27,7 +31,7 @@ const ukcw = () => {
     const getDataEvent = () => {
         const token = localStorage.getItem ('token')
 
-        axios.get (BASE_URL + `event`, { headers: { Authorization: `Bearer ${token}`}})
+        axios.get (BASE_URL + `event/ukt/UKCW`, { headers: { Authorization: `Bearer ${token}`}})
         .then (res => {
             setDataEvent (res.data.data)
         })
@@ -42,7 +46,7 @@ const ukcw = () => {
         setAction ('insert')
         setName ('')
         setDate ('')
-        setTipe ('ukcw')
+        setTipe ('UKCW')
     }
 
     // function modal edit
@@ -52,7 +56,7 @@ const ukcw = () => {
         setIdEvent (selectedItem.id_event)
         setName (selectedItem.name)
         setDate (selectedItem.date)
-        setTipe ('ukcw')
+        setTipe ('UKCW')
     }
 
     // function modal delete
@@ -61,6 +65,22 @@ const ukcw = () => {
         setAction ('deleteEvent')
         setIdEvent (selectedId)
     }
+
+    // function to rekap nilai
+    const toRekapNilai = (item) => {
+        localStorage.setItem ('event', JSON.stringify (item))
+        router.push ('./rekap_nilai_ukt_ukcw')
+    }
+
+    // function to detail nilai
+    const toDetailNilai = (item) => {
+        localStorage.setItem ('event', JSON.stringify (item))
+        router.push ('./detail_nilai_ukt_ukcw')
+    }
+
+    useEffect (() => {
+        getDataEvent ()
+    }, [])
 
     return (
         <>
@@ -113,7 +133,7 @@ const ukcw = () => {
                         <div className="grid grid-cols-2 gap-x-5">
                             
                             {/* card event */}
-                            {dataEvent.filter(a => a.tipe === 'ukcw').map((item, index) => (
+                            {dataEvent.map((item, index) => (
                                 <div key={index + 1} className="bg-navy hover:bg-gradient-to-r from-[#16D4FC] to-[#9A4BE9] rounded-md p-0.5">
 
                                     {/* inner bg */}
@@ -140,10 +160,10 @@ const ukcw = () => {
                                             </div>
                                         </div>
         
-                                        {/* action button */}
-                                        <div className=" space-x-2 w-full flex justify-center text-white text-center">
-                                            <Link href={'./rekap_nilai_ukt_jambon'} className='bg-purple hover:bg-white hover:text-purple duration-300 p-2 rounded-md w-full'>Lihat Nilai</Link>
-                                            <Link href={'./lihat_nilai_ukt_jambon'} className='bg-purple hover:bg-white hover:text-purple duration-300 p-2 rounded-md w-full'>Detail Nilai</Link>
+                                       {/* action button */}
+                                       <div className=" space-x-2 w-full flex justify-center text-white text-center">
+                                            <button onClick={() => toRekapNilai (item)} className='bg-purple hover:bg-white hover:text-purple duration-300 p-2 rounded-md w-full'>Lihat Nilai</button>
+                                            <button onClick={() => toDetailNilai (item)} className='bg-purple hover:bg-white hover:text-purple duration-300 p-2 rounded-md w-full'>Detail Nilai</button>
                                         </div>
                                     </div>
                                 </div>

@@ -101,11 +101,11 @@ const detail_siswa = () => {
                                             <td className='border-b-2 py-3 border-gray'>{index + 1}</td>
                                             <td className='border-b-2 border-gray'>{item.nis}</td>
                                             <td className='border-b-2 border-gray'>{item.name}</td>
-                                            <td className='border-b-2 border-gray'>{item.id_rayon}</td>
+                                            <td className='border-b-2 border-gray'>{item.rayon}</td>
                                             <td className='border-b-2 border-gray'>{item.jenis_kelamin}</td>
                                             <td className='border-b-2 border-gray'>{item.jenis_latihan}</td>
-                                            <td className='border-b-2 border-gray'>{item.ukt}</td>
-                                            <td className='border-b-2 border-gray'>{item.tingkatan}</td>
+                                            <td className='border-b-2 border-gray'>{item.tipe_ukt}</td>
+                                            <td className='border-b-2 border-gray'>{item.siswa_event?.name}</td>
                                         </tr>
                                     ))}
                                 </tbody>

@@ -15,7 +15,6 @@ const sambung = () => {
         const dataSiswa = JSON.parse (localStorage.getItem ('dataSiswa'))
         setDataSiswa (dataSiswa)
     }
-
     const postDataSambung = () => {
         const token = localStorage.getItem('tokenPenguji')
         const penguji = JSON.parse (localStorage.getItem('penguji'));
@@ -37,7 +36,6 @@ const sambung = () => {
               console.log(error.message);
             });
     }
-
     useEffect (() => {
         getDataSiswa ()
     }, [])
@@ -91,8 +89,6 @@ const sambung = () => {
                                     {/* button plus */}
                                     <button className='bg-purple rounded-md text-center text-2xl font-bold'
                                     onClick={() => nilai1 > 99 ? '' : setNilai1( nilai1 + 1)}>
-                                        <h1 className='text-xl font-semibold'>80</h1>
-                                    </div>
                                         +
                                     </button>
                                 </div>
@@ -139,8 +135,7 @@ const sambung = () => {
                                 </div>
                             </div>
                         </div>
-                        <div className='bg-yellow rounded-md p-3 text-white mb-8 shadow shadow-slate-700 text-center'
-                        onClick={postDataSambung}>Selesai</div>
+                        <div className='bg-yellow hover:bg-white rounded-md p-3 text-center text-xl text-white hover:text-yellow font-semibold shadow shadow-slate-700 duration-300' onClick={() => postDataSambung()}>Selesai</div>
                     </div>
                 </div>
             </div>

@@ -51,18 +51,34 @@ app.get("/:id", Auth, verifyRoles("admin", "super admin", "admin ranting", "peng
         })
     })    
 })
+//endpoint get data senam_siswa by tipe_ukt
+app.get("/ranting/:id", Auth, verifyRoles("admin", "super admin", "admin ranting", "pengurus cabang", "pengurus ranting", "penguji cabang", "penguji ranting"), (req,res) => {
+    senam_siswa.findAll({
+        where: {
+            ranting: req.params.id
+        }
+    })
+    .then(senam_siswa => {
+        res.json({
+            count: senam_siswa.length,
+            data: senam_siswa
+        })
+    })
+    .catch(error => {
+        res.json({
+            message: error.message
+        })
+    })    
+})
 //endpoint get data senam by tipe_ukt
 app.get("/ukt/:id", Auth, verifyRoles("admin", "super admin", "admin ranting", "pengurus cabang", "pengurus ranting", "penguji cabang", "penguji ranting"), (req,res) => {
     senam_siswa.findAll({
-        attributes: ['id_senam_siswa','id_siswa','id_senam'],
+        attributes: ['id_senam_siswa','id_senam_detail'],
         include: [
             {
-                model: models.senam,
+                model: models.senam_detail,
                 attributes: ['name','tipe_ukt'],
                 as: "siswa_senam",
-                where: {
-                    tipe_ukt: req.params.id
-                },
                 required: false
             }
         ]
@@ -119,8 +135,7 @@ app.get("/siswa/:id", Auth, verifyRoles("admin", "super admin", "admin ranting",
 //endpoint untuk menyimpan data senam_siswa, METHOD POST, function create
 app.post("/", Auth, verifyRoles("admin", "super admin", "admin ranting", "pengurus cabang", "pengurus ranting", "penguji cabang", "penguji ranting"), (req,res) =>{
     let data ={
-        id_event: req.body.id_event,
-        id_siswa: req.body.id_siswa,
+        id_detail_senam: req.body.id_detail_senam,
         id_senam: req.body.id_senam,
         predikat: req.body.predikat
     }
@@ -143,9 +158,9 @@ app.put("/:id", Auth, verifyRoles("admin", "super admin", "admin ranting", "peng
         id_senam_siswa : req.params.id
     }
     let data ={
-        id_event: req.body.id_event,
-        tipe_ukt: req.body.tipe_ukt,
-        name: req.body.name
+        id_detail_senam: req.body.id_detail_senam,
+        id_senam: req.body.id_senam,
+        predikat: req.body.predikat
     }
     senam_siswa.update(data, {where: param})
     .then(result => {
