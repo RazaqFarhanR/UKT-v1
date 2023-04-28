@@ -101,6 +101,28 @@ const jurus = () => {
                         console.log(err.message);
                     })
             })
+        const token = localStorage.getItem ('tokenPenguji')
+        const id_jurus_detail = localStorage.getItem ('id_jurus_detail')
+
+        const data = selectedButton.map ((option) => {
+            return {
+                id_jurus : option.id_jurus,
+                predikat : option.selectedOption,
+            }
+        })
+        for (let i = 0; i < data.length; i++) {
+            axios.post (BASE_URL + `jurus_siswa`, {
+                id_jurus_detail : id_jurus_detail,
+                id_jurus : data[i].id_jurus,
+                predikat: data[i].predikat,
+            }, { headers: { Authorization: `Bearer ${token}`}})
+            .then (res => {
+                console.log(res.data.message);
+            })
+            .catch (err => {
+                console.log(err.message);
+            })
+        }
     }
 
     useEffect (() => {

@@ -9,6 +9,10 @@ const senam = () => {
     const [dataSiswa, setDataSiswa] = useState([])
     const [dataSenam, setDataSenam] = useState([])
     const [selectedButton, setSelectedButton] = useState([])
+    const [dataSiswa, setDataSiswa] = useState ([])
+    const [dataSenam, setDataSenam] = useState ([])
+    const [selectedButton, setSelectedButton] = useState ([])
+
 
     // const randomSenam = () => {
     //     if (dataSiswa.tipe_ukt === 'UKT Jambon') {
@@ -29,6 +33,8 @@ const senam = () => {
 
     //     console.log(jumlahSenam);
     //     console.log(limitSenam);
+
+
 
     //     for (let s = 1; s <= 5; s++) {
     //         let randomSenam = Math.floor (Math.random() * 10);
@@ -135,6 +141,64 @@ const senam = () => {
     useEffect(() => {
         getDataSiswa()
         getDataSenam()
+
+        const token = localStorage.getItem ('tokenPenguji')
+        const dataSiswa = JSON.parse (localStorage.getItem ('dataSiswa'))
+
+        axios.get (BASE_URL + `senam/ukt/${dataSiswa.tipe_ukt}`, { headers: { Authorization: `Bearer ${token}`}})
+        .then (res => {
+            setDataSenam (res.data.data)
+        })
+        .catch (err => {
+            console.log(err.message);
+        })
+    }
+
+    // function set selected button
+    function handleButtonClick (id_senam,selectedOption ) {
+        const updatedOptions = [...selectedButton];
+        const index = updatedOptions.findIndex (
+            (option) => option.id_senam === id_senam
+        );
+        if (index === -1) {
+            updatedOptions.push ({ id_senam, selectedOption })
+        } else {
+            updatedOptions[index].selectedOption = selectedOption
+        }
+        setSelectedButton (updatedOptions)
+    }
+
+    // function handle save nilai senam
+    const handleSave = () => {
+        const token = localStorage.getItem ('tokenPenguji')
+        const id_senam_detail = localStorage.getItem ('id_senam_detail')
+        console.log(id_senam_detail);
+
+        const data = selectedButton.map((option) => {
+            return {
+                id_senam : option.id_senam,
+                predikat : option.selectedOption,
+            }
+        })
+        for (let i = 0; i < data.length; i++) {
+            axios.post (BASE_URL + `senam_siswa`, {
+                id_senam_detail : id_senam_detail,
+                id_senam : data[i].id_senam,
+                predikat : data[i].predikat,
+            }, { headers: { Authorization: `Bearer ${token}` } })
+            .then (res => {
+                console.log(res.data.message);
+            })
+            .catch (err => {
+                console.log(err.message);
+            })
+        }
+    }
+
+    useEffect (() => {
+        getDataSiswa ()
+        getDataSenam ()
+
     }, [])
 
     return (
@@ -164,6 +228,7 @@ const senam = () => {
                                 <div key={index + 1} className="grid grid-cols-2 items-center">
                                     <h1 className='text-white text-xl font-semibold'>{item.name}</h1>
                                     <div className="flex gap-x-2">
+
                                         <button className={selectedButton.find(
                                             (option) =>
                                                 option.id_senam === item.id_senam &&
@@ -176,6 +241,20 @@ const senam = () => {
                                                 option.id_senam === item.id_senam &&
                                                 option.selectedOption === 'false'
                                         ) ? "font-semibold bg-purple rounded-md text-white py-1.5 w-full" : "font-semibold bg-white border-2 border-purple rounded-md text-purple py-1.5 w-full"} onClick={() => handleButtonClick(item.id_senam, 'false')}>Salah</button>
+
+                                        <button className={selectedButton.find (
+                                            (option) => 
+                                                option.id_senam === item.id_senam &&
+                                                option.selectedOption === 'true'
+                                        ) ? "font-semibold bg-purple rounded-md text-white py-1.5 w-full" : "font-semibold bg-white border-2 border-purple rounded-md text-purple py-1.5 w-full"}
+                                        onClick={() => handleButtonClick(item.id_senam, 'true') }>Benar</button>
+                                        
+                                        <button className={selectedButton.find (
+                                            (option) => 
+                                                option.id_senam === item.id_senam &&
+                                                option.selectedOption === 'false'
+                                        ) ? "font-semibold bg-purple rounded-md text-white py-1.5 w-full" : "font-semibold bg-white border-2 border-purple rounded-md text-purple py-1.5 w-full"} onClick={() => handleButtonClick (item.id_senam, 'false')}>Salah</button>
+
                                     </div>
                                 </div>
                             ))}
