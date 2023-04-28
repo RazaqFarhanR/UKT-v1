@@ -13,6 +13,7 @@ const modal_siswa = () => {
     const [dataEvent, setDateEvent] = useState ([])
     const {nis, setNis} = useContext (globalState)
     const {siswaName, setSiswaName} = useContext (globalState)
+    const {ranting, setRanting} = useContext (globalState)
     const {rayon, setRayon} = useContext (globalState)
     const {jenisKelamin, setJenisKelamin} = useContext (globalState)
     const {jenisLatihan, setJenisLatihan} = useContext (globalState)
@@ -52,10 +53,11 @@ const modal_siswa = () => {
         let form = {
             nis : nis,
             name : siswaName,
-            id_rayon : rayon,
+            id_ranting : ranting,
+            rayon : rayon,
             jenis_kelamin : jenisKelamin,
             jenis_latihan : jenisLatihan,
-            ukt : ukt,
+            tipe_ukt : ukt,
             id_event : event,
             id_role : 'siswa',
         }
@@ -71,7 +73,7 @@ const modal_siswa = () => {
                 console.log(err.message);
             })
         } else if (action === 'update') {
-            axios.put (BASE_URL + `siswa/${idSiswa}`, form), { headers: { Authorization: `Bearer ${token}`}}
+            axios.put (BASE_URL + `siswa/${idSiswa}`, form, { headers: { Authorization: `Bearer ${token}`}})
             .then (res => {
                 setShowModalSiswa (false)
                 getDataSiswa ()
@@ -193,10 +195,10 @@ const modal_siswa = () => {
                                                     >
                                                         <option></option>
                                                         <option 
-                                                        value='pria'
+                                                        value='Laki laki'
                                                         >Laki - Laki</option>
                                                         <option 
-                                                        value='perempuan'
+                                                        value='Perempuan'
                                                         >Perempuan</option>
                                                     </select>
                                                 </div>
@@ -214,14 +216,14 @@ const modal_siswa = () => {
                                             <div className="relative w-full">
                                                 <div className='bg-darkBlue rounded-lg px-2'>
                                                     <select className='w-full bg-darkBlue focus:outline-none' 
-                                                    name={jenisLatihan} onChange = {(e) => setJenisLatihan (e.target.value)} required
+                                                    name={jenisLatihan} value={jenisLatihan} onChange = {(e) => setJenisLatihan (e.target.value)} required
                                                     >
                                                         <option></option>
                                                         <option 
-                                                        value='reguler'
-                                                        >Reguler</option>
+                                                        value='Remaja'
+                                                        >Remaja</option>
                                                         <option 
-                                                        value='privat'
+                                                        value='Privat'
                                                         >Privat</option>
                                                     </select>
                                                 </div>
@@ -246,7 +248,7 @@ const modal_siswa = () => {
                                                         value='UKT Jambon'
                                                         >UKT Jambon</option>
                                                         <option 
-                                                        value='UKT Hujau'
+                                                        value='UKT Hijau'
                                                         >UKT Hujau</option>
                                                         <option 
                                                         value='UKT Putih'

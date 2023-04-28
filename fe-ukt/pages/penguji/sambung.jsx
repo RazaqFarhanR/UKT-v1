@@ -135,8 +135,7 @@ const sambung = () => {
                                 </div>
                             </div>
                         </div>
-                        <div className='bg-yellow rounded-md p-3 text-white mb-8 shadow shadow-slate-700 text-center'
-                        onClick={postDataSambung}>Selesai</div>
+                        <div className='bg-yellow hover:bg-white rounded-md p-3 text-center text-xl text-white hover:text-yellow font-semibold shadow shadow-slate-700 duration-300' onClick={() => postDataSambung()}>Selesai</div>
                     </div>
                 </div>
             </div>
