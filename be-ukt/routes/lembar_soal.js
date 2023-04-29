@@ -3,6 +3,8 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const { randomUUID } = require('crypto');
 require('dotenv').config();
+const Sequelize = require('sequelize');
+const { sequelize, Op } = require("sequelize");
 const Auth = require('../middleware/Auth.js');
 const verifyRoles = require("../middleware/verifyRoles");
 
@@ -43,13 +45,49 @@ app.get("/", Auth, verifyRoles("admin", "super admin", "admin ranting", "penguru
     })    
 })
 
+app.get("/ukt/:ukt", Auth, verifyRoles("admin", "super admin", "admin ranting", "pengurus cabang", "pengurus ranting", "penguji cabang", "penguji ranting", "siswa"), (req,res) => {
+    lembar_soal.findOne({
+        where: {
+            tipe_ukt: req.params.ukt
+        },
+        include: [
+            {
+                model: ranting,
+                as: "lembar_ranting",
+                attributes: ['name'],
+                required: false
+            },
+            {
+                model: models.soal,
+                as: "lembar_soal_ujian",
+                order: [
+                    Sequelize.fn('RAND')
+                ],
+                limit: 20
+            }
+        ]
+    })
+    .then(lembar_soal => {
+        res.json({
+            count: lembar_soal.length,
+            data: lembar_soal
+        })
+    })
+    .catch(error => {
+        res.json({
+            message: error.message
+        })
+    })    
+})
+
 //endpoint untuk menyimpan data lembar_soal, METHOD POST, function create
 app.post("/", Auth, verifyRoles("admin", "super admin", "admin ranting", "pengurus cabang", "pengurus ranting", "penguji cabang", "penguji ranting"), (req,res) =>{
     const id = randomUUID();
     let data ={
         id_lembar_soal: id,
         id_ranting: req.body.id_ranting,
-        tipe_ukt: req.body.tipe_ukt
+        tipe_ukt: req.body.tipe_ukt,
+        waktu_pengerjaan: req.body.waktu_pengerjaan
     }
     lembar_soal.create(data)
     .then(result => {
@@ -71,7 +109,8 @@ app.put("/:id", Auth, verifyRoles("admin", "super admin", "admin ranting", "peng
     }
     let data = {
         id_ranting: req.body.id_ranting,
-        tipe_soal: req.body.tipe_soal
+        tipe_soal: req.body.tipe_soal,
+        waktu_pengerjaan: req.body.waktu_pengerjaan
     }
     lembar_soal.update(data, {where: param})
     .then(result => {

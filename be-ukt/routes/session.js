@@ -33,7 +33,7 @@ app.get("/", Auth, verifyRoles("admin", "super admin", "admin ranting", "penguru
 })
 
 //endpoint untuk menyimpan data session, METHOD POST, function create
-app.post("/", Auth, (req,res) =>{
+app.post("/", Auth, verifyRoles("admin", "super admin", "admin ranting", "pengurus cabang", "pengurus ranting", "penguji cabang", "penguji ranting", "siswa"), (req,res) =>{
     let data ={
         id_lembar_soal: req.body.id_lembar_soal,
         id_siswa: req.body.id_siswa,
@@ -43,7 +43,8 @@ app.post("/", Auth, (req,res) =>{
     session.create(data)
     .then(result => {
         res.json({
-            message: "data has been inserted"
+            message: "data has been inserted",
+            data: data
         })
     })
     .catch(error =>{

@@ -20,6 +20,9 @@ module.exports = {
       tipe_ukt: {
         type: Sequelize.ENUM('UKT Jambon','UKT Hijau','UKT Putih','UKCW')
       },
+      waktu_pengerjaan: {
+        type: Sequelize.INTEGER
+      },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE

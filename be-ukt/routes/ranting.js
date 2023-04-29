@@ -17,7 +17,7 @@ const ranting = models.ranting;
 //endpoint ditulis disini
 
 //endpoint get data ranting
-app.get("/", Auth, verifyRoles("admin", "super admin", "admin ranting", "pengurus cabang", "penguji cabang", "penguji ranting"), (req,res) => {
+app.get("/", Auth, verifyRoles("admin", "super admin", "admin ranting", "pengurus cabang"), (req,res) => {
     ranting.findAll()
     .then(ranting => {
         res.json({

@@ -58,6 +58,10 @@ module.exports = (sequelize, DataTypes) => {
     },
     id_event: DataTypes.INTEGER,
     nis: DataTypes.STRING,
+    nomor_urut: {
+      type: DataTypes.INTEGER,
+      unique: true
+    },
     name: DataTypes.STRING,
     id_role: DataTypes.STRING,
     jenis_kelamin: DataTypes.ENUM('Laki laki','Perempuan'),

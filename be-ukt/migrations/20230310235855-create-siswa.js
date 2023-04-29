@@ -20,6 +20,9 @@ module.exports = {
       nis: {
         type: Sequelize.STRING
       },
+      nomor_urut: {
+        type: Sequelize.INTEGER
+      },
       name: {
         type: Sequelize.STRING
       },

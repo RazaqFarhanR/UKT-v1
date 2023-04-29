@@ -25,9 +25,11 @@ const penguji = models.penguji;
 const auth = require("../auth")
 const jwt = require("jsonwebtoken")
 const SECRET_KEY = "BelajarNodeJSItuMenyengankan";
+
 const localStorage = process.env.LOCAL_STORAGE
 const cabang = models.cabang;
 const ranting = models.ranting;
+
 //konfigurasi proses upload file
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {

@@ -14,6 +14,7 @@ const app = express();
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: true}));
 
+
 //import model
 const models = require('../models/index');
 const { sequelize, Op } = require("sequelize");
@@ -22,6 +23,11 @@ const siswa = models.siswa;
 const ranting = models.ranting
 const event = models.event;
 const rayon = models.rayon;
+
+//import auth
+const auth = require("../auth")
+const jwt = require("jsonwebtoken")
+const SECRET_KEY = "BelajarNodeJSItuMenyengankan";
 
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
@@ -175,6 +181,7 @@ app.post("/", Auth, verifyRoles("admin", "super admin", "admin ranting", "pengur
     let data ={
         id_event: req.body.id_event,
         nis: req.body.nis,
+        nomor_urut: req.body.nomor_urut,
         name: req.body.name,
         id_role: req.body.id_role,
         jenis_kelamin: req.body.jenis_kelamin,
@@ -212,8 +219,9 @@ app.post('/csv', Auth, verifyRoles('admin', 'super admin', 'admin ranting', 'pen
           const newData = {
             id_event: req.body.id_event,
             nis: data.nis,
+            nomor_urut: data.nomor_urut,
             name: data.name,
-            id_role: data.id_role,
+            id_role: "siswa",
             jenis_kelamin: data.jenis_kelamin,
             jenis_latihan: data.jenis_latihan,
             peserta: data.jenis_latihan + ' - ' + data.jenis_kelamin,
@@ -251,6 +259,7 @@ app.put("/:id", Auth, verifyRoles("admin", "super admin", "admin ranting", "peng
     let data ={
         id_event: req.body.id_event,
         nis: req.body.nis,
+        nomor_urut: req.body.nomor_urut,
         name: req.body.name,
         id_role: req.body.id_role,
         jenis_kelamin: req.body.jenis_kelamin,
@@ -288,6 +297,48 @@ app.delete("/:id", Auth, verifyRoles("admin", "super admin", "admin ranting", "p
     .catch(error => {
         res.json({
             message: error.message
+        })
+    })
+})
+
+app.post("/auth", (req, res) => {
+    siswa.findOne({
+        where: {
+            nis: req.body.nis,
+            nomor_urut: req.body.nomor_urut
+        },
+    })
+    .then(async (result) => {
+        if (result) {
+            //set payload from data
+            console.log(result)
+            const data = result
+            if (result.id_role === "siswa") {
+                const idUser = result.id_user;
+                const role = result.id_role;
+    
+                // generate token based on payload and secret_key
+                let localToken = jwt.sign({ idUser, role }, process.env.ACCESS_TOKEN_SECRET);
+                res.json({
+                  logged: true,
+                  data: data,
+                  token: localToken,
+                });
+
+            } else {
+              res.status(404).json({ msg: "Kamu Bukan Penguji" });
+            }
+          } else {
+            //tidak ditemukan
+            res.json({
+              logged: false,
+              message: "Invalid username or password",
+            });
+          }
+    })
+    .catch(e => {
+        res.json({
+            message: e.message
         })
     })
 })
