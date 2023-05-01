@@ -31,7 +31,10 @@ module.exports = (sequelize, DataTypes) => {
     },
     id_jurus_detail: DataTypes.INTEGER,
     id_jurus: DataTypes.INTEGER,
-    predikat: DataTypes.BOOLEAN
+    predikat: {
+      type: DataTypes.BOOLEAN,
+      allowNull: true
+    }
   }, {
     sequelize,
     modelName: 'jurus_siswa',

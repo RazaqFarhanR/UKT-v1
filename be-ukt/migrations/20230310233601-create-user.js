@@ -30,7 +30,7 @@ module.exports = {
         }
       },
       id_ranting: {
-        type: Sequelize.INTEGER,
+        type: Sequelize.STRING,
         allowNull: true,
         references: {
           model: "ranting",

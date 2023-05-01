@@ -17,7 +17,7 @@ const jurus_siswa = models.jurus_siswa;
 //endpoint ditulis disini
 
 //endpoint get data jurus_siswa
-app.get("/", Auth, verifyRoles("admin", "super admin", "admin ranting", "pengurus cabang", "pengurus ranting", "penguji cabang", "penguji ranting"), (req,res) => {
+app.get("/", Auth, verifyRoles("admin", "super admin", "admin ranting", "admin cabang", "pengurus cabang", "pengurus ranting", "penguji cabang", "penguji ranting"), (req,res) => {
     jurus_siswa.findAll({
         include: [
             {
@@ -41,7 +41,7 @@ app.get("/", Auth, verifyRoles("admin", "super admin", "admin ranting", "penguru
 })
 
 //endpoint get data jurus_siswa by tipe_ukt
-app.get("/:id", Auth, verifyRoles("admin", "super admin", "admin ranting", "pengurus cabang", "pengurus ranting", "penguji cabang", "penguji ranting"), (req,res) => {
+app.get("/:id", Auth, verifyRoles("admin", "super admin", "admin ranting", "admin cabang", "pengurus cabang", "pengurus ranting", "penguji cabang", "penguji ranting"), (req,res) => {
     jurus_siswa.findAll({
         where: {
             tipe_ukt: req.params.id
@@ -60,7 +60,7 @@ app.get("/:id", Auth, verifyRoles("admin", "super admin", "admin ranting", "peng
     })    
 })
 //endpoint get data jurus by tipe_ukt
-app.get("/ukt/:id", Auth, verifyRoles("admin", "super admin", "admin ranting", "pengurus cabang", "pengurus ranting", "penguji cabang", "penguji ranting"), (req,res) => {
+app.get("/ukt/:id", Auth, verifyRoles("admin", "super admin", "admin ranting", "admin cabang", "pengurus cabang", "pengurus ranting", "penguji cabang", "penguji ranting"), (req,res) => {
     jurus_siswa.findAll({
         attributes: ['id_jurus_siswa','id_jurus', 'predikat'],
         include: [
@@ -89,7 +89,7 @@ app.get("/ukt/:id", Auth, verifyRoles("admin", "super admin", "admin ranting", "
     })    
 })
 //endpoint get data jurus by id siswa
-app.get("/siswa/:id", Auth, verifyRoles("admin", "super admin", "admin ranting", "pengurus cabang", "pengurus ranting", "penguji cabang", "penguji ranting"), (req,res) => {
+app.get("/siswa/:id", Auth, verifyRoles("admin", "super admin", "admin ranting", "admin cabang", "pengurus cabang", "pengurus ranting", "penguji cabang", "penguji ranting"), (req,res) => {
     jurus_siswa.findAll({
         attributes: ['id_jurus_siswa','id_jurus', 'predikat'],
         where: {
@@ -127,7 +127,7 @@ app.get("/siswa/:id", Auth, verifyRoles("admin", "super admin", "admin ranting",
     })    
 })
 //endpoint untuk menyimpan data jurus_siswa, METHOD POST, function create
-app.post("/", Auth, verifyRoles("admin", "super admin", "admin ranting", "pengurus cabang", "pengurus ranting", "penguji cabang", "penguji ranting"), (req,res) =>{
+app.post("/", Auth, verifyRoles("admin", "super admin", "admin ranting", "admin cabang", "pengurus cabang", "pengurus ranting", "penguji cabang", "penguji ranting"), (req,res) =>{
     let data ={
         id_jurus_detail: req.body.id_jurus_detail,
         id_jurus: req.body.id_jurus,
@@ -147,7 +147,7 @@ app.post("/", Auth, verifyRoles("admin", "super admin", "admin ranting", "pengur
 }) 
 
 //endpoint untuk mengupdate data jurus_siswa, METHOD: PUT, fuction: UPDATE
-app.put("/:id", Auth, verifyRoles("admin", "super admin", "admin ranting", "pengurus cabang", "pengurus ranting", "penguji cabang", "penguji ranting"), (req,res) => {
+app.put("/:id", Auth, verifyRoles("admin", "super admin", "admin ranting", "admin cabang", "pengurus cabang", "pengurus ranting", "penguji cabang", "penguji ranting"), (req,res) => {
     let param = {
         id_jurus_siswa : req.params.id
     }
@@ -170,7 +170,7 @@ app.put("/:id", Auth, verifyRoles("admin", "super admin", "admin ranting", "peng
 })
 
 //endpoint untuk menghapus data jurus_siswa,METHOD: DELETE, function: destroy
-app.delete("/:id", Auth, verifyRoles("admin", "super admin", "admin ranting", "pengurus cabang", "pengurus ranting", "penguji cabang", "penguji ranting"), (req,res) => {
+app.delete("/:id", Auth, verifyRoles("admin", "super admin", "admin ranting", "admin cabang", "pengurus cabang", "pengurus ranting", "penguji cabang", "penguji ranting"), (req,res) => {
     let param = {
         id_jurus_siswa : req.params.id
     }

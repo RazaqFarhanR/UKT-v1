@@ -40,7 +40,7 @@ module.exports = (sequelize, DataTypes) => {
       primaryKey: true,
       type: DataTypes.INTEGER,
     },
-    id_cabang: DataTypes.INTEGER,
+    id_cabang: DataTypes.STRING,
     name: DataTypes.STRING
   }, {
     sequelize,

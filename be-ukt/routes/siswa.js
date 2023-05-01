@@ -44,7 +44,7 @@ let upload2 = multer({ storage: storage });
 //endpoint ditulis disini
 
 //endpoint get data siswa
-app.get("/", Auth, verifyRoles("admin", "super admin", "admin ranting", "pengurus cabang", "pengurus ranting", "penguji cabang", "penguji ranting"), (req,res) => {
+app.get("/", Auth, verifyRoles("admin", "super admin", "admin ranting", "admin cabang", "pengurus cabang", "pengurus ranting", "penguji cabang", "penguji ranting"), (req,res) => {
     siswa.findAll({        
         include: [
             {
@@ -73,7 +73,7 @@ app.get("/", Auth, verifyRoles("admin", "super admin", "admin ranting", "penguru
         })
     })    
 })
-app.get("/event/:id", Auth, verifyRoles("admin", "super admin", "admin ranting", "pengurus cabang", "pengurus ranting", "penguji cabang", "penguji ranting"), (req,res) => {
+app.get("/event/:id", Auth, verifyRoles("admin", "super admin", "admin ranting", "admin cabang", "pengurus cabang", "pengurus ranting", "penguji cabang", "penguji ranting"), (req,res) => {
     siswa.findAll({       
         where: {
             id_event: req.params.id
@@ -106,7 +106,7 @@ app.get("/event/:id", Auth, verifyRoles("admin", "super admin", "admin ranting",
     })    
 })
 
-app.get("/ranting/:id", Auth, verifyRoles("admin", "super admin", "admin ranting", "pengurus cabang", "pengurus ranting", "penguji cabang", "penguji ranting"), (req,res) => {
+app.get("/ranting/:id", Auth, verifyRoles("admin", "super admin", "admin ranting", "admin cabang", "pengurus cabang", "pengurus ranting", "penguji cabang", "penguji ranting"), (req,res) => {
     const id_ranting = req.params.id;
     siswa
     .findAll({
@@ -141,10 +141,10 @@ app.get("/ranting/:id", Auth, verifyRoles("admin", "super admin", "admin ranting
     }); 
 })
 
-app.post("/nis", (req, res) => {
+app.get("/nomor_urut:id", (req, res) => {
     siswa.findAll({
         where: {
-            nis: req.body.nis
+            nomor: req.params.id
         },
     })
     .then((result) => {
@@ -153,7 +153,7 @@ app.post("/nis", (req, res) => {
         }
         if(result) {
             siswa.update(data, {where: {
-             nis: req.body.nis   
+             nomor_urut: req.body.nomor_urut   
             }})
             .then((result) => {
                 console.log(result[0]);
@@ -177,10 +177,9 @@ app.post("/nis", (req, res) => {
 })
 
 //endpoint untuk menyimpan data siswa, METHOD POST, function create
-app.post("/", Auth, verifyRoles("admin", "super admin", "admin ranting", "pengurus cabang", "pengurus ranting", "penguji cabang", "penguji ranting"), (req,res) =>{    
+app.post("/", Auth, verifyRoles("admin", "super admin", "admin ranting", "admin cabang", "pengurus cabang", "pengurus ranting", "penguji cabang", "penguji ranting"), (req,res) =>{    
     let data ={
         id_event: req.body.id_event,
-        nis: req.body.nis,
         nomor_urut: req.body.nomor_urut,
         name: req.body.name,
         id_role: req.body.id_role,
@@ -214,22 +213,27 @@ app.post('/csv', Auth, verifyRoles('admin', 'super admin', 'admin ranting', 'pen
       .on('end', () => {
         const promises = []
         for (const data of results) {
-            console.log("data")
-            console.log(data)
-          const newData = {
-            id_event: req.body.id_event,
-            nis: data.nis,
-            nomor_urut: data.nomor_urut,
-            name: data.name,
-            id_role: "siswa",
-            jenis_kelamin: data.jenis_kelamin,
-            jenis_latihan: data.jenis_latihan,
-            peserta: data.jenis_latihan + ' - ' + data.jenis_kelamin,
-            tipe_ukt: req.body.tipe_ukt,
-            id_ranting: data.id_ranting,
-            rayon: data.rayon,
-            tingkatan: data.tingkatan
-          }
+            let dataKelamin = ''
+            if(data.jenisKelamin = "L"){
+                dataKelamin = 'Laki laki'
+            } else if(data.jeniskelamin = "P"){
+                dataKelamin = 'Perempuan'
+            }
+            const idRole = "siswa"
+            const newData = {
+                id_event: req.body.id_event,
+                nomor_urut: data.nomorUrut,
+                name: data.name,
+                id_role: idRole,
+                jenis_kelamin: dataKelamin,
+                jenis_latihan: data.jenisLatihan,
+                peserta: data.jenisLatihan + ' - ' + dataKelamin,
+                tipe_ukt: req.body.tipe_ukt,
+                id_ranting: data.ranting,
+                rayon: data.rayon,
+                tingkatan: data.tingkatan
+            }
+            console.log(newData);
           promises.push(siswa.create(newData))
         }
   
@@ -252,13 +256,12 @@ app.post('/csv', Auth, verifyRoles('admin', 'super admin', 'admin ranting', 'pen
   })
 
 //endpoint untuk meng UPDATE data siswa, METHOD: PUT, fuction: UPDATE
-app.put("/:id", Auth, verifyRoles("admin", "super admin", "admin ranting", "pengurus cabang", "pengurus ranting", "penguji cabang", "penguji ranting"), (req,res) => {
+app.put("/:id", Auth, verifyRoles("admin", "super admin", "admin ranting", "admin cabang", "pengurus cabang", "pengurus ranting", "penguji cabang", "penguji ranting"), (req,res) => {
     let param = {
         id_siswa : req.params.id
     }
     let data ={
         id_event: req.body.id_event,
-        nis: req.body.nis,
         nomor_urut: req.body.nomor_urut,
         name: req.body.name,
         id_role: req.body.id_role,
@@ -284,7 +287,7 @@ app.put("/:id", Auth, verifyRoles("admin", "super admin", "admin ranting", "peng
 })
 
 //endpoint untuk menghapus data siswa,METHOD: DELETE, function: destroy
-app.delete("/:id", Auth, verifyRoles("admin", "super admin", "admin ranting", "pengurus cabang", "pengurus ranting", "penguji cabang", "penguji ranting"), (req,res) => {
+app.delete("/:id", Auth, verifyRoles("admin", "super admin", "admin ranting", "admin cabang", "pengurus cabang", "pengurus ranting", "penguji cabang", "penguji ranting"), (req,res) => {
     let param = {
         id_siswa : req.params.id
     }
@@ -304,7 +307,6 @@ app.delete("/:id", Auth, verifyRoles("admin", "super admin", "admin ranting", "p
 app.post("/auth", (req, res) => {
     siswa.findOne({
         where: {
-            nis: req.body.nis,
             nomor_urut: req.body.nomor_urut
         },
     })

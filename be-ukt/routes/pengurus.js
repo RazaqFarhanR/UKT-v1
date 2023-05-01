@@ -44,7 +44,7 @@ const storage = multer.diskStorage({
 
 //endpoint ditulis disini
 //endpoint get data pengurus
-app.get("/", Auth, verifyRoles("admin", "super admin", "admin ranting", "pengurus cabang", "pengurus ranting"), (req,res) => {
+app.get("/", Auth, verifyRoles("admin", "super admin", "admin ranting", "admin cabang", "pengurus cabang", "pengurus ranting"), (req,res) => {
     const imagePath = "http://localhost:8080/image/"
     pengurus.findAll({    
       include: [
@@ -72,7 +72,7 @@ app.get("/", Auth, verifyRoles("admin", "super admin", "admin ranting", "penguru
     })    
 })
 //endpoint get data pengurus berdasarkan name dan id_ranting
-app.post("/name_dan_ranting", Auth, verifyRoles("admin", "super admin", "admin ranting", "pengurus cabang", "pengurus ranting"), (req,res) => {
+app.post("/name_dan_ranting", Auth, verifyRoles("admin", "super admin", "admin ranting", "admin cabang", "pengurus cabang", "pengurus ranting"), (req,res) => {
     const name = req.body.name;
     const id_ranting = req.body.id_ranting;
     pengurus.findAll({
@@ -99,7 +99,7 @@ app.post("/name_dan_ranting", Auth, verifyRoles("admin", "super admin", "admin r
 })
 
 //endpoint untuk menyimpan data pengurus, METHOD POST, function create
-app.post("/", Auth, verifyRoles("admin", "super admin", "admin ranting", "pengurus cabang"), upload2.single('foto'), async (req,res) =>{
+app.post("/", Auth, verifyRoles("admin", "super admin", "admin ranting", "admin cabang", "pengurus cabang"), upload2.single('foto'), async (req,res) =>{
     const hash = await bcrypt.hash(req.body.password, salt);
     let data ={
         NIW: req.body.niw,
@@ -142,7 +142,7 @@ app.post("/niw", async (req, res) => {
 })
 
 //endpoint untuk mengupdate data user, METHOD: PUT, fuction: UPDATE
-app.put("/:id", Auth, verifyRoles("admin", "super admin", "admin ranting", "pengurus cabang"), upload2.single("foto"), async (req, res) => {
+app.put("/:id", Auth, verifyRoles("admin", "super admin", "admin ranting", "admin cabang", "pengurus cabang"), upload2.single("foto"), async (req, res) => {
   const password = req.body.password != null ? req.body.password : "freestyle"
   const hash = await bcrypt.hash(password, salt);
   try {
@@ -207,7 +207,7 @@ app.put("/:id", Auth, verifyRoles("admin", "super admin", "admin ranting", "peng
 });
 
 //endpoint untuk menghapus data pengurus,METHOD: DELETE, function: destroy
-app.delete("/:id", Auth, verifyRoles("admin", "super admin", "admin ranting", "pengurus cabang"), (req,res) => {
+app.delete("/:id", Auth, verifyRoles("admin", "super admin", "admin ranting", "admin cabang", "pengurus cabang"), (req,res) => {
     let param = {
         id_pengurus : req.params.id
     }

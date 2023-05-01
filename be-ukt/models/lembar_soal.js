@@ -33,7 +33,7 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false
     },
     
-    id_ranting: DataTypes.INTEGER,
+    id_ranting: DataTypes.STRING,
     tipe_ukt: DataTypes.ENUM('UKT Jambon','UKT Hijau','UKT Putih','UKCW'),
     waktu_pengerjaan: DataTypes.INTEGER
   }, {

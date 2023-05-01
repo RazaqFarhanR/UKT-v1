@@ -46,7 +46,7 @@ let upload2 = multer({ storage: storage });
 
 //endpoint ditulis disini
 //endpoint get data penguji
-app.get("/", Auth, verifyRoles("admin", "super admin", "admin ranting", "pengurus cabang", "pengurus ranting", "penguji cabang", "penguji ranting"), (req, res) => {
+app.get("/", Auth, verifyRoles("admin", "super admin", "admin ranting", "admin cabang", "pengurus cabang", "pengurus ranting", "penguji cabang", "penguji ranting"), (req, res) => {
   const imagePath = "http://localhost:8080/image/"
 
   penguji
@@ -81,9 +81,44 @@ app.get("/", Auth, verifyRoles("admin", "super admin", "admin ranting", "penguru
       });
     });
 });
+app.get("/:id", Auth, verifyRoles("admin", "super admin", "admin ranting", "admin cabang", "pengurus cabang", "pengurus ranting", "penguji cabang", "penguji ranting"), (req, res) => {
+  const imagePath = "http://localhost:8080/image/"
+
+  penguji
+    .findOne({
+      include: [
+        {
+          model: cabang,
+          as: "penguji_cabang",
+          attributes: ['name']
+        },
+        {
+          model: ranting,
+          as: "penguji_ranting",
+          attributes: ['name']
+        }
+      ],
+      where: {
+        id_penguji: req.params.id
+      }
+    })
+    .then((penguji) => {
+      // Map over the tipe_kamar array and add the image URL to each object
+      const foto = penguji.foto
+      res.json({
+        data: penguji,
+        image: `${imagePath}${foto}`,
+      });
+    })
+    .catch((error) => {
+      res.json({
+        message: error.message,
+      });
+    });
+});
 
 //endpoint get data penguji cabang berdasarkan nama dan ranting
-app.post("/name_dan_ranting", Auth, verifyRoles("admin", "super admin", "admin ranting", "pengurus cabang", "pengurus ranting", "penguji ranting"), (req, res) => {
+app.post("/name_dan_ranting", Auth, verifyRoles("admin", "super admin", "admin ranting", "admin cabang", "pengurus cabang", "pengurus ranting", "penguji ranting"), (req, res) => {
   const name = req.body.name;
   const id_ranting = req.body.id_ranting;
   penguji
@@ -110,11 +145,11 @@ app.post("/name_dan_ranting", Auth, verifyRoles("admin", "super admin", "admin r
     });
 });
 
-app.post("/niw", async (req, res) => {
+app.get("/niw/:id", async (req, res) => {
   try {
-    let niw = await penguji.findAll({
+    let niw = await penguji.findOne({
       where: {
-        NIW: req.body.niw
+        NIW: req.params.id
       }
     });
     res.json({
@@ -125,7 +160,7 @@ app.post("/niw", async (req, res) => {
   }
 })
 
-app.post("/", Auth, verifyRoles("admin", "super admin", "admin ranting", "pengurus cabang", "pengurus ranting"), upload2.single("foto"), async (req, res) => {
+app.post("/", Auth, verifyRoles("admin", "super admin", "admin ranting", "admin cabang", "pengurus cabang", "pengurus ranting"), upload2.single("foto"), async (req, res) => {
   const Ranting = models.ranting;
   const hash = await bcrypt.hash(req.body.password, salt);
   try {
@@ -182,7 +217,7 @@ app.post("/", Auth, verifyRoles("admin", "super admin", "admin ranting", "pengur
 });
 
 //endpoint untuk mengupdate data user, METHOD: PUT, fuction: UPDATE
-app.put("/:id", Auth, verifyRoles("admin", "super admin", "admin ranting", "pengurus cabang", "pengurus ranting"), upload2.single("foto"), async (req, res) => {
+app.put("/:id", Auth, verifyRoles("admin", "super admin", "admin ranting", "admin cabang", "pengurus cabang", "pengurus ranting", "penguji ranting", "penguji cabang"), upload2.single("foto"), async (req, res) => {
   const password = req.body.password != null ? req.body.password : "freestyle"
   const hash = await bcrypt.hash(password, salt);
   try {
@@ -228,9 +263,38 @@ app.put("/:id", Auth, verifyRoles("admin", "super admin", "admin ranting", "peng
       penguji
         .update(password != null ? data : dataNoPsw, { where: param })
         .then((result) => {
-          res.json({
-            message: "data has been updated",
-          });
+          const imagePath = "http://localhost:8080/image/"
+            penguji
+              .findOne({
+                include: [
+                  {
+                    model: cabang,
+                    as: "penguji_cabang",
+                    attributes: ['name']
+                  },
+                  {
+                    model: ranting,
+                    as: "penguji_ranting",
+                    attributes: ['name']
+                  }
+                ],
+                where: {
+                  id_penguji: req.params.id
+                }
+              })
+              .then((penguji) => {
+                // Map over the tipe_kamar array and add the image URL to each object
+                const foto = penguji.foto
+                res.json({
+                  data: penguji,
+                  image: `${imagePath}${foto}`,
+                });
+              })
+              .catch((error) => {
+                res.json({
+                  message: error.message,
+                });
+              });
         })
         .catch((error) => {
           res.json({
@@ -246,7 +310,7 @@ app.put("/:id", Auth, verifyRoles("admin", "super admin", "admin ranting", "peng
 });
 
 //endpoint untuk menghapus data penguji,METHOD: DELETE, function: destroy
-app.delete("/:id", Auth, verifyRoles("admin", "super admin", "admin ranting", "pengurus cabang", "pengurus ranting"), (req, res) => {
+app.delete("/:id", Auth, verifyRoles("admin", "super admin", "admin ranting", "admin cabang", "pengurus cabang", "pengurus ranting"), (req, res) => {
   let param = {
     id_penguji: req.params.id,
   };
