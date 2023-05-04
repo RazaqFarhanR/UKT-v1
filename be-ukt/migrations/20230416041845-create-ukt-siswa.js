@@ -23,6 +23,7 @@ module.exports = {
       id_siswa: {
         type: Sequelize.INTEGER,
         allowNull: false,
+        unique: true,
         references: {
           model: "siswa",
           key: "id_siswa"

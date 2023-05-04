@@ -28,8 +28,12 @@ module.exports = (sequelize, DataTypes) => {
       autoIncrement: true,
       allowNull: false
     },
+    tipe_ukt: DataTypes.ENUM('UKT Jambon','UKT Hijau','UKT Putih','UKCW'),
     id_event: DataTypes.INTEGER,
-    id_siswa: DataTypes.INTEGER,
+    id_siswa: {
+      type: DataTypes.INTEGER,
+      unique: true
+    },
     rayon: DataTypes.STRING,
     keshan: DataTypes.INTEGER,
     senam: DataTypes.DOUBLE,

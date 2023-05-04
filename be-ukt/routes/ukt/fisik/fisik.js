@@ -2,8 +2,8 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 require('dotenv').config();
-const Auth = require('../middleware/Auth.js');
-const verifyRoles = require("../middleware/verifyRoles");
+const Auth = require('../../../middleware/Auth');
+const verifyRoles = require("../../../middleware/verifyRoles.js");
 
 //implementasi
 const app = express();
@@ -11,14 +11,27 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: true}));
 
 //import model
-const models = require('../models/index');
+const models = require('../../../models/index');
 const fisik = models.fisik;
 
 //endpoint ditulis disini
 
 //endpoint get data fisik
 app.get("/", Auth, verifyRoles("admin", "super admin", "admin ranting", "pengurus cabang", "pengurus ranting", "penguji cabang", "penguji ranting"), (req,res) => {
-    fisik.findAll()
+    fisik.findAll({
+        include: [
+            {
+                model: models.siswa,
+                as: "siswa_fisik",
+                attributes: ['name']
+            },
+            {
+                model: models.penguji,
+                as: "penguji_fisik",
+                attributes: ['name']
+            }
+        ]
+    })
     .then(fisik => {
         res.json({
             count: fisik.length,
@@ -41,6 +54,11 @@ app.get("/ukt/:id", Auth, verifyRoles("admin", "super admin", "admin ranting", "
             {
                 model: models.siswa,
                 as: "siswa_fisik",
+                attributes: ['name']
+            },
+            {
+                model: models.penguji,
+                as: "penguji_fisik",
                 attributes: ['name']
             }
         ]
@@ -68,6 +86,11 @@ app.get("/ukt/:id/:event", Auth, verifyRoles("admin", "super admin", "admin rant
             {
                 model: models.siswa,
                 as: "siswa_fisik",
+                attributes: ['name']
+            },
+            {
+                model: models.penguji,
+                as: "penguji_fisik",
                 attributes: ['name']
             }
         ]
