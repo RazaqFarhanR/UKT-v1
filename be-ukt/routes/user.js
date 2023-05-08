@@ -75,7 +75,7 @@ app.get("/", Auth, verifyRoles("super admin", "admin"),(req, res) => {
 app.get("/:id", Auth, verifyRoles("super admin", "admin"),(req, res) => {
   const imagePath = "http://localhost:8080/image/";
   user
-    .findAll({
+    .findOne({
       where:{
         id_user: req.params.id
       },
@@ -89,14 +89,9 @@ app.get("/:id", Auth, verifyRoles("super admin", "admin"),(req, res) => {
       ]
     })
     .then((user) => {
-      // Map over the tipe_kamar array and add the image URL to each object
-      const user_with_image_url = user.map((tk) => ({
-        ...tk.toJSON(),
-        image: `${imagePath}${tk.foto}`,
-      }));
       res.json({
-        count: user_with_image_url.length,
-        data: user_with_image_url,
+        data: user,
+        image: imagePath + user.foto
       });
     })
     .catch((error) => {
@@ -135,8 +130,8 @@ app.post("/", Auth, verifyRoles("super admin", "admin"), upload2.single("foto"),
 });
 
 //endpoint untuk mengupdate data user, METHOD: PUT, fuction: UPDATE
-app.put("/:id", Auth, verifyRoles("admin", "super admin", "admin ranting"), upload2.single("foto"), async (req, res) => {
-  const password = req.body.password != null ? req.body.password : "freestyle"
+app.put("/:id", Auth, verifyRoles("admin", "super admin", "admin ranting", "admin cabang"), upload2.single("foto"), async (req, res) => {
+  const password = req.body.password == null ? 'check' : req.body.password
   const hash = await bcrypt.hash(password, salt);
   try {
     let param = {
@@ -152,7 +147,7 @@ app.put("/:id", Auth, verifyRoles("admin", "super admin", "admin ranting"), uplo
         name: req.body.name,
         id_role: req.body.id_role,
         id_ranting: req.body.id_ranting,
-        foto: req.file.filename,
+        foto: req.file?.filename,
         password: hash,
         no_wa: req.body.no_wa,
       };
@@ -162,7 +157,7 @@ app.put("/:id", Auth, verifyRoles("admin", "super admin", "admin ranting"), uplo
         name: req.body.name,
         id_role: req.body.id_role,
         id_ranting: req.body.id_ranting,
-        foto: req.file.filename,
+        foto: req.file?.filename,
         no_wa: req.body.no_wa,
       };
       if (req.file) {
@@ -176,13 +171,36 @@ app.put("/:id", Auth, verifyRoles("admin", "super admin", "admin ranting"), uplo
         });
         data.foto = req.file.filename;
       }
-      user
-        .update(password != null ? data : dataNoPsw, { where: param })
+      await user
+        .update(req.body.password == null ? dataNoPsw : data, { where: param })
         .then((result) => {
-          res.json({
-            message: "data has been updated",
-          });
-        })
+          const imagePath = "http://localhost:8080/image/";
+            user
+              .findOne({
+                where:{
+                  id_user: req.params.id
+                },
+                include: [
+                  {
+                    model: ranting,
+                    as: "user_ranting",
+                    attributes: ['name'],
+                    required: false,
+                  }
+                ]
+              })
+              .then((user) => {
+                res.json({
+                  data: user,
+                  image: imagePath + user.foto
+                });
+              })
+              .catch((error) => {
+                res.json({
+                  message: error.message,
+                });
+              });
+            })
         .catch((error) => {
           res.json({
             message: error.message,

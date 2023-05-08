@@ -17,7 +17,7 @@ const teknik_detail = models.teknik_detail;
 //endpoint ditulis disini
 
 //endpoint get data teknik_detail
-app.get("/", Auth, verifyRoles("admin", "super admin", "admin ranting", "pengurus cabang", "pengurus ranting", "penguji cabang", "penguji ranting"), (req,res) => {
+app.get("/", Auth, verifyRoles("admin", "super admin", "admin ranting", "admin cabang", "pengurus cabang", "pengurus ranting", "penguji cabang", "penguji ranting"), (req,res) => {
     teknik_detail.findAll()
     .then(teknik_detail => {
         res.json({
@@ -33,7 +33,7 @@ app.get("/", Auth, verifyRoles("admin", "super admin", "admin ranting", "penguru
 })
 
 //endpoint get data teknik_detail by tipe_ukt
-app.get("/:id", Auth, verifyRoles("admin", "super admin", "admin ranting", "pengurus cabang", "pengurus ranting", "penguji cabang", "penguji ranting"), (req,res) => {
+app.get("/:id", Auth, verifyRoles("admin", "super admin", "admin ranting", "admin cabang", "pengurus cabang", "pengurus ranting", "penguji cabang", "penguji ranting"), (req,res) => {
     teknik_detail.findAll({
         where: {
             tipe_ukt: req.params.id
@@ -52,7 +52,7 @@ app.get("/:id", Auth, verifyRoles("admin", "super admin", "admin ranting", "peng
     })    
 })
 //endpoint get data teknik by tipe_ukt
-app.get("/ukt/:id", Auth, verifyRoles("admin", "super admin", "admin ranting", "pengurus cabang", "pengurus ranting", "penguji cabang", "penguji ranting"), (req,res) => {
+app.get("/ukt/:id", Auth, verifyRoles("admin", "super admin", "admin ranting", "admin cabang", "pengurus cabang", "pengurus ranting", "penguji cabang", "penguji ranting"), (req,res) => {
     teknik_detail.findAll({
         where: {
             tipe_ukt: req.params.id
@@ -77,11 +77,12 @@ app.get("/ukt/:id", Auth, verifyRoles("admin", "super admin", "admin ranting", "
                     {
                         model: models.teknik,
                         attributes: ['name'],
-                        as: "siswa_teknik"
+                        as: "siswa_teknik",
                     }
-                ]
+                ],
+                order: [['id_teknik', 'ASC']]
             }
-        ]
+        ],
     })
     .then(teknik => {
         res.json({
@@ -96,7 +97,7 @@ app.get("/ukt/:id", Auth, verifyRoles("admin", "super admin", "admin ranting", "
     })    
 })
 //endpoint get data teknik by tipe_ukt
-app.get("/ukt/:id/:event", Auth, verifyRoles("admin", "super admin", "admin ranting", "pengurus cabang", "pengurus ranting", "penguji cabang", "penguji ranting"), (req,res) => {
+app.get("/ukt/:id/:event", Auth, verifyRoles("admin", "super admin", "admin ranting", "admin cabang", "pengurus cabang", "pengurus ranting", "penguji cabang", "penguji ranting"), (req,res) => {
     teknik_detail.findAll({
         where: {
             tipe_ukt: req.params.id,
@@ -121,12 +122,13 @@ app.get("/ukt/:id/:event", Auth, verifyRoles("admin", "super admin", "admin rant
                 include: [
                     {
                         model: models.teknik,
-                        attributes: ['name'],
-                        as: "siswa_teknik"
+                        attributes: ['id_teknik','name'],
+                        as: "siswa_teknik",
                     }
-                ]
+                ],
+                order: [['id_teknik', 'DESC']]
             }
-        ]
+        ],
     })
     .then(teknik => {
         res.json({
@@ -141,7 +143,7 @@ app.get("/ukt/:id/:event", Auth, verifyRoles("admin", "super admin", "admin rant
     })    
 })
 //endpoint get data teknik by id siswa
-app.get("/siswa/:id", Auth, verifyRoles("admin", "super admin", "admin ranting", "pengurus cabang", "pengurus ranting", "penguji cabang", "penguji ranting"), (req,res) => {
+app.get("/siswa/:id", Auth, verifyRoles("admin", "super admin", "admin ranting", "admin cabang", "pengurus cabang", "pengurus ranting", "penguji cabang", "penguji ranting"), (req,res) => {
     teknik_detail.findAll({
         attributes: ['id_teknik_detail','id_siswa','id_teknik', 'predikat'],
         where: {
@@ -178,7 +180,7 @@ app.get("/siswa/:id", Auth, verifyRoles("admin", "super admin", "admin ranting",
     })    
 })
 //endpoint untuk menyimpan data teknik_detail, METHOD POST, function create
-app.post("/", Auth, verifyRoles("admin", "super admin", "admin ranting", "pengurus cabang", "pengurus ranting", "penguji cabang", "penguji ranting"), (req,res) =>{
+app.post("/", Auth, verifyRoles("admin", "super admin", "admin ranting", "admin cabang", "pengurus cabang", "pengurus ranting", "penguji cabang", "penguji ranting"), (req,res) =>{
     let data ={
         id_penguji: req.body.id_penguji,
         id_event: req.body.id_event,
@@ -200,7 +202,7 @@ app.post("/", Auth, verifyRoles("admin", "super admin", "admin ranting", "pengur
 }) 
 
 //endpoint untuk mengupdate data teknik_detail, METHOD: PUT, fuction: UPDATE
-app.put("/:id", Auth, verifyRoles("admin", "super admin", "admin ranting", "pengurus cabang", "pengurus ranting", "penguji cabang", "penguji ranting"), (req,res) => {
+app.put("/:id", Auth, verifyRoles("admin", "super admin", "admin ranting", "admin cabang", "pengurus cabang", "pengurus ranting", "penguji cabang", "penguji ranting"), (req,res) => {
     let param = {
         id_teknik_detail : req.params.id
     }
@@ -224,7 +226,7 @@ app.put("/:id", Auth, verifyRoles("admin", "super admin", "admin ranting", "peng
 })
 
 //endpoint untuk menghapus data teknik_detail,METHOD: DELETE, function: destroy
-app.delete("/:id", Auth, verifyRoles("admin", "super admin", "admin ranting", "pengurus cabang", "pengurus ranting", "penguji cabang", "penguji ranting"), (req,res) => {
+app.delete("/:id", Auth, verifyRoles("admin", "super admin", "admin ranting", "admin cabang", "pengurus cabang", "pengurus ranting", "penguji cabang", "penguji ranting"), (req,res) => {
     let param = {
         id_teknik_detail : req.params.id
     }

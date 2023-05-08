@@ -17,14 +17,6 @@ module.exports = {
           key: "id_senam_detail"
         }
       },
-      id_penguji: {
-        type: Sequelize.INTEGER,
-        allowNull: false,
-        references: {
-          model: "penguji",
-          key: "id_penguji"
-        }
-      },
       id_senam: {
         type: Sequelize.INTEGER,
         allowNull: false,
@@ -34,7 +26,8 @@ module.exports = {
         }
       },
       predikat: {
-        type: Sequelize.BOOLEAN
+        type: Sequelize.BOOLEAN,
+        allowNull: true
       },
       createdAt: {
         allowNull: false,

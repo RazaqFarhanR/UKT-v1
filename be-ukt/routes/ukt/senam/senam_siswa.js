@@ -17,7 +17,7 @@ const senam_siswa = models.senam_siswa;
 //endpoint ditulis disini
 
 //endpoint get data senam_siswa
-app.get("/", Auth, verifyRoles("admin", "super admin", "admin ranting", "pengurus cabang", "pengurus ranting", "penguji cabang", "penguji ranting"), (req,res) => {
+app.get("/", Auth, verifyRoles("admin", "super admin", "admin ranting", "admin cabang", "pengurus cabang", "pengurus ranting", "penguji cabang", "penguji ranting"), (req,res) => {
     senam_siswa.findAll()
     .then(senam_siswa => {
         res.json({
@@ -33,7 +33,7 @@ app.get("/", Auth, verifyRoles("admin", "super admin", "admin ranting", "penguru
 })
 
 //endpoint get data senam_siswa by tipe_ukt
-app.get("/:id", Auth, verifyRoles("admin", "super admin", "admin ranting", "pengurus cabang", "pengurus ranting", "penguji cabang", "penguji ranting"), (req,res) => {
+app.get("/:id", Auth, verifyRoles("admin", "super admin", "admin ranting", "admin cabang", "pengurus cabang", "pengurus ranting", "penguji cabang", "penguji ranting"), (req,res) => {
     senam_siswa.findAll({
         where: {
             tipe_ukt: req.params.id
@@ -52,7 +52,7 @@ app.get("/:id", Auth, verifyRoles("admin", "super admin", "admin ranting", "peng
     })    
 })
 //endpoint get data senam_siswa by tipe_ukt
-app.get("/ranting/:id", Auth, verifyRoles("admin", "super admin", "admin ranting", "pengurus cabang", "pengurus ranting", "penguji cabang", "penguji ranting"), (req,res) => {
+app.get("/ranting/:id", Auth, verifyRoles("admin", "super admin", "admin ranting", "admin cabang", "pengurus cabang", "pengurus ranting", "penguji cabang", "penguji ranting"), (req,res) => {
     senam_siswa.findAll({
         where: {
             ranting: req.params.id
@@ -71,7 +71,7 @@ app.get("/ranting/:id", Auth, verifyRoles("admin", "super admin", "admin ranting
     })    
 })
 //endpoint get data senam by tipe_ukt
-app.get("/ukt/:id", Auth, verifyRoles("admin", "super admin", "admin ranting", "pengurus cabang", "pengurus ranting", "penguji cabang", "penguji ranting"), (req,res) => {
+app.get("/ukt/:id", Auth, verifyRoles("admin", "super admin", "admin ranting", "admin cabang", "pengurus cabang", "pengurus ranting", "penguji cabang", "penguji ranting"), (req,res) => {
     senam_siswa.findAll({
         attributes: ['id_senam_siswa','id_senam_detail'],
         include: [
@@ -96,7 +96,7 @@ app.get("/ukt/:id", Auth, verifyRoles("admin", "super admin", "admin ranting", "
     })    
 })
 //endpoint get data senam by id siswa
-app.get("/siswa/:id", Auth, verifyRoles("admin", "super admin", "admin ranting", "pengurus cabang", "pengurus ranting", "penguji cabang", "penguji ranting"), (req,res) => {
+app.get("/siswa/:id", Auth, verifyRoles("admin", "super admin", "admin ranting", "admin cabang", "pengurus cabang", "pengurus ranting", "penguji cabang", "penguji ranting"), (req,res) => {
     senam_siswa.findAll({
         attributes: ['id_senam_siswa','id_siswa','id_senam', 'predikat'],
         where: {
@@ -133,7 +133,7 @@ app.get("/siswa/:id", Auth, verifyRoles("admin", "super admin", "admin ranting",
     })    
 })
 //endpoint untuk menyimpan data senam_siswa, METHOD POST, function create
-app.post("/", Auth, verifyRoles("admin", "super admin", "admin ranting", "pengurus cabang", "pengurus ranting", "penguji cabang", "penguji ranting"), (req,res) =>{
+app.post("/", Auth, verifyRoles("admin", "super admin", "admin ranting", "admin cabang", "pengurus cabang", "pengurus ranting", "penguji cabang", "penguji ranting"), (req,res) =>{
     let data ={
         id_senam_detail: req.body.id_senam_detail,
         id_senam: req.body.id_senam,
@@ -153,7 +153,7 @@ app.post("/", Auth, verifyRoles("admin", "super admin", "admin ranting", "pengur
 }) 
 
 //endpoint untuk mengupdate data senam_siswa, METHOD: PUT, fuction: UPDATE
-app.put("/:id", Auth, verifyRoles("admin", "super admin", "admin ranting", "pengurus cabang", "pengurus ranting", "penguji cabang", "penguji ranting"), (req,res) => {
+app.put("/:id", Auth, verifyRoles("admin", "super admin", "admin ranting", "admin cabang", "pengurus cabang", "pengurus ranting", "penguji cabang", "penguji ranting"), (req,res) => {
     let param = {
         id_senam_siswa : req.params.id
     }
@@ -176,12 +176,34 @@ app.put("/:id", Auth, verifyRoles("admin", "super admin", "admin ranting", "peng
 })
 
 //endpoint untuk menghapus data senam_siswa,METHOD: DELETE, function: destroy
-app.delete("/:id", Auth, verifyRoles("admin", "super admin", "admin ranting", "pengurus cabang", "pengurus ranting", "penguji cabang", "penguji ranting"), (req,res) => {
+app.delete("/:id", Auth, verifyRoles("admin", "super admin", "admin ranting", "admin cabang", "pengurus cabang", "pengurus ranting", "penguji cabang", "penguji ranting"), (req,res) => {
     let param = {
         id_senam_siswa : req.params.id
     }
     senam_siswa.destroy({where: param})
     .then(result => {
+        res.json({
+            massege : "data has been deleted"
+        })
+    })
+    .catch(error => {
+        res.json({
+            message: error.message
+        })
+    })
+})
+app.delete("/detail/:id", Auth, verifyRoles("admin", "super admin", "admin ranting", "admin cabang", "pengurus cabang", "pengurus ranting", "penguji cabang", "penguji ranting"), (req,res) => {
+    let param = {
+        id_senam_detail : req.params.id
+    }
+    senam_siswa.findAll({where: param})
+    .then(result => {
+        for(let i=0; i<result.length; i++){
+            let data = result[i].dataValues.id_senam
+            senam_siswa.destroy({where: {
+                id_senam: data
+            }})
+        }
         res.json({
             massege : "data has been deleted"
         })
