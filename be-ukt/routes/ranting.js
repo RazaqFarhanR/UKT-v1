@@ -17,7 +17,7 @@ const ranting = models.ranting;
 //endpoint ditulis disini
 
 //endpoint get data ranting
-app.get("/", Auth, verifyRoles("admin", "super admin", "admin ranting", "pengurus cabang", "penguji cabang", "penguji ranting"), (req,res) => {
+app.get("/", Auth, verifyRoles("admin", "super admin", "admin ranting", "admin cabang", "pengurus cabang", "pengurus ranting", "penguji cabang", "penguji ranting"), (req,res) => {
     ranting.findAll()
     .then(ranting => {
         res.json({
@@ -33,9 +33,10 @@ app.get("/", Auth, verifyRoles("admin", "super admin", "admin ranting", "penguru
 })
 
 //endpoint untuk menyimpan data ranting, METHOD POST, function create
-app.post("/", Auth, verifyRoles("admin", "super admin", "admin ranting", "pengurus cabang"), (req,res) =>{
+app.post("/", Auth, verifyRoles("admin", "super admin", "admin ranting", "admin cabang", "pengurus cabang"), (req,res) =>{
     let data ={
         id_cabang: req.body.id_cabang,
+        id_ranting: req.body.name,
         name: req.body.name,
     }
     ranting.create(data)
@@ -52,12 +53,13 @@ app.post("/", Auth, verifyRoles("admin", "super admin", "admin ranting", "pengur
 }) 
 
 //endpoint untuk mengupdate data ranting, METHOD: PUT, fuction: UPDATE
-app.put("/:id", Auth, verifyRoles("admin", "super admin", "admin ranting", "pengurus cabang"), (req,res) => {
+app.put("/:id", Auth, verifyRoles("admin", "super admin", "admin ranting", "admin cabang", "pengurus cabang"), (req,res) => {
     let param = {
         id_ranting: req.params.id
     }
     let data = {
         id_cabang: req.body.id_cabang,
+        id_ranting: req.body.id_ranting,
         name: req.body.name,
     }
     ranting.update(data, {where: param})
@@ -74,7 +76,7 @@ app.put("/:id", Auth, verifyRoles("admin", "super admin", "admin ranting", "peng
 })
 
 //endpoint untuk menghapus data ranting,METHOD: DELETE, function: destroy
-app.delete("/:id", Auth, verifyRoles("admin", "super admin", "admin ranting", "pengurus cabang"), (req,res) => {
+app.delete("/:id", Auth, verifyRoles("admin", "super admin", "admin ranting", "admin cabang", "pengurus cabang"), (req,res) => {
     let param = {
         id_ranting : req.params.id
     }
