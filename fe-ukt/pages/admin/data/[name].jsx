@@ -24,7 +24,7 @@ const detail_siswa = () => {
     const [dataSiswa, setDataSiswa] = useState ([])
     const [action, setAction] = useState ('')
     const [idSiswa, setIdSiswa] = useState ('')
-    const [nis, setNis] = useState ('')
+    const [noUrut, setNoUrut] = useState ('')
     const [siswaName, setSiswaName] = useState ('')
     const [ranting, setRanting] = useState ('')
     const [rayon, setRayon] = useState ('')
@@ -52,7 +52,7 @@ const detail_siswa = () => {
     const addModal = () => {
         setShowModalSiswa (true)
         setAction ('insert')
-        setNis ('')
+        setNoUrut ('')
         setSiswaName ('')
         setRanting (ranting)
         setRayon ('')
@@ -67,7 +67,7 @@ const detail_siswa = () => {
         setShowModalSiswa (true)
         setAction ('update')
         setIdSiswa (selectedItem.id_siswa)
-        setNis (selectedItem.nis)
+        setNoUrut (selectedItem.nomor_urut)
         setSiswaName (selectedItem.name)
         setRanting (ranting)
         setRayon (selectedItem.rayon)
@@ -149,7 +149,7 @@ const detail_siswa = () => {
                                 <thead>
                                     <tr className='text-green'>
                                         <th className='py-3 w-[5%]'>No</th>
-                                        <th className='w-[13%]'>NIS</th>
+                                        <th className='w-[13%]'>No Urut</th>
                                         <th className='w-[20%]'>Nama</th>
                                         <th className='w-[10%]'>Rayon</th>
                                         <th className='w-[10%]'>Jenis Kelamin</th>
@@ -163,7 +163,7 @@ const detail_siswa = () => {
                                     {dataSiswa.map ((item, index) => (
                                         <tr key={index + 1} className='text-white text-center'>
                                             <td className='border-b-2 py-3 border-gray'>{index + 1}</td>
-                                            <td className='border-b-2 border-gray'>{item.nis}</td>
+                                            <td className='border-b-2 border-gray'>{item.nomor_urut}</td>
                                             <td className='border-b-2 border-gray'>{item.name}</td>
                                             <td className='border-b-2 border-gray'>{item.rayon}</td>
                                             <td className='border-b-2 border-gray'>{item.jenis_kelamin}</td>
@@ -207,7 +207,7 @@ const detail_siswa = () => {
             </div> 
 
              {/*memanggil modal  */}
-             <globalState.Provider value={{ showModalSiswa, setShowModalSiswa, dataSiswa, setDataSiswa, action, setAction, idSiswa, setIdSiswa,nis, setNis, siswaName, setSiswaName, ranting, setRanting, rayon, setRayon, jenisKelamin, setJenisKelamin, jenisLatihan, setJenisLatihan, ukt, setUkt, event, setEvent }}>
+             <globalState.Provider value={{ showModalSiswa, setShowModalSiswa, dataSiswa, setDataSiswa, action, setAction, idSiswa, setIdSiswa, noUrut, setNoUrut, siswaName, setSiswaName, ranting, setRanting, rayon, setRayon, jenisKelamin, setJenisKelamin, jenisLatihan, setJenisLatihan, ukt, setUkt, event, setEvent }}>
                 <Modal_siswa />
              </globalState.Provider>
 

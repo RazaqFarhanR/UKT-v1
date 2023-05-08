@@ -11,7 +11,7 @@ const modal_siswa = () => {
     // state
     const {setDataSiswa, action, idSiswa} = useContext (globalState)
     const [dataEvent, setDateEvent] = useState ([])
-    const {nis, setNis} = useContext (globalState)
+    const {noUrut, setNoUrut} = useContext (globalState)
     const {siswaName, setSiswaName} = useContext (globalState)
     const {ranting, setRanting} = useContext (globalState)
     const {rayon, setRayon} = useContext (globalState)
@@ -51,7 +51,7 @@ const modal_siswa = () => {
         const token = localStorage.getItem ('token')
         
         let form = {
-            nis : nis,
+            nomor_urut : noUrut,
             name : siswaName,
             id_ranting : ranting,
             rayon : rayon,
@@ -133,14 +133,14 @@ const modal_siswa = () => {
                                     {/* Input nis */}
                                     <div className="flex flex-row space-x-3 w-full">
                                         <div className="w-2/6 flex justify-between">
-                                            <span>NIS</span>
+                                            <span>Nomor Urut</span>
                                             <span>:</span>
                                         </div>
                                         <div className="w-4/6">
                                             <input className='w-full bg-darkBlue rounded-md focus:outline-none px-2'
                                             type="number"
-                                            value={nis}
-                                            onChange={(e) => setNis(e.target.value)}
+                                            value={noUrut}
+                                            onChange={(e) => setNoUrut(e.target.value)}
                                             required
                                             >        
                                             </input>
@@ -249,7 +249,7 @@ const modal_siswa = () => {
                                                         >UKT Jambon</option>
                                                         <option 
                                                         value='UKT Hijau'
-                                                        >UKT Hujau</option>
+                                                        >UKT Hijau</option>
                                                         <option 
                                                         value='UKT Putih'
                                                         >UKT Putih</option>
