@@ -1,8 +1,20 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import Link from 'next/link'
 import Header from './components/header'
+const IMAGE_URL = process.env.NEXT_PUBLIC_IMAGE_URL
 
 const index = () => {
+    const [dataPenguji, setDataPenguji] = useState([])
+
+    const getDataPenguji = () => {
+        const penguji = JSON.parse(localStorage.getItem('penguji'))
+        setDataPenguji(penguji)
+    }
+
+    useEffect(() => {
+      getDataPenguji()
+    }, [])
+    
     return (
         <div className="font-lato">
 
@@ -20,15 +32,15 @@ const index = () => {
                     <div className="flex flex-col justify-center items-center mb-7">
 
                         {/* photo profile */}
-                        <div className="bg-gradient-to-r from-[#16D4FC] to-[#9A4BE9] p-0.5 rounded-full w-28 mb-3">
-                            <img className='rounded-full object-cover' src="/images/profile.jpeg" alt="" />
+                        <div className="bg-gradient-to-r from-[#16D4FC] to-[#9A4BE9] p-0.5 rounded-full mb-3">
+                            <img className='rounded-full object-cover w-28 h-28' src={IMAGE_URL + dataPenguji.foto} alt="" />
                         </div>
 
                         {/* username */}
-                        <h1 className='text-2xl font-semibold text-white'>Stevan Dean</h1>
+                        <h1 className='text-2xl font-semibold text-white'>{dataPenguji.username}</h1>
 
                         {/* name */}
-                        <h1 className='text-green'>Stevan Dean Achmad Ngunardi</h1>
+                        <h1 className='text-green'>{dataPenguji.name}</h1>
                     </div>
 
                     {/* wrapper ukt card */}

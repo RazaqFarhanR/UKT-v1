@@ -1,11 +1,18 @@
 import React, { useEffect, useState } from 'react'
 import axios from 'axios'
+import { globalState } from '@/context/context'
 import Header from './components/header'
+import Modal_Alert from './components/modal_alert';
+import { useRouter } from 'next/router';
 const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
 
 const fisik = () => {
 
+    const [showModalAlert, setShowModalAlert ] = useState(false);
+    const router = useRouter()
+
     // state
+    const [alert, setAlert] = useState(false)
     const [dataSiswa, setDataSiswa] = useState([])
     const [dataStandartFisik, setDataStandartFisik] = useState([])
     const [mft, setMft] = useState(0);
@@ -13,13 +20,27 @@ const fisik = () => {
     const [spirPA, setSpirPA] = useState(0);
     const [spirPB, setSpirPB] = useState(0);
     const [spirDada, setSpirDada] = useState(0);
-    const [plank, setPlank] = useState(0)
+    const [plank, setPlank] = useState(0);
 
     // function get data siswa from local storage
     const getDataSiswa = () => {
         const dataSiswa = JSON.parse(localStorage.getItem('dataSiswa'))
         setDataSiswa(dataSiswa)
     }
+
+    const handleAlertData = (data) => {
+        console.log(data.data)
+        if (data.data === true) {
+            setAlert(true)
+        }
+    }
+
+    useEffect(() => {
+        if (alert == true) {
+            handleSave()
+            setShowModalAlert(false);
+        }
+    }, [alert])
 
     // function get data standart fisik
     const getDataStandartFisik = () => {
@@ -46,54 +67,63 @@ const fisik = () => {
                 console.log(err.message);
             })
     }
-    const postDataFisik = async () => {
-        // -- data detail -- //
-        const uktSiswa = JSON.parse(localStorage.getItem('dataUktSiswa'))
-        const token = localStorage.getItem('tokenPenguji')
-        const dataPenguji = JSON.parse(localStorage.getItem('penguji'))
-
-        const mftNew = ((mft / dataStandartFisik.mft) * 100)
-        const pushUpNew = (pushUp / dataStandartFisik.push_up) * 100
-        const spirPANew = (spirPA / dataStandartFisik.spir_perut_atas) * 100
-        const spirPBNew = (spirPB / dataStandartFisik.spir_perut_bawah) * 100
-        const spirDadaNew = ((spirDada / dataStandartFisik.spir_dada) * 100)
-        const plankNew = ((plank / dataStandartFisik.plank) * 100)
-
-        const data = {
-            id_penguji: dataPenguji.id_penguji,
-            id_event: dataSiswa.id_event,
-            id_siswa: dataSiswa.id_siswa,
-            mft: mftNew,
-            push_up: pushUpNew,
-            spir_perut_atas: spirPANew,
-            spir_perut_bawah: spirPBNew,
-            spir_dada: spirDadaNew,
-            plank: plankNew
+    const handleSave = async () => {
+        setShowModalAlert(true)
+        if(alert){
+            // -- data detail -- //
+            const uktSiswa = JSON.parse(localStorage.getItem('dataUktSiswa'))
+            const token = localStorage.getItem('tokenPenguji')
+            const dataPenguji = JSON.parse(localStorage.getItem('penguji'))
+            
+            const primeMft = mft.toFixed(1)
+            const mftNew = ((primeMft / dataStandartFisik.mft) * 100)
+            const pushUpNew = (pushUp / dataStandartFisik.push_up) * 100
+            const spirPANew = (spirPA / dataStandartFisik.spir_perut_atas) * 100
+            const spirPBNew = (spirPB / dataStandartFisik.spir_perut_bawah) * 100
+            const spirDadaNew = ((spirDada / dataStandartFisik.spir_dada) * 100)
+            const plankNew = ((plank / dataStandartFisik.plank) * 100)
+            const data = {
+                id_penguji: dataPenguji.id_penguji,
+                id_event: dataSiswa.id_event,
+                id_siswa: dataSiswa.id_siswa,
+                mft: primeMft,
+                push_up: pushUp,
+                spir_perut_atas: spirPA,
+                spir_perut_bawah: spirPB,
+                spir_dada: spirDada,
+                plank: plank
+            }
+            axios.post(BASE_URL + `fisik`, data, { headers: { Authorization: `Bearer ${token}` } },)
+                .then((res) => {
+                    console.log(res);
+                })
+                .catch((error) => {
+                    console.log(error.message);
+                });
+            // -- ukt siswa  -- //
+            const nilaiUkt = ((mftNew + pushUpNew + spirPANew + spirPBNew + spirDadaNew + plankNew) / 6).toFixed(2)
+            await axios.put(BASE_URL + `ukt_siswa/${uktSiswa.id_ukt_siswa}`, {
+                fisik: nilaiUkt
+            }, { headers: { Authorization: `Bearer ${token}` } })
+                .then(res => {
+                    console.log(res)
+                    router.back()
+                })
+                .catch(err => {
+                    console.log(err.message);
+                })
+        } else {
+            null
         }
-        axios.post(BASE_URL + `fisik`, data, { headers: { Authorization: `Bearer ${token}` } },)
-            .then((res) => {
-                console.log(res);
-            })
-            .catch((error) => {
-                console.log(error.message);
-            });
-        // -- ukt siswa  -- //
-        const nilaiUkt = ((mftNew + pushUpNew + spirPANew + spirPBNew + spirDadaNew + plankNew) / 6).toFixed(2)
-        await axios.put(BASE_URL + `ukt_siswa/${uktSiswa.id_ukt_siswa}`, {
-            fisik: nilaiUkt
-        }, { headers: { Authorization: `Bearer ${token}` } })
-            .then(res => {
-                console.log(res)
-            })
-            .catch(err => {
-                console.log(err.message);
-            })
     }
     useEffect(() => {
         getDataSiswa()
         getDataStandartFisik()
     }, [])
 
+    useEffect(() => {
+        console.log(mft)
+    }, [mft])
     return (
         <>
             <div className="font-lato">
@@ -110,9 +140,9 @@ const fisik = () => {
 
                         {/* card siswa information */}
                         <div className="bg-navy rounded-md p-3 text-white mb-8 shadow shadow-slate-700 hover:shadow-purple transition ease-in-out duration-300">
-                            <h1 className='text-green tracking-wide text-lg'>{dataSiswa.nis}</h1>
+                            <h1 className='text-green tracking-wide text-lg'>{dataSiswa.nomor_urut}</h1>
                             <h1 className='text-xl font-semibold'>{dataSiswa.name}</h1>
-                            <h1 className='tracking-wide'>{dataSiswa.rayon}</h1>
+                            <h1 className='tracking-wide'>{dataSiswa.id_ranting}</h1>
                         </div>
 
                         {/* wrapper mft */}
@@ -124,33 +154,23 @@ const fisik = () => {
 
                                 {/* button minus */}
                                 <button className='bg-red rounded-md text-center text-2xl font-bold'
-
-                                    onClick={() => setMft(mft - 1)}
+                                    onClick={() => setMft(Math.round(mft - 0.1))}
                                 >
                                     -
                                 </button>
 
-
-                                    onClick={() => setMft(mft - 1)}>
-                                </button>
                                 {/* score indicator */}
                                 <div className="outline outline-purple rounded-md h-full flex items-center justify-center">
-                                    <h1 className='text-xl font-semibold'>{mft}</h1>
+                                    <h1 className='text-xl font-semibold'>{mft.toFixed(1)}</h1>
                                 </div>
 
                                 {/* button plus */}
                                 <button className='bg-purple rounded-md text-center text-2xl font-bold'
-
-                                    onClick={() => setMft(mft + 1)}>
-
-                                onClick={() => setMft(mft + 1)}>
-
+                                    onClick={() => setMft(mft + 0.1)}>
                                     +
                                 </button>
                             </div>
                         </div>
-
-                        
                         {/* wrapper push_up */}
                         <div className="bg-navy rounded-md p-2 text-center text-white space-y-3 mb-3">
                             <h1 className='text-xl font-semibold tracking-wider'>Push Up</h1>
@@ -160,12 +180,8 @@ const fisik = () => {
 
                                 {/* button minus */}
                                 <button className='bg-red rounded-md text-center text-2xl font-bold'
-
                                     onClick={() => setPushUp(pushUp - 1)}
                                 >
-
-                                    onClick={() => setPushUp(pushUp - 1)}>
-
                                     -
                                 </button>
 
@@ -177,14 +193,10 @@ const fisik = () => {
                                 {/* button plus */}
                                 <button className='bg-purple rounded-md text-center text-2xl font-bold'
                                     onClick={() => setPushUp(pushUp + 1)}>
-                                onClick={() => setPushUp(pushUp + 1)}>
-
-
                                     +
                                 </button>
                             </div>
                         </div>
-
                         {/* wrapper spir_perut_atas */}
                         <div className="bg-navy rounded-md p-2 text-center text-white space-y-3 mb-3">
                             <h1 className='text-xl font-semibold tracking-wider'>Spir Perut Atas</h1>
@@ -207,14 +219,10 @@ const fisik = () => {
                                 {/* button plus */}
                                 <button className='bg-purple rounded-md text-center text-2xl font-bold'
                                     onClick={() => setSpirPA(spirPA + 1)}>
-
-                                onClick={() => setSpirPA(spirPA + 1)}>
-
                                     +
                                 </button>
                             </div>
                         </div>
-
                         {/* wrapper spir_perut_bawah */}
                         <div className="bg-navy rounded-md p-2 text-center text-white space-y-3 mb-3">
                             <h1 className='text-xl font-semibold tracking-wider'>Spir Perut Bawah</h1>
@@ -236,16 +244,11 @@ const fisik = () => {
 
                                 {/* button plus */}
                                 <button className='bg-purple rounded-md text-center text-2xl font-bold'
-
                                     onClick={() => setSpirPB(spirPB + 1)}>
-
-                                onClick={() => setSpirPB(spirPB + 1)}>
-
                                     +
                                 </button>
                             </div>
                         </div>
-
                         {/* wrapper spir_dada */}
                         <div className="bg-navy rounded-md p-2 text-center text-white space-y-3 mb-3">
                             <h1 className='text-xl font-semibold tracking-wider'>Spir Dada</h1>
@@ -267,16 +270,11 @@ const fisik = () => {
 
                                 {/* button plus */}
                                 <button className='bg-purple rounded-md text-center text-2xl font-bold'
-
                                     onClick={() => setSpirDada(spirDada + 1)}>
-
-                                onClick={() => setSpirDada(spirDada + 1)}>
-
                                     +
                                 </button>
                             </div>
                         </div>
-
                         {/* wrapper plank */}
                         <div className="bg-navy rounded-md p-2 text-center text-white space-y-3 mb-3">
                             <h1 className='text-xl font-semibold tracking-wider'>Plank</h1>
@@ -298,26 +296,20 @@ const fisik = () => {
 
                                 {/* button plus */}
                                 <button className='bg-purple rounded-md text-center text-2xl font-bold'
-
                                     onClick={() => setPlank(plank + 1)}>
-
-                                onClick={() => setPlank(plank + 1)}>
-
                                     +
                                 </button>
                             </div>
                         </div>
-
                         <div className='bg-yellow rounded-md p-3 text-white mb-8 shadow shadow-slate-700 text-center'
-                            onClick={postDataFisik}>Selesai</div>
-
-                        
-                        <div className='bg-yellow hover:bg-white rounded-md p-3 text-center text-xl text-white hover:text-yellow font-semibold shadow shadow-slate-700 duration-300' onClick={() => postDataFisik()}>Selesai</div>
-
-
+                            onClick={handleSave}>Selesai</div>
                     </div>
                 </div>
             </div>
+
+            <globalState.Provider value={{ showModalAlert, setShowModalAlert}}>
+                <Modal_Alert onData={handleAlertData} />
+            </globalState.Provider>
         </>
     )
 }

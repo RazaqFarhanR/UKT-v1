@@ -4,9 +4,10 @@ export const globalState = createContext()
 function context ({ children }) {
     
     const [showSideBar, setShowSideBar] = useState(true)
+    const [active, setActive] = useState('senam')
 
     return ( 
-        <globalState.Provider value={{ showSideBar, setShowSideBar }}>
+        <globalState.Provider value={{ showSideBar, setShowSideBar, setActive, active }}>
             {children}
         </globalState.Provider>
     )
