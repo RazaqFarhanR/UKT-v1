@@ -8,6 +8,7 @@ import Modal_admin_ranting from '../components/modal_admin_ranting'
 import Modal_delete from '../components/modal_delete'
 import axios from 'axios'
 const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
+const IMAGE_URL = process.env.NEXT_PUBLIC_IMAGE_URL;
 
 const admin_ranting = () => {
 
@@ -159,7 +160,7 @@ const admin_ranting = () => {
                                             <td className='border-b-2 border-gray'>{item.username}</td>
                                             <td className='border-b-2 border-gray'>{item.no_wa}</td>
                                             <td className='border-b-2 border-gray p-3'>
-                                                <img className='rounded-lg object-cover' src={item.image} alt="" />
+                                                <img className='rounded-lg object-cover' src={IMAGE_URL + item.image.split('http://localhost:8080/image/')[1]} alt="" />
                                             </td>
                                             <td className='border-b-2 border-gray'>
                                                 <div className="flex gap-x-2">
