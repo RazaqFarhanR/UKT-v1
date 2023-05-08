@@ -17,8 +17,8 @@ module.exports = {
           key: "id_event"
         }
       },
-      nis: {
-        type: Sequelize.STRING
+      nomor_urut: {
+        type: Sequelize.INTEGER
       },
       name: {
         type: Sequelize.STRING
@@ -44,7 +44,7 @@ module.exports = {
         type: Sequelize.ENUM('UKT Jambon','UKT Hijau','UKT Putih','UKCW')
       },
       id_ranting: {
-        type: Sequelize.INTEGER,
+        type: Sequelize.STRING,
         allowNull: false,
         references: {
           model: "ranting",

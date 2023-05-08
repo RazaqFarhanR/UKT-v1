@@ -14,6 +14,7 @@ const app = express();
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: true}));
 
+
 //import model
 const models = require('../models/index');
 const { sequelize, Op } = require("sequelize");
@@ -22,6 +23,11 @@ const siswa = models.siswa;
 const ranting = models.ranting
 const event = models.event;
 const rayon = models.rayon;
+
+//import auth
+const auth = require("../auth")
+const jwt = require("jsonwebtoken")
+const SECRET_KEY = "BelajarNodeJSItuMenyengankan";
 
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
@@ -38,7 +44,7 @@ let upload2 = multer({ storage: storage });
 //endpoint ditulis disini
 
 //endpoint get data siswa
-app.get("/", Auth, verifyRoles("admin", "super admin", "admin ranting", "pengurus cabang", "pengurus ranting", "penguji cabang", "penguji ranting"), (req,res) => {
+app.get("/", Auth, verifyRoles("admin", "super admin", "admin ranting", "admin cabang", "pengurus cabang", "pengurus ranting", "penguji cabang", "penguji ranting"), (req,res) => {
     siswa.findAll({        
         include: [
             {
@@ -67,7 +73,7 @@ app.get("/", Auth, verifyRoles("admin", "super admin", "admin ranting", "penguru
         })
     })    
 })
-app.get("/event/:id", Auth, verifyRoles("admin", "super admin", "admin ranting", "pengurus cabang", "pengurus ranting", "penguji cabang", "penguji ranting"), (req,res) => {
+app.get("/event/:id", Auth, verifyRoles("admin", "super admin", "admin ranting", "admin cabang", "pengurus cabang", "pengurus ranting", "penguji cabang", "penguji ranting"), (req,res) => {
     siswa.findAll({       
         where: {
             id_event: req.params.id
@@ -99,8 +105,213 @@ app.get("/event/:id", Auth, verifyRoles("admin", "super admin", "admin ranting",
         })
     })    
 })
+app.get("/event/senam/:id", Auth, verifyRoles("admin", "super admin", "admin ranting", "admin cabang", "pengurus cabang", "pengurus ranting", "penguji cabang", "penguji ranting"), (req,res) => {
+    siswa.findAll({       
+        include: [
+            {
+                model: ranting,
+                as: "siswa_ranting",
+                attributes: ['name'],
+                required: false,
+            },
+            {
+                model: event,
+                as: "siswa_event",
+                attributes: ['name'],
+                required: false
+            },
+            {
+                model: models.senam_detail,
+                as: "senam_siswa",
+                required: false,
+                attributes: ['id_siswa']
+            }
+        ],
+        where: {
+            id_event: req.params.id,
+            "$senam_siswa.id_siswa$": {
+                [Op.is]: null
+            }
+        }, 
+    })
+    .then(siswa => {
+        res.json({
+            count: siswa.length,
+            data: siswa
+        })
+    })
+    .catch(error => {
+        res.json({
+            message: error.message
+        })
+    })    
+})
+app.get("/event/jurus/:id", Auth, verifyRoles("admin", "super admin", "admin ranting", "admin cabang", "pengurus cabang", "pengurus ranting", "penguji cabang", "penguji ranting"), (req,res) => {
+    siswa.findAll({       
+        include: [
+            {
+                model: ranting,
+                as: "siswa_ranting",
+                attributes: ['name'],
+                required: false,
+            },
+            {
+                model: event,
+                as: "siswa_event",
+                attributes: ['name'],
+                required: false
+            },
+            {
+                model: models.jurus_detail,
+                as: "jurus_siswa",
+                required: false,
+                attributes: ['id_siswa']
+            },
+        ],
+        where: {
+            id_event: req.params.id,
+            "$jurus_siswa.id_siswa$": {
+                [Op.is]: null
+            }
+        }, 
+    })
+    .then(siswa => {
+        res.json({
+            count: siswa.length,
+            data: siswa
+        })
+    })
+    .catch(error => {
+        res.json({
+            message: error.message
+        })
+    })    
+})
+app.get("/event/fisik/:id", Auth, verifyRoles("admin", "super admin", "admin ranting", "admin cabang", "pengurus cabang", "pengurus ranting", "penguji cabang", "penguji ranting"), (req,res) => {
+    siswa.findAll({       
+        include: [
+            {
+                model: ranting,
+                as: "siswa_ranting",
+                attributes: ['name'],
+                required: false,
+            },
+            {
+                model: event,
+                as: "siswa_event",
+                attributes: ['name'],
+                required: false
+            },
+            {
+                model: models.fisik,
+                as: "siswa_fisik",
+                required: false,
+                attributes: ['id_siswa']
+            },
+        ],
+        where: {
+            id_event: req.params.id,
+            "$siswa_fisik.id_siswa$": {
+                [Op.is]: null
+            }
+        }, 
+    })
+    .then(siswa => {
+        res.json({
+            count: siswa.length,
+            data: siswa
+        })
+    })
+    .catch(error => {
+        res.json({
+            message: error.message
+        })
+    })    
+})
+app.get("/event/teknik/:id", Auth, verifyRoles("admin", "super admin", "admin ranting", "admin cabang", "pengurus cabang", "pengurus ranting", "penguji cabang", "penguji ranting"), (req,res) => {
+    siswa.findAll({       
+        include: [
+            {
+                model: ranting,
+                as: "siswa_ranting",
+                attributes: ['name'],
+                required: false,
+            },
+            {
+                model: event,
+                as: "siswa_event",
+                attributes: ['name'],
+                required: false
+            },
+            {
+                model: models.teknik_detail,
+                as: "siswa_teknik",
+                required: false,
+                attributes: ['id_siswa']
+            },
+        ],
+        where: {
+            id_event: req.params.id,
+            "$siswa_teknik.id_siswa$": {
+                [Op.is]: null
+            }
+        }, 
+    })
+    .then(siswa => {
+        res.json({
+            count: siswa.length,
+            data: siswa
+        })
+    })
+    .catch(error => {
+        res.json({
+            message: error.message
+        })
+    })    
+})
+app.get("/event/sambung/:id", Auth, verifyRoles("admin", "super admin", "admin ranting", "admin cabang", "pengurus cabang", "pengurus ranting", "penguji cabang", "penguji ranting"), (req,res) => {
+    siswa.findAll({       
+        include: [
+            {
+                model: ranting,
+                as: "siswa_ranting",
+                attributes: ['name'],
+                required: false,
+            },
+            {
+                model: event,
+                as: "siswa_event",
+                attributes: ['name'],
+                required: false
+            },
+            {
+                model: models.detail_sambung,
+                as: "sambung_siswa",
+                required: false,
+                attributes: ['id_siswa']
+            },
+        ],
+        where: {
+            id_event: req.params.id,
+            "$sambung_siswa.id_siswa$": {
+                [Op.is]: null
+            }
+        }, 
+    })
+    .then(siswa => {
+        res.json({
+            count: siswa.length,
+            data: siswa
+        })
+    })
+    .catch(error => {
+        res.json({
+            message: error.message
+        })
+    })    
+})
 
-app.get("/ranting/:id", Auth, verifyRoles("admin", "super admin", "admin ranting", "pengurus cabang", "pengurus ranting", "penguji cabang", "penguji ranting"), (req,res) => {
+app.get("/ranting/:id", Auth, verifyRoles("admin", "super admin", "admin ranting", "admin cabang", "pengurus cabang", "pengurus ranting", "penguji cabang", "penguji ranting"), (req,res) => {
     const id_ranting = req.params.id;
     siswa
     .findAll({
@@ -125,7 +336,7 @@ app.get("/ranting/:id", Auth, verifyRoles("admin", "super admin", "admin ranting
     .then((siswa) => {
       res.json({
         count: siswa.length,
-        siswa: siswa,
+        data: siswa,
       });
     })
     .catch((error) => {
@@ -135,33 +346,32 @@ app.get("/ranting/:id", Auth, verifyRoles("admin", "super admin", "admin ranting
     }); 
 })
 
-app.post("/nis", (req, res) => {
+app.post("/search", (req, res) => {
     siswa.findAll({
         where: {
-            nis: req.body.nis
+            name: {
+                [Op.like]: '%' + req.body.name + '%'
+              }
         },
+        include: [
+          {
+              model: ranting,
+              as: "siswa_ranting",
+              attributes: ['name'],
+              required: false,
+          },
+          {
+              model: event,
+              as: "siswa_event",
+              attributes: ['name'],
+              required: false
+          },
+      ]
     })
     .then((result) => {
-        const data = {
-            password: req.body.password
-        }
-        if(result) {
-            siswa.update(data, {where: {
-             nis: req.body.nis   
-            }})
-            .then((result) => {
-                console.log(result[0]);
-                res.json({
-                    count: result.length,
-                    message: "data has been updated"
-                })
-            })
-            .catch(e => {
-                res.json({
-                    message: e.message
-                })
-            })
-        }
+        res.json({
+            data: result
+        })
     })
     .catch(e => {
         res.json({
@@ -171,10 +381,10 @@ app.post("/nis", (req, res) => {
 })
 
 //endpoint untuk menyimpan data siswa, METHOD POST, function create
-app.post("/", Auth, verifyRoles("admin", "super admin", "admin ranting", "pengurus cabang", "pengurus ranting", "penguji cabang", "penguji ranting"), (req,res) =>{    
+app.post("/", Auth, verifyRoles("admin", "super admin", "admin ranting", "admin cabang", "pengurus cabang", "pengurus ranting", "penguji cabang", "penguji ranting"), (req,res) =>{    
     let data ={
         id_event: req.body.id_event,
-        nis: req.body.nis,
+        nomor_urut: req.body.nomor_urut,
         name: req.body.name,
         id_role: req.body.id_role,
         jenis_kelamin: req.body.jenis_kelamin,
@@ -207,21 +417,27 @@ app.post('/csv', Auth, verifyRoles('admin', 'super admin', 'admin ranting', 'pen
       .on('end', () => {
         const promises = []
         for (const data of results) {
-            console.log("data")
-            console.log(data)
-          const newData = {
-            id_event: req.body.id_event,
-            nis: data.nis,
-            name: data.name,
-            id_role: data.id_role,
-            jenis_kelamin: data.jenis_kelamin,
-            jenis_latihan: data.jenis_latihan,
-            peserta: data.jenis_latihan + ' - ' + data.jenis_kelamin,
-            tipe_ukt: req.body.tipe_ukt,
-            id_ranting: data.id_ranting,
-            rayon: data.rayon,
-            tingkatan: data.tingkatan
-          }
+            let dataKelamin = ''
+            if(data.jenisKelamin = "L"){
+                dataKelamin = 'Laki laki'
+            } else if(data.jeniskelamin = "P"){
+                dataKelamin = 'Perempuan'
+            }
+            const idRole = "siswa"
+            const newData = {
+                id_event: req.body.id_event,
+                nomor_urut: data.nomorUrut,
+                name: data.name,
+                id_role: idRole,
+                jenis_kelamin: dataKelamin,
+                jenis_latihan: data.jenisLatihan,
+                peserta: data.jenisLatihan + ' - ' + dataKelamin,
+                tipe_ukt: req.body.tipe_ukt,
+                id_ranting: data.ranting,
+                rayon: data.rayon,
+                tingkatan: data.tingkatan
+            }
+            console.log(newData);
           promises.push(siswa.create(newData))
         }
   
@@ -244,13 +460,13 @@ app.post('/csv', Auth, verifyRoles('admin', 'super admin', 'admin ranting', 'pen
   })
 
 //endpoint untuk meng UPDATE data siswa, METHOD: PUT, fuction: UPDATE
-app.put("/:id", Auth, verifyRoles("admin", "super admin", "admin ranting", "pengurus cabang", "pengurus ranting", "penguji cabang", "penguji ranting"), (req,res) => {
+app.put("/:id", Auth, verifyRoles("admin", "super admin", "admin ranting", "admin cabang", "pengurus cabang", "pengurus ranting", "penguji cabang", "penguji ranting"), (req,res) => {
     let param = {
         id_siswa : req.params.id
     }
     let data ={
         id_event: req.body.id_event,
-        nis: req.body.nis,
+        nomor_urut: req.body.nomor_urut,
         name: req.body.name,
         id_role: req.body.id_role,
         jenis_kelamin: req.body.jenis_kelamin,
@@ -275,7 +491,7 @@ app.put("/:id", Auth, verifyRoles("admin", "super admin", "admin ranting", "peng
 })
 
 //endpoint untuk menghapus data siswa,METHOD: DELETE, function: destroy
-app.delete("/:id", Auth, verifyRoles("admin", "super admin", "admin ranting", "pengurus cabang", "pengurus ranting", "penguji cabang", "penguji ranting"), (req,res) => {
+app.delete("/:id", Auth, verifyRoles("admin", "super admin", "admin ranting", "admin cabang", "pengurus cabang", "pengurus ranting", "penguji cabang", "penguji ranting"), (req,res) => {
     let param = {
         id_siswa : req.params.id
     }
@@ -288,6 +504,47 @@ app.delete("/:id", Auth, verifyRoles("admin", "super admin", "admin ranting", "p
     .catch(error => {
         res.json({
             message: error.message
+        })
+    })
+})
+
+app.post("/auth", (req, res) => {
+    siswa.findOne({
+        where: {
+            nomor_urut: req.body.nomor_urut
+        },
+    })
+    .then(async (result) => {
+        if (result) {
+            //set payload from data
+            console.log(result)
+            const data = result
+            if (result.id_role === "siswa") {
+                const idUser = result.id_user;
+                const role = result.id_role;
+    
+                // generate token based on payload and secret_key
+                let localToken = jwt.sign({ idUser, role }, process.env.ACCESS_TOKEN_SECRET);
+                res.json({
+                  logged: true,
+                  data: data,
+                  token: localToken,
+                });
+
+            } else {
+              res.status(404).json({ msg: "Kamu Bukan Penguji" });
+            }
+          } else {
+            //tidak ditemukan
+            res.json({
+              logged: false,
+              message: "Invalid username or password",
+            });
+          }
+    })
+    .catch(e => {
+        res.json({
+            message: e.message
         })
     })
 })
