@@ -4,12 +4,15 @@ import Link from 'next/link'
 import { globalState } from '@/context/context';
 // import Modal_foto from './components/modal_foto';
 const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
+const IMAGE_URL = process.env.NEXT_PUBLIC_IMAGE_URL;
 
 const edit_profile = () => {
 
     // state password
     const [passwordType, setPassworrdType] = useState ('password')
     const [passwordInput, setPasswordInput] = useState ('')
+    const [editPassword, setEditPassword] = useState(false)
+
 
     // state modal
     const [showModalFoto, setShowModalFoto] = useState (false)
@@ -59,31 +62,27 @@ const edit_profile = () => {
 
     // function handle edit
     const handleSave = async (e) => {
-        e.preventDefault ()
-        const token = localStorage.getItem ('tokenPenguji')
+        e.preventDefault()
+        const token = localStorage.getItem('tokenPenguji')
 
         let form = new FormData()
 
-        form.append ('no_wa', noWa)
-        form.append ('username', username)
-        form.append ('password', password)
-        form.append ('id_role', role)
-        form.append ('foto', foto)
-
-        await axios.put (BASE_URL + `penguji/${idPenguji}`, form, { headers: { Authorization: `Bearer ${token}`}})
-        .then (res => {
-            axios.get (BASE_URL + `penguji/${idPenguji}`, { headers: { Authorization: `Bearer ${token}`}})
-            .then (res => {
-                localStorage.setItem (`penguji`, JSON.stringify (res.data.data[0]))
+        form.append('no_wa', noWa)  
+        form.append('username', username) 
+        {editPassword
+        ? form.append('password', password)
+        : []
+        }
+        form.append('id_role', role) 
+        form.append('foto', foto) 
+        await axios.put(BASE_URL + `penguji/${idPenguji}`, form, { headers: { Authorization: `Bearer ${token}` } })
+            .then(res => {
+                console.log(res.data.data);
+                localStorage.setItem(`penguji`, JSON.stringify(res.data.data))
             })
-            .catch (err => {
+            .catch(err => {
                 console.log(err.message);
             })
-            console.log('berhasil');
-        })
-        .catch (err => {
-            console.log(err.message);
-        })
     }
 
     useEffect (() => {
@@ -114,7 +113,7 @@ const edit_profile = () => {
 
                         {/* Title */}
                         <div className="flex justify-center items-center">
-                        <   h1 className='text-white font-semibold text-xl'>PSHT Cabang Trenggalek</h1>
+                            <   h1 className='text-white font-semibold text-xl'>PSHT Cabang Trenggalek</h1>
                         </div>
                     </div>
 
@@ -129,7 +128,7 @@ const edit_profile = () => {
                             {/* wrapper foto profile */}
                             <div className="flex justify-center">
                                 <button onClick={() => editFoto ()} className="bg-gradient-to-r from-[#16D4FC] to-[#9A4BE9] w-40 h-40 rounded-full p-1 group">
-                                    <img className='group-hover:hidden object-cover h-full w-full rounded-full' src={`http://localhost:8080/image/` + dataPenguji.foto} alt="" />
+                                    <img className='group-hover:hidden object-cover h-full w-full rounded-full' src={IMAGE_URL + dataPenguji.foto} alt="" />
                                     <div className="hidden rounded-full w-full h-full group-hover:flex flex-col justify-center items-center gap-y-2">
                                         <img className='object-cover w-full h-full rounded-full' src={`http://localhost:8080/image/` + dataPenguji.foto} alt="" />
                                         <svg className='absolute' width="28" height="26" viewBox="0 0 28 26" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -172,17 +171,36 @@ const edit_profile = () => {
                                 </div>
 
                                 {/* wrapper form password */}
-                                <div className="flex flex-col gap-y-2">
-                                    <div className="flex justify-between">
-                                        <label className='text-purple text-lg tracking-wider' htmlFor="">Password</label>
-                                        <button onClick={() => showPassword()}>
-                                            <svg width="25" height="23" viewBox="0 0 34 23" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                <path d="M17 6.9C18.2296 6.9 19.4089 7.38464 20.2784 8.24731C21.1479 9.10998 21.6364 10.28 21.6364 11.5C21.6364 12.72 21.1479 13.89 20.2784 14.7527C19.4089 15.6154 18.2296 16.1 17 16.1C15.7704 16.1 14.5911 15.6154 13.7216 14.7527C12.8521 13.89 12.3636 12.72 12.3636 11.5C12.3636 10.28 12.8521 9.10998 13.7216 8.24731C14.5911 7.38464 15.7704 6.9 17 6.9ZM17 0C24.7273 0 31.3264 4.76867 34 11.5C31.3264 18.2313 24.7273 23 17 23C9.27273 23 2.67364 18.2313 0 11.5C2.67364 4.76867 9.27273 0 17 0ZM3.36909 11.5C4.61821 14.0305 6.55784 16.1625 8.96747 17.6537C11.3771 19.1448 14.1601 19.9354 17 19.9354C19.8399 19.9354 22.6229 19.1448 25.0325 17.6537C27.4422 16.1625 29.3818 14.0305 30.6309 11.5C29.3818 8.96953 27.4422 6.83752 25.0325 5.34634C22.6229 3.85517 19.8399 3.06464 17 3.06464C14.1601 3.06464 11.3771 3.85517 8.96747 5.34634C6.55784 6.83752 4.61821 8.96953 3.36909 11.5Z" fill="white"/>
-                                            </svg>
-                                        </button>
-                                    </div>
-                                    <input className='rounded-md bg-navy p-2 text-white focus:outline-purple w-full' type={passwordType} value={password} onChange={(e) => setPassword(e.target.value)} autoComplete='password' />
-                                </div>
+                                {
+                                    editPassword
+                                        ?
+                                        <>
+                                            {/* wrapper form password */}
+                                            <div className="flex flex-col gap-y-2">
+                                                <div className="flex justify-between">
+                                                    <label className='text-purple text-lg tracking-wider' htmlFor="">Password</label>
+                                                    <button onClick={() => showPassword()}>
+                                                        <svg width="25" height="23" viewBox="0 0 34 23" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                            <path d="M17 6.9C18.2296 6.9 19.4089 7.38464 20.2784 8.24731C21.1479 9.10998 21.6364 10.28 21.6364 11.5C21.6364 12.72 21.1479 13.89 20.2784 14.7527C19.4089 15.6154 18.2296 16.1 17 16.1C15.7704 16.1 14.5911 15.6154 13.7216 14.7527C12.8521 13.89 12.3636 12.72 12.3636 11.5C12.3636 10.28 12.8521 9.10998 13.7216 8.24731C14.5911 7.38464 15.7704 6.9 17 6.9ZM17 0C24.7273 0 31.3264 4.76867 34 11.5C31.3264 18.2313 24.7273 23 17 23C9.27273 23 2.67364 18.2313 0 11.5C2.67364 4.76867 9.27273 0 17 0ZM3.36909 11.5C4.61821 14.0305 6.55784 16.1625 8.96747 17.6537C11.3771 19.1448 14.1601 19.9354 17 19.9354C19.8399 19.9354 22.6229 19.1448 25.0325 17.6537C27.4422 16.1625 29.3818 14.0305 30.6309 11.5C29.3818 8.96953 27.4422 6.83752 25.0325 5.34634C22.6229 3.85517 19.8399 3.06464 17 3.06464C14.1601 3.06464 11.3771 3.85517 8.96747 5.34634C6.55784 6.83752 4.61821 8.96953 3.36909 11.5Z" fill="white" />
+                                                        </svg>
+                                                    </button>
+                                                </div>
+                                                <input className='rounded-md bg-navy p-2 text-white focus:outline-purple w-full' type={passwordType} onChange={(e) => setPassword(e.target.value)} autoComplete='password' />
+                                            </div>
+                                            {/* button show password */}
+                                            <div className="flex justify-start">
+                                                <button className='bg-purple hover:bg-white text-white hover:text-purple duration-300 px-5 py-2 rounded-md' onClick={(e) => setEditPassword(false)}>Close Password</button>
+                                            </div>
+                                        </>
+
+                                        :
+                                        <>
+                                            {/* button show password */}
+                                            <div className="flex justify-end">
+                                                <button className='bg-purple hover:bg-white text-white hover:text-purple duration-300 px-5 py-2 rounded-md' onClick={(e) => setEditPassword(true)}>Ganti Password</button>
+                                            </div>
+                                        </>
+                                }
 
                                 {/* button submit */}
                                 <div className="flex justify-end">
@@ -194,7 +212,7 @@ const edit_profile = () => {
                     {/* akhir konten utama */}
                 </div>
                 {/* akhir wrapper konten utama */}
-            </div>  
+            </div>
 
             {/* memanggil modal */}
             {/* <globalState.Provider value={{ showModalFoto, setShowModalFoto, dataAdmin, setDataAdmin, foto, setFoto, idAdmin }}>
