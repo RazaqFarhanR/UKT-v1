@@ -2,14 +2,19 @@ import React, { useContext, useEffect, useState } from 'react'
 import { globalState } from '@/context/context'
 import { useRouter } from 'next/router'
 import Link from 'next/link'
+const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
+const IMAGE_URL = process.env.NEXT_PUBLIC_IMAGE_URL;
+
 
 const sidebar = () => {
 
     // state role
     const [role, setRole] = useState ([])
+    const [dataAdmin, setDataAdmin] = useState([])
 
     const getRole = () => {
         const role = JSON.parse(localStorage.getItem ('admin'))
+        setDataAdmin (role)
         setRole (role)
     }
 
@@ -39,13 +44,13 @@ const sidebar = () => {
 
                     {/* photo profile */}
                     <div className={`${showSideBar ? 'block' : 'hidden'} h-fit rounded-full bg-gradient-to-r from-[#16D4FC] to-[#9A4BE9] p-0.5 mb-3`}>
-                        <img className='object-cover rounded-full w-28' src="/images/profile.jpeg" alt="" />
+                        <img className='object-cover rounded-full w-28 h-28' src={IMAGE_URL + dataAdmin.foto} alt="" />
                     </div>
 
                     {/* username and name */}
                     <div className={`${showSideBar ? 'block' : 'hidden'} text-center mb-5`}>
-                        <h1 className='text-white text-xl font-medium tracking-wider'>{splitLoc}</h1>
-                        <span className='text-green text-sm'>japir love rapip</span>
+                        <h1 className='text-white text-xl font-medium tracking-wider'>{dataAdmin.username}</h1>
+                        <span className='text-green text-sm'>{dataAdmin.name}</span>
                     </div>
 
                     {/* wrapper navigation button */}
@@ -220,7 +225,7 @@ const sidebar = () => {
 
                         {/* navigation button UKT */}
                         <div className={`${showSideBar ? '' : 'space-y-3'}`}>
-                            <h1 className='text-gray mb-2'>UKT</h1>
+                            <h1 className='text-gray mb-2'>Rekap</h1>
 
                             {/* ---------- UKT JAMBON ---------- */}
                             <Link href={'/admin/ukt/ukt_jambon'} className={splitLoc[1] === 'ukt_jambon' ? 
