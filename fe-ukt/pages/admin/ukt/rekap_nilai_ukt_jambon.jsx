@@ -95,12 +95,12 @@ const rekap_nilai_ukt_jambon = () => {
                                         <td className='border-b-2 py-3 border-gray'>{item.siswa_ukt_siswa.tingkatan}</td>
                                         <td className='border-b-2 border-gray'>{item.siswa_ukt_siswa.name}</td>
                                         <td className='border-b-2 border-gray'>{item.siswa_ukt_siswa.siswa_ranting.name}</td>
-                                        <td className='border-b-2 border-gray'>{item.keshan}</td>
-                                        <td className='border-b-2 border-gray'>{item.senam}</td>
-                                        <td className='border-b-2 border-gray'>{item.jurus}</td>
-                                        <td className='border-b-2 border-gray'>{item.fisik}</td>
-                                        <td className='border-b-2 border-gray'>{item.teknik}</td>
-                                        <td className='border-b-2 border-gray'>{item.sambung}</td>
+                                        <td className='border-b-2 border-gray'>{(item.keshan)}</td>
+                                        <td className='border-b-2 border-gray'>{(item.senam)?.toFixed(1)}</td>
+                                        <td className='border-b-2 border-gray'>{(item.jurus)?.toFixed(1)}</td>
+                                        <td className='border-b-2 border-gray'>{(item.fisik)?.toFixed(1)}</td>
+                                        <td className='border-b-2 border-gray'>{(item.teknik)?.toFixed(1)}</td>
+                                        <td className='border-b-2 border-gray'>{(item.sambung)?.toFixed(1)}</td>
                                         <td className='border-b-2 border-gray'>{((item.keshan + item.senam + item.jurus + item.fisik + item.teknik + item.sambung) / 6).toFixed(2)}</td>
                                     </tr>
                                     ))}

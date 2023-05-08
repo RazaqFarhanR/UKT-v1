@@ -10,7 +10,7 @@ const fisik = (props) => {
         const token = localStorage.getItem('token')
         const event = JSON.parse(localStorage.getItem('event'))
 
-        axios.get(BASE_URL + `fisik/ukt/${props.data.tipe_ukt}`, { headers: { Authorization: `Bearer ${token}` } })
+        axios.get(BASE_URL + `fisik/ukt/${props.data.tipe_ukt}/${event.id_event}`, { headers: { Authorization: `Bearer ${token}` } })
             .then(res => {
                 console.log(res.data.data);
                 setDataFisik(res.data.data)
@@ -54,7 +54,7 @@ const fisik = (props) => {
                                         <td className='border-b-2 text-white py-3 border-gray'>{index + 1}</td>
                                         <td className='border-b-2 text-white border-gray '>{item.siswa_fisik.name}</td>
                                         <td className='border-b-2 text-white border-gray '>{item.penguji_fisik.name}</td>
-                                        <td className='border-b-2 text-white border-gray '>{(item.mft).toFixed(2)}</td>
+                                        <td className='border-b-2 text-white border-gray '>{(item.mft).toFixed(1)}</td>
                                         <td className='border-b-2 text-white border-gray '>{(item.push_up).toFixed(2)}</td>
                                         <td className='border-b-2 text-white border-gray '>{item.spir_perut_atas}</td>
                                         <td className='border-b-2 text-white border-gray '>{item.spir_perut_bawah}</td>

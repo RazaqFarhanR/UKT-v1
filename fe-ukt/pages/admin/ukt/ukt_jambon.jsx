@@ -46,7 +46,7 @@ const ukt_jambon = () => {
         setAction ('insert')
         setName ('')
         setDate ('')
-        setTipe ('UKT Jambon')
+        setTipe ('ukt_jambon')
     }
 
     // function modal edit
@@ -56,7 +56,7 @@ const ukt_jambon = () => {
         setIdEvent (selectedItem.id_event)
         setName (selectedItem.name)
         setDate (selectedItem.tanggal)
-        setTipe ('UKT Jambon')
+        setTipe ('ukt_jambon')
     }
 
     // function modal delete

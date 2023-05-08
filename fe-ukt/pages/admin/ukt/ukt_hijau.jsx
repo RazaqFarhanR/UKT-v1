@@ -46,7 +46,7 @@ const ukt_hijau = () => {
         setAction ('insert')
         setName ('')
         setDate ('')
-        setTipe ('UKT Hijau')
+        setTipe ('ukt_hijau')
     }
 
     // function modal edit
@@ -56,7 +56,7 @@ const ukt_hijau = () => {
         setIdEvent (selectedItem.id_event)
         setName (selectedItem.name)
         setDate (selectedItem.tanggal)
-        setTipe ('UKT Hijau')
+        setTipe ('ukt_hijau')
     }
 
     // function modal delete

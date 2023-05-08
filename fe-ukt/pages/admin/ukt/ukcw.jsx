@@ -46,7 +46,7 @@ const ukcw = () => {
         setAction ('insert')
         setName ('')
         setDate ('')
-        setTipe ('UKCW')
+        setTipe ('ukcw')
     }
 
     // function modal edit
@@ -56,7 +56,7 @@ const ukcw = () => {
         setIdEvent (selectedItem.id_event)
         setName (selectedItem.name)
         setDate (selectedItem.date)
-        setTipe ('UKCW')
+        setTipe ('ukcw')
     }
 
     // function modal delete

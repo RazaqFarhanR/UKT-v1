@@ -20,20 +20,30 @@ const jurus = (props) => {
     }
 
     function ThComponent({ items }) {
-        let limit = items.length + 1
-        let banding = 1;
-        banding < limit;
-        return items.map((item) => (
-            <th key={banding}>{banding++}</th>
+        return items.map((item, index) => (
+            <th key={index + 1}>{item.jurus.name}</th>
         ));
     }
 
     function TdComponent({ items }) {
         return items.map((item, index) => (
-            <td key={index + 1} className='px-3 border-b-2 border-gray'>{item.jurus.name}
-                <div className={item.predikat == true
-                    ? "font-semibold bg-purple rounded-md text-white py-1.5 px-12"
-                    : "font-semibold bg-red rounded-md text-white py-1.5 px-12"}>{item.predikat === true ? "benar" : "salah"}</div></td>
+            <td key={index + 1} className='px-3 border-b-2 border-gray'>
+                {item.predikat === true && (
+                    <div className="font-semibold bg-purple rounded-md text-white py-1.5 px-12">
+                        benar
+                    </div>
+                )}
+                {item.predikat === false && (
+                    <div className="font-semibold bg-red rounded-md text-white py-1.5 px-12">
+                        salah
+                    </div>
+                )}
+                {item.predikat === null && (
+                    <div className="font-semibold bg-navy border-4 border-purple rounded-md text-white py-1.5 px-12">
+                        kosong
+                    </div>
+                )}        
+            </td>
         ));
     }
     useEffect(() => {
@@ -52,14 +62,14 @@ const jurus = (props) => {
                             <tr className='text-white'>
                                 <th className='py-3 w-5 px-5'>No</th>
                                 <th className='w-30 px-20'>Nama</th>
-                                {dataJurus.slice(0, 1).map((item, index) => (
+                                {dataJurus?.slice(0, 1).map((item, index) => (
                                     <ThComponent items={(item.siswa_jurus_detail)} key={index + 1} />
                                 ))}
                             </tr>
 
                         </thead>
                         <tbody>
-                            {dataJurus.map((item, index) => (
+                            {dataJurus?.map((item, index) => (
                                 <>
                                     <tr className='text-green text-center' key={item.id_jurus_detail}>
                                         <td className='border-b-2 text-white py-3 border-gray'>{index + 1}</td>
