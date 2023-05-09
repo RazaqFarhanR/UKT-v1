@@ -1,4 +1,8 @@
 import React from 'react'
+import Sidebar from '../admin/components/sidebar'
+import Header from '../admin/components/header'
+import Footer from '../admin/components/footer'
+import Link from 'next/link'
 
 const main_layout_detail = () => {
     return (

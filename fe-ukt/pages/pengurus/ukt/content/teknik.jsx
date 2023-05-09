@@ -5,12 +5,12 @@ const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
 
 const teknik = (props) => {
     const [dataTeknik, setDataTeknik] = useState([])
-    console.log(props.data.tipe_ukt);
+    console.log(props.data?.tipe_ukt);
     const getDataTeknik = () => {
         const token = localStorage.getItem('token')
         const event = JSON.parse(localStorage.getItem('event'))
 
-        axios.get(BASE_URL + `teknik_detail/ukt/${props.data.tipe_ukt}/${event.id_event}`, { headers: { Authorization: `Bearer ${token}` } })
+        axios.get(BASE_URL + `teknik_detail/ukt/${props.data?.tipe_ukt}/${event.id_event}`, { headers: { Authorization: `Bearer ${token}` } })
             .then(res => {
                 console.log(res.data.data[0].siswa_teknik_detail.length);
                 setDataTeknik(res.data.data)

@@ -5,12 +5,12 @@ const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
 
 const sambung = (props) => {
     const [dataSambung, setDatasambung] = useState([])
-    console.log(props.data.tipe_ukt);
+    console.log(props.data?.tipe_ukt);
     const getDataSambung = () => {
         const token = localStorage.getItem('token')
         const event = JSON.parse(localStorage.getItem('event'))
 
-        axios.get(BASE_URL + `sambung/ukt/${props.data.tipe_ukt}/${event.id_event}`, { headers: { Authorization: `Bearer ${token}` } })
+        axios.get(BASE_URL + `sambung/ukt/${props.data?.tipe_ukt}/${event.id_event}`, { headers: { Authorization: `Bearer ${token}` } })
             .then(res => {
                 console.log(res.data.data);
                 setDatasambung(res.data.data)

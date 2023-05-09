@@ -5,13 +5,13 @@ const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
 
 const senam = (props) => {
     const [dataSenam, setDataSenam] = useState([])
-    console.log(props.data.tipe_ukt);
+    console.log(props.data?.tipe_ukt);
     const getDataSenam = () => {
         const event = JSON.parse (localStorage.getItem('event'))
         const token = localStorage.getItem('token')
 
         console.log(event);
-        axios.get(BASE_URL + `senam_detail/ukt/${props.data.tipe_ukt}`, { headers: { Authorization: `Bearer ${token}` } })
+        axios.get(BASE_URL + `senam_detail/ukt/${props.data?.tipe_ukt}`, { headers: { Authorization: `Bearer ${token}` } })
             .then(res => {
                 console.log(res.data.data[0].siswa_senam_detail.length);
                 setDataSenam(res.data.data)

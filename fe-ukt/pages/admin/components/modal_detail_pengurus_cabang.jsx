@@ -1,6 +1,7 @@
-import React from 'react'
+import React, { useState } from 'react'
 
 const modal_detail_pengurus_cabang = () => {
+    const [showModalDetailPengurusCabang, setShowModalPengurusCabang] = useState()
     return (
         <>
         {showModalDetailPengurusCabang ? (

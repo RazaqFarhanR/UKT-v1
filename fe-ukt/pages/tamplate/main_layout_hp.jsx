@@ -1,4 +1,5 @@
 import React from 'react'
+import Header from '../admin/components/header'
 
 const main_layout_hp = () => {
     return (

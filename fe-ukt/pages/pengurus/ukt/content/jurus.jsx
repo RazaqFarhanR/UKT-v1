@@ -5,12 +5,12 @@ const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
 
 const jurus = (props) => {
     const [dataJurus, setDataJurus] = useState([])
-    console.log(props.data.tipe_ukt);
+    console.log(props.data?.tipe_ukt);
     const getDataJurus = () => {
         const token = localStorage.getItem('token')
         const event = JSON.parse(localStorage.getItem('event'))
 
-        axios.get(BASE_URL + `jurus_detail/ukt/${props.data.tipe_ukt}/${event.id_event}`, { headers: { Authorization: `Bearer ${token}` } })
+        axios.get(BASE_URL + `jurus_detail/ukt/${props.data?.tipe_ukt}/${event.id_event}`, { headers: { Authorization: `Bearer ${token}` } })
             .then(res => {
                 console.log(res.data.data[0].siswa_jurus_detail.length);
                 setDataJurus(res.data.data)

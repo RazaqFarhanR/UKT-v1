@@ -5,12 +5,12 @@ const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
 
 const fisik = (props) => {
     const [dataFisik, setDataFisik] = useState([])
-    console.log(props.data.tipe_ukt);
+    console.log(props.data?.tipe_ukt);
     const getDataFisik = () => {
         const token = localStorage.getItem('token')
         const event = JSON.parse(localStorage.getItem('event'))
 
-        axios.get(BASE_URL + `fisik/ukt/${props.data.tipe_ukt}`, { headers: { Authorization: `Bearer ${token}` } })
+        axios.get(BASE_URL + `fisik/ukt/${props.data?.tipe_ukt}`, { headers: { Authorization: `Bearer ${token}` } })
             .then(res => {
                 console.log(res.data.data);
                 setDataFisik(res.data.data)
