@@ -27,10 +27,10 @@ module.exports = {
         }
       },
       id_ranting: {
-        type: Sequelize.INTEGER
+        type: Sequelize.STRING
       },
       id_cabang: {
-        type: Sequelize.INTEGER,
+        type: Sequelize.STRING,
         allowNull: true,
         references: {
           model: "cabang",
