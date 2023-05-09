@@ -1,6 +1,81 @@
-import React from 'react'
+import axios from 'axios'
+import { useRouter } from 'next/router'
+import React, { useState } from 'react'
+const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
 
 const loginPage = () => {
+
+    const router = useRouter()
+
+    const [nis, setNis] = useState();
+    const [nomorUrut, setNomorUrut] = useState();
+
+    const Auth = () => {
+
+        let form = {
+            nis: nis,
+            nomor_urut: nomorUrut
+        }
+
+        console.log(form)
+
+        axios.post(BASE_URL + `siswa/auth`, form)
+            .then(res => {
+                if (res.data.logged) {
+                    let dataSiswa = res.data.data
+                    let token = res.data.token
+
+                    const uktSiswa = localStorage.getItem('dataUktSiswa')
+                    const data = {
+                        tipe_ukt: dataSiswa.tipe_ukt,
+                        id_siswa: dataSiswa.id_siswa,
+                        id_event: dataSiswa.id_event,
+                        rayon: dataSiswa.rayon
+                    }
+                    if (!uktSiswa) {
+                        "south side"
+                        axios.post(BASE_URL + `ukt_siswa`, data, { headers: { Authorization: `Bearer ${token}` } })
+                            .then(res => {
+                                console.log(res.data.data)
+                                localStorage.setItem('dataUktSiswa', JSON.stringify(res.data.data))
+                            })
+                    } else if (uktSiswa) {
+                        if (data.id_siswa == uktSiswa.id_siswa) {
+                            "id siswa item sama dengan yang di lokal"
+
+                        } else if (data.id_siswa != uktSiswa.id_siswa) {
+                            axios.get(BASE_URL + `ukt_siswa/siswa/${data.id_siswa}`, { headers: { Authorization: `Bearer ${token}` } })
+                                .then(res => {
+                                    console.log("ngecek apakah item id siswa punya sudah ukt siswa")
+                                    if (res.data.data != null) {
+                                        console.log("ternyata udah punya")
+                                        localStorage.setItem('dataUktSiswa', JSON.stringify(res.data.data))
+                                    } else {
+                                        console.log("ternyata belum punya")
+                                        axios.post(BASE_URL + `ukt_siswa`, data, { headers: { Authorization: `Bearer ${token}` } })
+                                            .then(res => {
+                                                localStorage.setItem('dataUktSiswa', JSON.stringify(res.data.data))
+                                            })
+                                    }
+                                })
+                                .catch(err => {
+                                    console.log(err.message);
+                                })
+
+                        }
+                    }
+
+                    localStorage.setItem('dataSiswa', JSON.stringify(dataSiswa))
+                    localStorage.setItem('tokenSiswa', (token))
+                    router.push('./ujian')
+                } else {
+                    window.alert(res.data.message)
+                }
+            })
+            .catch(err => {
+                console.log(err.message);
+            })
+    }
     return (
         <>
             <div className="font-lato">
@@ -20,32 +95,31 @@ const loginPage = () => {
 
                             <h1 className='text-lg tracking-wide text-green mb-5'>Login Siswa</h1>
 
-                            {/* wrapper username */}
+                            {/* wrapper nis */}
                             <div className="hover:bg-gradient-to-r from-[#16D4FC] to-[#9A4BE9] rounded-md p-0.5 w-full mb-4">
                                 <div className="bg-darkBlue rounded-md p-2 flex items-center gap-x-3">
                                     <svg width="23" height="23" viewBox="0 0 30 30" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                        <path d="M25 26.25V23.75C25 22.4239 24.4732 21.1521 23.5355 20.2145C22.5979 19.2768 21.3261 18.75 20 18.75H10C8.67392 18.75 7.40215 19.2768 6.46447 20.2145C5.52678 21.1521 5 22.4239 5 23.75V26.25" stroke="white" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"/>
-                                        <path d="M15 13.75C17.7614 13.75 20 11.5114 20 8.75C20 5.98858 17.7614 3.75 15 3.75C12.2386 3.75 10 5.98858 10 8.75C10 11.5114 12.2386 13.75 15 13.75Z" stroke="white" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"/>
+                                        <path d="M25 26.25V23.75C25 22.4239 24.4732 21.1521 23.5355 20.2145C22.5979 19.2768 21.3261 18.75 20 18.75H10C8.67392 18.75 7.40215 19.2768 6.46447 20.2145C5.52678 21.1521 5 22.4239 5 23.75V26.25" stroke="white" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" />
+                                        <path d="M15 13.75C17.7614 13.75 20 11.5114 20 8.75C20 5.98858 17.7614 3.75 15 3.75C12.2386 3.75 10 5.98858 10 8.75C10 11.5114 12.2386 13.75 15 13.75Z" stroke="white" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" />
                                     </svg>
-                                    <input className='w-full px-2 bg-darkBlue focus:outline-none border-b-2 border-gray focus:border-purple transition ease-in-out duration-300' placeholder='Username' type="text" />
+                                    <input className='w-full px-2 bg-darkBlue focus:outline-none border-b-2 border-gray focus:border-purple transition ease-in-out duration-300' placeholder='NIS' type="text" onChange={(e) => setNis(e.target.value)} />
                                 </div>
                             </div>
 
-                            {/* wrapper password */}
+                            {/* wrapper nomor urut */}
                             <div className="hover:bg-gradient-to-r from-[#16D4FC] to-[#9A4BE9] rounded-md p-0.5 w-full mb-4">
                                 <div className="bg-darkBlue rounded-md p-2 flex items-center gap-x-3">
                                     <svg width="23" height="23" viewBox="0 0 30 30" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                        <path d="M23.75 13.75H6.25C4.86929 13.75 3.75 14.8693 3.75 16.25V25C3.75 26.3807 4.86929 27.5 6.25 27.5H23.75C25.1307 27.5 26.25 26.3807 26.25 25V16.25C26.25 14.8693 25.1307 13.75 23.75 13.75Z" stroke="white" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"/>
-                                        <path d="M8.75 13.75V8.75C8.75 7.0924 9.40848 5.50269 10.5806 4.33058C11.7527 3.15848 13.3424 2.5 15 2.5C16.6576 2.5 18.2473 3.15848 19.4194 4.33058C20.5915 5.50269 21.25 7.0924 21.25 8.75V13.75" stroke="white" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"/>
+                                        <path d="M25 26.25V23.75C25 22.4239 24.4732 21.1521 23.5355 20.2145C22.5979 19.2768 21.3261 18.75 20 18.75H10C8.67392 18.75 7.40215 19.2768 6.46447 20.2145C5.52678 21.1521 5 22.4239 5 23.75V26.25" stroke="white" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" />
+                                        <path d="M15 13.75C17.7614 13.75 20 11.5114 20 8.75C20 5.98858 17.7614 3.75 15 3.75C12.2386 3.75 10 5.98858 10 8.75C10 11.5114 12.2386 13.75 15 13.75Z" stroke="white" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" />
                                     </svg>
-                                    <input className='w-full px-2 bg-darkBlue focus:outline-none border-b-2 border-gray focus:border-purple transition ease-in-out duration-300' placeholder='Password' type="text" />
+                                    <input className='w-full px-2 bg-darkBlue focus:outline-none border-b-2 border-gray focus:border-purple transition ease-in-out duration-300' placeholder='Nomor Urut' type="text" onChange={(e) => setNomorUrut(e.target.value)} />
                                 </div>
                             </div>
 
-                            {/* forget password */}
-                            <button className='text-[15px] tracking-wider text-gray hover:text-white duration-300 transition ease-in-out mb-5'>Forget Password?</button>
-
-                            <button className='bg-purple py-1.5 w-full rounded-md text-lg font-semibold hover:scale-105 transition ease-in-out duration-300'>Login</button>
+                            <button className='bg-purple py-1.5 w-full rounded-md text-lg font-semibold hover:scale-105 transition ease-in-out duration-300'
+                                onClick={() => Auth()}
+                            >Login</button>
                         </div>
                     </div>
                 </div>
