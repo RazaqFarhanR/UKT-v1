@@ -52,11 +52,11 @@ module.exports = (sequelize, DataTypes) => {
     name: DataTypes.STRING,
     id_role: DataTypes.STRING,
     id_ranting: {
-      type: DataTypes.INTEGER,
+      type: DataTypes.STRING,
       allowNull: true
     },
     id_cabang: {
-      type: DataTypes.INTEGER,
+      type: DataTypes.STRING,
       allowNull: true
     },
     username: DataTypes.STRING,

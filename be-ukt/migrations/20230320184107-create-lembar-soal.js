@@ -10,7 +10,7 @@ module.exports = {
         type: Sequelize.STRING
       },
       id_ranting: {
-        type: Sequelize.INTEGER,
+        type: Sequelize.STRING,
         allowNull: false,
         references: {
           model: "ranting",
@@ -19,6 +19,9 @@ module.exports = {
       },
       tipe_ukt: {
         type: Sequelize.ENUM('UKT Jambon','UKT Hijau','UKT Putih','UKCW')
+      },
+      waktu_pengerjaan: {
+        type: Sequelize.INTEGER
       },
       createdAt: {
         allowNull: false,
