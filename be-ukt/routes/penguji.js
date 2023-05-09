@@ -293,10 +293,10 @@ app.put("/:id", Auth, verifyRoles("admin", "super admin", "admin ranting", "admi
                 });
               })
               .catch((error) => {
-          res.json({
+                res.json({
                   message: error.message,
                 });
-          });
+              });
         })
         .catch((error) => {
           res.json({
