@@ -1,10 +1,17 @@
 import { globalState } from '@/context/context'
-import React, { useContext } from 'react'
+import React, { useContext, useState } from 'react'
+import { useRouter } from 'next/router'
 
-const modal_soal_keSHan = () => {
+const modal_soal_keSHan = (props) => {
 
     // state modal
     const {showModalSoalKeSHan, setShowModalSoalKeSHan} = useContext (globalState)
+    // const {pertanyaan, setPertanyaan} = useContext (globalState)
+    // const {opsi, setOpsi} = useContext (globalState)
+    // const {opsi1, setOpsi1} = useContext (globalState)
+    // const {opsi2, setOpsi2} = useContext (globalState)
+    // const {opsi3, setOpsi3} = useContext (globalState)
+    // const {opsi4, setOpsi4} = useContext (globalState)
 
     return (
         <>
@@ -20,7 +27,7 @@ const modal_soal_keSHan = () => {
                             {/* Modal header */}
                             <div className="flex justify-center p-4">
                                 <h1 className="text-2xl font-semibold text-gray-900 text-center">
-                                    Tambah Soal UKT Jambon
+                                    Tambah Soal {props.tipe}
                                 </h1>
                                 <button onClick={() => setShowModalSoalKeSHan(false)} type="button" className="p-1.5 inline-flex items-center absolute right-5">
                                     <svg className="w-7 h-7 fill-white hover:fill-purple duration-300" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
@@ -30,57 +37,95 @@ const modal_soal_keSHan = () => {
                                 </button>
                             </div>
 
-                            {/* Modal body */}
-                            <div className="px-6 py-2 space-y-3">
+                            <form onSubmit={props.onSave}>
+                                {/* Modal body */}
+                                <div className="px-6 py-2 space-y-3">
 
-                                {/* Input soal */}
-                                <div className="flex flex-row space-x-3 w-full">
-                                    <div className="w-2/6 flex justify-between">
-                                        <span>Soal</span>
-                                        <span>:</span>
-                                    </div>
-                                    <div className="w-4/6">
-                                        <textarea className='w-full h-40 bg-darkBlue rounded-md focus:outline-none px-2'
-                                        type="text"
-                                        // value={nama}
-                                        // onChange={(e) => setNama(e.target.value)}
-                                        required
-                                        >        
-                                        </textarea>
-                                    </div>
-                                </div>
-
-                                {/* Input jawaban */}
-                                <div className="flex flex-row space-x-3 w-full">
-                                    <div className="w-2/6 flex justify-between">
-                                        <span>Jawaban</span>
-                                        <span>:</span>
-                                    </div>
-                                    <div className="w-4/6">
-                                        <div className="space-y-3">
-
-                                            {/* wrapper checkbox and answer */}
-                                            <div className="flex items-center gap-x-3">
-                                                <input className='w-6 h-6' type="checkbox" name="" id=""/>
-                                                <input className='w-full h-6 bg-darkBlue rounded-md focus:outline-none px-2'
-                                                    type="text"
-                                                    // value={nama}
-                                                    // onChange={(e) => setNama(e.target.value)}
-                                                    required
-                                                    >        
-                                                </input>
-                                            </div>
+                                    {/* Input soal */}
+                                    <div className="flex flex-row space-x-3 w-full">
+                                        <div className="w-1/6 flex justify-between">
+                                            <span>Soal</span>
+                                            <span>:</span>
+                                        </div>
+                                        <div className="w-5/6">
+                                            <textarea className='w-full h-40 bg-darkBlue rounded-md focus:outline-none px-2'
+                                            type="text"
+                                            value={props.pertanyaan}
+                                            onChange={(e) => props.setPertanyaan(e.target.value)}
+                                            required
+                                            >        
+                                            </textarea>
                                         </div>
                                     </div>
 
-                                </div>
-                            </div>
+                                    {/* Input jawaban */}
+                                    <div className="flex flex-row space-x-3 w-full">
+                                        <div className="w-1/6 flex justify-between">
+                                            <span>Jawaban</span>
+                                            <span>:</span>
+                                        </div>
+                                        <div className="w-5/6">
+                                            <div className="space-y-3">
 
-                            {/* Modal footer */}
-                            <div className="flex items-center justify-end p-6 space-x-2">
-                                <button onClick={() => setShowModalSoalKeSHan(false)} className="text-red hover:text-white bg-white hover:bg-red duration-300 font-medium rounded-lg px-5 py-2.5 text-center">Cancel</button>
-                                <button className="text-green hover:text-white bg-white hover:bg-green duration-300 rounded-lg font-medium px-5 py-2.5 focus:z-10">Selesai</button>
-                            </div>
+                                                {/* wrapper checkbox and answer */}
+                                                <div className="flex items-center gap-x-3">
+                                                    <input className='w-6 h-6' type="radio" name="true option" id="" value='opsi1' onChange={(e) => props.setOpsi(e.target.value)} checked={props.opsi === 'opsi1'}/>
+                                                    <input className='w-full h-6 bg-darkBlue rounded-md focus:outline-none px-2'
+                                                        type="text"
+                                                        value={props.opsi1}
+                                                        onChange={(e) => props.setOpsi1(e.target.value)}
+                                                        required
+                                                        >        
+                                                    </input>
+                                                </div>
+
+                                                {/* wrapper checkbox and answer */}
+                                                <div className="flex items-center gap-x-3">
+                                                    <input className='w-6 h-6' type="radio" name="true option" id="" value='opsi2' onChange={(e) => props.setOpsi(e.target.value)}/>
+                                                    <input className='w-full h-6 bg-darkBlue rounded-md focus:outline-none px-2'
+                                                        type="text"
+                                                        value={props.opsi2}
+                                                        onChange={(e) => props.setOpsi2(e.target.value)}
+                                                        required
+                                                        >        
+                                                    </input>
+                                                </div>
+
+                                                {/* wrapper checkbox and answer */}
+                                                <div className="flex items-center gap-x-3">
+                                                    <input className='w-6 h-6' type="radio" name="true option" id="" value='opsi3' onChange={(e) => props.setOpsi(e.target.value)}/>
+                                                    <input className='w-full h-6 bg-darkBlue rounded-md focus:outline-none px-2'
+                                                        type="text"
+                                                        value={props.opsi3}
+                                                        onChange={(e) => props.setOpsi3(e.target.value)}
+                                                        required
+                                                        >        
+                                                    </input>
+                                                </div>
+
+                                                {/* wrapper checkbox and answer */}
+                                                <div className="flex items-center gap-x-3">
+                                                    <input className='w-6 h-6' type="radio" name="true option" id="" value='opsi4' onChange={(e) => props.setOpsi(e.target.value)}/>
+                                                    <input className='w-full h-6 bg-darkBlue rounded-md focus:outline-none px-2'
+                                                        type="text"
+                                                        value={props.opsi4}
+                                                        onChange={(e) => props.setOpsi4(e.target.value)}
+                                                        required
+                                                        >        
+                                                    </input>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                </div>
+
+                                {/* Modal footer */}
+                                <div className="flex items-center justify-end p-6 space-x-2">
+                                    <button onClick={() => setShowModalSoalKeSHan(false)} className="text-red hover:text-white bg-white hover:bg-red duration-300 font-medium rounded-lg px-5 py-2.5 text-center" type='button'>Cancel</button>
+                                    <button className="text-green hover:text-white bg-white hover:bg-green duration-300 rounded-lg font-medium px-5 py-2.5 focus:z-10" type='submit'>Simpan</button>
+                                </div>
+                            </form>
                         </div>
                     </div>
                 </div>

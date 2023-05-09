@@ -45,11 +45,18 @@ app.get("/", Auth, verifyRoles("admin", "super admin", "admin ranting", "admin c
     })    
 })
 
-app.get("/ukt/:ukt", Auth, verifyRoles("admin", "super admin", "admin ranting", "admin cabang", "pengurus cabang", "pengurus ranting", "penguji cabang", "penguji ranting", "siswa"), (req,res) => {
+//get soal untuk ujian siswa
+app.post("/ukt/:ukt", Auth, verifyRoles("admin", "super admin", "admin ranting", "admin cabang", "pengurus cabang", "pengurus ranting", "penguji cabang", "penguji ranting", "siswa"), (req,res) => {
+    let param = {
+        tipe_ukt: req.params.ukt,
+    }
+
+    if(req.body.id_ranting){
+        param.id_ranting= req.body.id_ranting
+    }
+
     lembar_soal.findOne({
-        where: {
-            tipe_ukt: req.params.ukt
-        },
+        where: param,
         include: [
             {
                 model: ranting,

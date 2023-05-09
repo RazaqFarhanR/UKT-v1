@@ -70,7 +70,6 @@ app.get("/kosong", Auth, verifyRoles("admin", "super admin", "admin ranting", "a
                 as: "kunci_soal",
                 attributes: ['id_soal'],
                 required: false,
-
             }
         ],
         where: {
@@ -97,10 +96,33 @@ app.get("/lembar_soal/:id", Auth, verifyRoles("admin", "super admin", "admin ran
         where: {
             id_lembar_soal: req.params.id
         },
-        order: [
-            Sequelize.fn('RAND')
+    })
+    .then(soal => {
+        res.json({
+            count: soal.length,
+            data: soal
+        })
+    })
+    .catch(error => {
+        res.json({
+            message: error.message
+        })
+    })    
+})
+
+app.get("/kunci/lembar_soal/:id", Auth, verifyRoles("admin", "super admin", "admin ranting", "admin cabang", "pengurus cabang", "pengurus ranting", "penguji cabang", "penguji ranting"), (req,res) => {
+    soal.findAll({
+        where: {
+            id_lembar_soal: req.params.id
+        },
+        include: [
+            {
+                model: kunciSoal,
+                as: "kunci_soal",
+                attributes: ['opsi'],
+                required: true,
+            }
         ],
-        limit: 20
     })
     .then(soal => {
         res.json({
@@ -164,8 +186,16 @@ app.put("/:id", Auth, verifyRoles("admin", "super admin", "admin ranting", "admi
     }
     soal.update(data, {where: param})
     .then(result => {
-        res.json({
-            message : "data has been updated"
+        kunciSoal.update({opsi: req.body.opsi}, {where: param})
+        .then(res => {
+            res.json({
+                message : "data has been updated"
+            })
+        })
+        .catch(error => {
+            res.json({
+                message  : error.message
+            })
         })
     })
     .catch(error => {
@@ -180,6 +210,7 @@ app.delete("/:id", Auth, verifyRoles("admin", "super admin", "admin ranting", "a
     let param = {
         id_soal : req.params.id
     }
+    kunciSoal.destroy({where: param})
     soal.destroy({where: param})
     .then(result => {
         res.json({

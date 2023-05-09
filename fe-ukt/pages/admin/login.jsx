@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import axios from 'axios'
 import { useRouter } from 'next/router';
+import Link from 'next/link';
 const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
 
 const loginPage = () => {
@@ -36,6 +37,7 @@ const loginPage = () => {
         })
         .catch (err => {
             console.log(err.message);
+            alert ("username atau password salah")
         })
     }
 
@@ -57,7 +59,7 @@ const loginPage = () => {
 
                         <h1 className='text-lg tracking-wide text-green mb-5'>Login Admin</h1>
 
-                        <form action="POST" onSubmit={login}>
+                        <form onSubmit={(e) => login(e)}>
 
                             {/* wrapper username */}
                             <div className="hover:bg-gradient-to-r from-[#16D4FC] to-[#9A4BE9] rounded-md p-0.5 w-full mb-4">
@@ -80,15 +82,14 @@ const loginPage = () => {
                                     <input className='w-full px-2 bg-darkBlue focus:outline-none border-b-2 border-gray focus:border-purple transition ease-in-out duration-300' placeholder='Password' type="password" value={password} onChange={(e) => setPassword (e.target.value)} />
                                 </div>
                             </div>
-                        </form>
 
-                        {/* forget password */}
-                        <button className='text-[15px] tracking-wider text-gray hover:text-white duration-300 transition ease-in-out mb-5'>Forget Password?</button>
-                        
-                        <form className='w-full' action="POST" onSubmit={login}>
-
+                            {/* forget password */}
+                            <div className='mb-5'>
+                                <Link href='#' className='text-[15px] tracking-wider text-gray hover:text-white duration-300 transition ease-in-out'>Forget Password?</Link>
+                            </div>
+                    
                             {/* button submit */}
-                            <button type='submit' className='bg-purple py-1.5 w-full lg:w-1/4 rounded-md text-lg font-semibold hover:scale-105 transition ease-in-out duration-300'>Login</button>
+                            <button type='submit' className='bg-purple py-1.5 w-full rounded-md text-lg font-semibold hover:scale-105 transition ease-in-out duration-300'>Login</button>
                         </form>
 
                     </div>

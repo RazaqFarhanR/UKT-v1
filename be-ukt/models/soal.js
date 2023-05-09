@@ -15,7 +15,7 @@ module.exports = (sequelize, DataTypes) => {
         foreignKey: "id_lembar_soal",
         as: "lembar_soal_ujian"
       })
-      this.hasMany(models.kunci_soal, {
+      this.hasOne(models.kunci_soal, {
         foreignKey: "id_soal",
         as: "kunci_soal"
       })

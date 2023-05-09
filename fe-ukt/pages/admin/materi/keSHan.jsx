@@ -106,7 +106,7 @@ const keSHan = () => {
                         </Link>
 
                         {/* card ukcw */}
-                        <Link href={'./ukcw'} className="bg-navy hover:bg-gradient-to-r from-[#16D4FC] to-[#9A4BE9] rounded-md p-0.5">
+                        <Link href={'./keSHan/ukcw'} className="bg-navy hover:bg-gradient-to-r from-[#16D4FC] to-[#9A4BE9] rounded-md p-0.5">
 
                             {/* inner bg */}
                             <div className="bg-navy p-5 rounded-md space-y-5">
