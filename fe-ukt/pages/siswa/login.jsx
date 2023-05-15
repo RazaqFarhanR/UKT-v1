@@ -10,10 +10,12 @@ const loginPage = () => {
     const router = useRouter()
 
     // const [nis, setNis] = useState();
-    const [nomorUrut, setNomorUrut] = useState();
+    const [nomorUrut, setNomorUrut] = useState(0);
+    const [dataSiswa, setDataSiswa] = useState()
     const [showModalSiswa, setShowModalSiswa] = useState (false)
 
-    const Auth = () => {
+    const Auth = (e) => {
+        e.preventDefault()
 
         let form = {
             // nis: nis,
@@ -23,35 +25,49 @@ const loginPage = () => {
         console.log(form)
 
         axios.post(BASE_URL + `siswa/auth`, form)
-            .then(res => {
+            .then(async res => {
                 if (res.data.logged) {
                     let dataSiswa = res.data.data
                     let token = res.data.token
+                    setDataSiswa(res.data.data)
+                    console.log(res.data.data);
 
-                    const uktSiswa = localStorage.getItem('dataUktSiswa')
+                    // const uktSiswa = localStorage.getItem('dataUktSiswa')
+                    
                     const data = {
                         tipe_ukt: dataSiswa.tipe_ukt,
                         id_siswa: dataSiswa.id_siswa,
                         id_event: dataSiswa.id_event,
                         rayon: dataSiswa.rayon
                     }
+
+                    let uktSiswa = []
+                    await axios.get(BASE_URL + `ukt_siswa/siswa/${data.id_siswa}`, { headers: { Authorization: `Bearer ${token}` } })
+                    .then(res => {
+                        uktSiswa = res.data.data
+                    })
+                    .catch(err => {
+                        console.log(err.message);
+                    })
+
                     if (!uktSiswa) {
-                        "south side"
+                        console.log("belum uktsiswa");
                         axios.post(BASE_URL + `ukt_siswa`, data, { headers: { Authorization: `Bearer ${token}` } })
                             .then(res => {
-                                console.log(res.data.data)
+                                console.log(res.data);
                                 localStorage.setItem('dataUktSiswa', JSON.stringify(res.data.data))
+                            })
+                            .catch(err => {
+                                console.log(err.message);
                             })
                     } else if (uktSiswa) {
                         if (data.id_siswa == uktSiswa.id_siswa) {
-                            "id siswa item sama dengan yang di lokal"
-
-                        } else if (data.id_siswa != uktSiswa.id_siswa) {
                             axios.get(BASE_URL + `ukt_siswa/siswa/${data.id_siswa}`, { headers: { Authorization: `Bearer ${token}` } })
                                 .then(res => {
                                     console.log("ngecek apakah item id siswa punya sudah ukt siswa")
                                     if (res.data.data != null) {
                                         console.log("ternyata udah punya")
+                                        console.log(res.data.data);
                                         localStorage.setItem('dataUktSiswa', JSON.stringify(res.data.data))
                                     } else {
                                         console.log("ternyata belum punya")
@@ -95,35 +111,29 @@ const loginPage = () => {
                             <img className='w-32 mb-4' src="/images/psht-icon.png" alt="" />
 
                             {/* title */}
-                            <h1 className='text-xl font-semibold mb-12'>Uji Kenaikan Tingkat Cabang Trenggalek</h1>
+                            <h1 className='text-xl font-semibold mb-12 uppercase'>Uji Kelayakan Calon Warga <br></br> Cabang Trenggalek 2023</h1>
 
                             <h1 className='text-lg tracking-wide text-green mb-5'>Login Siswa</h1>
 
-                            {/* wrapper nis */}
-                            {/* <div className="hover:bg-gradient-to-r from-[#16D4FC] to-[#9A4BE9] rounded-md p-0.5 w-full mb-4">
-                                <div className="bg-darkBlue rounded-md p-2 flex items-center gap-x-3">
-                                    <svg width="23" height="23" viewBox="0 0 30 30" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                        <path d="M25 26.25V23.75C25 22.4239 24.4732 21.1521 23.5355 20.2145C22.5979 19.2768 21.3261 18.75 20 18.75H10C8.67392 18.75 7.40215 19.2768 6.46447 20.2145C5.52678 21.1521 5 22.4239 5 23.75V26.25" stroke="white" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" />
-                                        <path d="M15 13.75C17.7614 13.75 20 11.5114 20 8.75C20 5.98858 17.7614 3.75 15 3.75C12.2386 3.75 10 5.98858 10 8.75C10 11.5114 12.2386 13.75 15 13.75Z" stroke="white" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" />
-                                    </svg>
-                                    <input className='w-full px-2 bg-darkBlue focus:outline-none border-b-2 border-gray focus:border-purple transition ease-in-out duration-300' placeholder='NIS' type="text" onChange={(e) => setNis(e.target.value)} />
-                                </div>
-                            </div> */}
-
                             {/* wrapper nomor urut */}
-                            <div className="hover:bg-gradient-to-r from-[#16D4FC] to-[#9A4BE9] rounded-md p-0.5 w-full mb-4">
-                                <div className="bg-darkBlue rounded-md p-2 flex items-center gap-x-3">
-                                    <svg width="23" height="23" viewBox="0 0 30 30" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                        <path d="M25 26.25V23.75C25 22.4239 24.4732 21.1521 23.5355 20.2145C22.5979 19.2768 21.3261 18.75 20 18.75H10C8.67392 18.75 7.40215 19.2768 6.46447 20.2145C5.52678 21.1521 5 22.4239 5 23.75V26.25" stroke="white" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" />
-                                        <path d="M15 13.75C17.7614 13.75 20 11.5114 20 8.75C20 5.98858 17.7614 3.75 15 3.75C12.2386 3.75 10 5.98858 10 8.75C10 11.5114 12.2386 13.75 15 13.75Z" stroke="white" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" />
-                                    </svg>
-                                    <input className='w-full px-2 bg-darkBlue focus:outline-none border-b-2 border-gray focus:border-purple transition ease-in-out duration-300' placeholder='Nomor Urut' type="text" onChange={(e) => setNomorUrut(e.target.value)} />
+                            <form onSubmit={Auth}>
+                                <div className="hover:bg-gradient-to-r from-[#16D4FC] to-[#9A4BE9] rounded-md p-0.5 w-full mb-4">
+                                    <div className="bg-darkBlue rounded-md p-2 flex items-center gap-x-3">
+                                        <svg width="23" height="23" viewBox="0 0 30 30" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                            <path d="M25 26.25V23.75C25 22.4239 24.4732 21.1521 23.5355 20.2145C22.5979 19.2768 21.3261 18.75 20 18.75H10C8.67392 18.75 7.40215 19.2768 6.46447 20.2145C5.52678 21.1521 5 22.4239 5 23.75V26.25" stroke="white" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" />
+                                            <path d="M15 13.75C17.7614 13.75 20 11.5114 20 8.75C20 5.98858 17.7614 3.75 15 3.75C12.2386 3.75 10 5.98858 10 8.75C10 11.5114 12.2386 13.75 15 13.75Z" stroke="white" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" />
+                                        </svg>
+                                        <input className='w-full px-2 bg-darkBlue focus:outline-none border-b-2 border-gray focus:border-purple transition ease-in-out duration-300' placeholder='Nomor Urut' type="number" onChange={(e) => setNomorUrut(e.target.value)} />
+                                    </div>
                                 </div>
-                            </div>
 
-                            <button className='bg-purple py-1.5 w-full rounded-md text-lg font-semibold hover:scale-105 transition ease-in-out duration-300'
-                                onClick={() => Auth()}
-                            >Login</button>
+                                <button 
+                                    className='bg-purple py-1.5 w-full rounded-md text-lg font-semibold hover:scale-105 transition ease-in-out duration-300 uppercase'
+                                    type='submit'
+                                >
+                                Verikasi Nama
+                                </button>
+                            </form>
                         </div>
                     </div>
                 </div>
@@ -133,6 +143,9 @@ const loginPage = () => {
                 <Modal_siswa 
                     show={showModalSiswa}
                     mulai={() => router.push('./ujian')}
+                    nama={dataSiswa?.name}
+                    ranting={dataSiswa?.id_ranting}
+                    close={() => setShowModalSiswa(false)}
                 />
              {/* </globalState.Provider> */}
         </>

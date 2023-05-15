@@ -20,6 +20,12 @@ const modal = (props) => {
                                 <h1 className="text-2xl font-semibold text-green tracking-wide text-center">
                                     Verifikasi Nama
                                 </h1>
+                                <button onClick={props.close} type="button" className="p-1.5 inline-flex items-center absolute right-5">
+                                    <svg className="w-7 h-7 fill-white hover:fill-purple duration-300" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                                        <path fillRule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clipRule="evenodd">
+                                        </path>
+                                    </svg>  
+                                </button>
                             </div>
 
                             {/* line */}
@@ -31,12 +37,12 @@ const modal = (props) => {
 
                                 {/* Input nama */}
                                 <div className="w-full">
-                                    <h1 className='text-center font-lato font-bold text-3xl'>Nadia Azza Desti</h1>
+                                    <h1 className='text-center font-lato font-bold text-3xl'>{props.nama}</h1>
                                 </div>
 
                                 {/* Input nama */}
                                 <div className="w-full">
-                                    <h1 className='text-center font-lato font-bold text-xl'>Rating Trenggalek</h1>
+                                    <h1 className='text-center font-lato font-bold text-xl'>{props.ranting}</h1>
                                 </div>
 
                             </div>
