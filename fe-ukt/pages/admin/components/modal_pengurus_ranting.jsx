@@ -40,8 +40,7 @@ const modal_pengurus_ranting = () => {
     // function handle add and edit data
     const handleSave = (e) => {
         e.preventDefault ()
-
-        { headers: { Authorization: `Bearer ${token}`}}
+        const token = localStorage.getItem ('token')
 
         let form = new FormData()
         form.append ('niw', niw)
@@ -57,7 +56,7 @@ const modal_pengurus_ranting = () => {
             axios.post (BASE_URL + `pengurus`, form, { headers: { Authorization: `Bearer ${token}`}})
             .then (res => {
                 setShowModalPengurusRanting (false)
-                getDataPengurusRanting (res.data.data)
+                getDataPengurusRanting ()
                 console.log(res.data.message);
             })
             .catch (err => {
@@ -66,8 +65,8 @@ const modal_pengurus_ranting = () => {
         } else if (action === 'update') {
             axios.put (BASE_URL + `pengurus/${idPengurusRanting}`, form, { headers: { Authorization: `Bearer ${token}`}})
             .then (res=> {
-                setDataPengurusRanting (false)
-                getDataPengurusRanting (res.data.data)
+                setShowModalPengurusRanting (false)
+                getDataPengurusRanting ()
                 console.log(res.data.message);
             })
             .catch (err => {
@@ -94,13 +93,13 @@ const modal_pengurus_ranting = () => {
                                         if (action === 'insert') {
                                             return (
                                                 <h1 className="text-2xl font-semibold text-gray-900 text-center">
-                                                    Tambah Pengurus Cabang
+                                                    Tambah Pengurus Ranting
                                                 </h1>
                                             )
                                         } else if (action === 'update') {
                                             return (
                                                 <h1 className="text-2xl font-semibold text-gray-900 text-center">
-                                                    Edit Pengurus Cabang
+                                                    Edit Pengurus Ranting
                                                 </h1>
                                             )
                                         }

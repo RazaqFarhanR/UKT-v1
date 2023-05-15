@@ -21,8 +21,8 @@ const modal_pengurus_cabang = () => {
 
     // function get data pengurus cabang
     const getDataPengurusCabang = () => {
-        const token = localStorage.getItem ('token', { headers: { Authorization: `Bearer ${token}`}})
-        axios.get (BASE_URL + `pengurus`)
+        const token = localStorage.getItem ('token')
+        axios.get (BASE_URL + `pengurus`, { headers: { Authorization: `Bearer ${token}`}})
         .then (res => {
             setDataPengurusCabang (res.data.data)
         })
@@ -40,7 +40,6 @@ const modal_pengurus_cabang = () => {
     // function handle add and edit data
     const handleSave = (e) => {
         e.preventDefault ()
-
         const token = localStorage.getItem ('token')
 
         let form = new FormData()
