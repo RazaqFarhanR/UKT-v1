@@ -1,4 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react'
+import { useRouter } from 'next/router'
 import { globalState } from '@/context/context'
 import axios from 'axios'
 const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
@@ -7,6 +8,8 @@ const modal_siswa = () => {
 
     // state modal
     const {showModalSiswa, setShowModalSiswa} = useContext (globalState)
+    const router = useRouter()
+    const { name } = router.query
 
     // state
     const {setDataSiswa, action, idSiswa} = useContext (globalState)

@@ -18,6 +18,8 @@ const modal_delete = () => {
     const {idPengujiCabang, idPengujiRanting} = useContext (globalState)
     const {idPengurusCabang, idPengurusRanting} = useContext (globalState)
     const {setDataEvent, idEvent} = useContext (globalState)
+    const {setDataTeknik, idTeknik} = useContext (globalState)
+    const {tipe, setTipe} = useContext (globalState)
 
     // state from local storage
     const [token, setToken] = useState ('')
@@ -94,6 +96,7 @@ const modal_delete = () => {
         })
     }
 
+    
     // function get data siswa
     const getDataSiswa = () => {
         axios.get (BASE_URL + `siswa`, { headers: { Authorization: `Bearer ${token}`}})
@@ -107,9 +110,20 @@ const modal_delete = () => {
 
     // function get data event
     const getDataEvent = () => {
-        axios.get (BASE_URL + `event`, { headers: { Authorization: `Bearer ${token}`}})
+        axios.get (BASE_URL + `event/ukt/${tipe}`, { headers: { Authorization: `Bearer ${token}`}})
         .then (res => {
             setDataEvent (res.data.data)
+        })
+        .catch (err => {
+            console.log(err.message);
+        })
+    }
+
+    // function get data event
+    const getDataTeknik = () => {
+        axios.get (BASE_URL + `teknik/ukt/${tipe}`, { headers: { Authorization: `Bearer ${token}`}})
+        .then (res => {
+            setDataTeknik (res.data.data)
         })
         .catch (err => {
             console.log(err.message);
@@ -193,6 +207,16 @@ const modal_delete = () => {
             axios.delete (BASE_URL + `event/${idEvent}`, { headers: { Authorization: `Bearer ${token}`}})
             .then (res => {
                 getDataEvent ()
+                setShowModalDelete (false)
+                console.log(res.data.message);
+            })
+            .catch (err => {
+                console.log(err.message);
+            })
+        } else if (action === 'deleteTeknik') {
+            axios.delete (BASE_URL + `teknik/${idTeknik}`, { headers: { Authorization: `Bearer ${token}`}})
+            .then (res => {
+                getDataTeknik ()
                 setShowModalDelete (false)
                 console.log(res.data.message);
             })
