@@ -17,7 +17,7 @@ app.use(bodyParser.urlencoded({extended: true}));
 
 //import model
 const models = require('../models/index');
-const { sequelize, Op } = require("sequelize");
+const { sequelize, Op, where } = require("sequelize");
 const localStorage = process.env.LOCAL_STORAGE_GENERAL + "csv/"
 const siswa = models.siswa;
 const ranting = models.ranting
@@ -26,7 +26,8 @@ const rayon = models.rayon;
 
 //import auth
 const auth = require("../auth")
-const jwt = require("jsonwebtoken")
+const jwt = require("jsonwebtoken");
+const csvParser = require('csv-parser');
 const SECRET_KEY = "BelajarNodeJSItuMenyengankan";
 
 const storage = multer.diskStorage({
@@ -105,7 +106,25 @@ app.get("/event/:id", Auth, verifyRoles("admin", "super admin", "admin ranting",
         })
     })    
 })
-app.get("/event/senam/:id", Auth, verifyRoles("admin", "super admin", "admin ranting", "admin cabang", "pengurus cabang", "pengurus ranting", "penguji cabang", "penguji ranting"), (req,res) => {
+app.get("/event/:id/:action", Auth, verifyRoles("admin", "super admin", "admin ranting", "admin cabang", "pengurus cabang", "pengurus ranting", "penguji cabang", "penguji ranting"), (req,res) => {
+    let idEvent = req.params.id
+    let action = req.params.action
+
+    let whereClause = {
+        id_event: idEvent
+    };
+    
+    if (action == 'senam') {
+        whereClause["$senam_siswa.id_siswa$"] = {[Op.is]: null};
+    } else if (action == 'jurus') {
+        whereClause["$jurus_siswa.id_siswa$"] = {[Op.is]: null};
+    } else if (action == 'fisik') {
+        whereClause["$siswa_fisik.id_siswa$"] = {[Op.is]: null};
+    } else if (action == 'teknik') {
+        whereClause["$siswa_teknik.id_siswa$"] = {[Op.is]: null};
+    } else if (action == 'sambung') {
+        whereClause["$sambung_siswa.id_siswa$"] = {[Op.is]: null};
+    }
     siswa.findAll({       
         include: [
             {
@@ -125,41 +144,6 @@ app.get("/event/senam/:id", Auth, verifyRoles("admin", "super admin", "admin ran
                 as: "senam_siswa",
                 required: false,
                 attributes: ['id_siswa']
-            }
-        ],
-        where: {
-            id_event: req.params.id,
-            "$senam_siswa.id_siswa$": {
-                [Op.is]: null
-            }
-        }, 
-    })
-    .then(siswa => {
-        res.json({
-            count: siswa.length,
-            data: siswa
-        })
-    })
-    .catch(error => {
-        res.json({
-            message: error.message
-        })
-    })    
-})
-app.get("/event/jurus/:id", Auth, verifyRoles("admin", "super admin", "admin ranting", "admin cabang", "pengurus cabang", "pengurus ranting", "penguji cabang", "penguji ranting"), (req,res) => {
-    siswa.findAll({       
-        include: [
-            {
-                model: ranting,
-                as: "siswa_ranting",
-                attributes: ['name'],
-                required: false,
-            },
-            {
-                model: event,
-                as: "siswa_event",
-                attributes: ['name'],
-                required: false
             },
             {
                 model: models.jurus_detail,
@@ -167,122 +151,17 @@ app.get("/event/jurus/:id", Auth, verifyRoles("admin", "super admin", "admin ran
                 required: false,
                 attributes: ['id_siswa']
             },
-        ],
-        where: {
-            id_event: req.params.id,
-            "$jurus_siswa.id_siswa$": {
-                [Op.is]: null
-            }
-        }, 
-    })
-    .then(siswa => {
-        res.json({
-            count: siswa.length,
-            data: siswa
-        })
-    })
-    .catch(error => {
-        res.json({
-            message: error.message
-        })
-    })    
-})
-app.get("/event/fisik/:id", Auth, verifyRoles("admin", "super admin", "admin ranting", "admin cabang", "pengurus cabang", "pengurus ranting", "penguji cabang", "penguji ranting"), (req,res) => {
-    siswa.findAll({       
-        include: [
-            {
-                model: ranting,
-                as: "siswa_ranting",
-                attributes: ['name'],
-                required: false,
-            },
-            {
-                model: event,
-                as: "siswa_event",
-                attributes: ['name'],
-                required: false
-            },
             {
                 model: models.fisik,
                 as: "siswa_fisik",
                 required: false,
                 attributes: ['id_siswa']
             },
-        ],
-        where: {
-            id_event: req.params.id,
-            "$siswa_fisik.id_siswa$": {
-                [Op.is]: null
-            }
-        }, 
-    })
-    .then(siswa => {
-        res.json({
-            count: siswa.length,
-            data: siswa
-        })
-    })
-    .catch(error => {
-        res.json({
-            message: error.message
-        })
-    })    
-})
-app.get("/event/teknik/:id", Auth, verifyRoles("admin", "super admin", "admin ranting", "admin cabang", "pengurus cabang", "pengurus ranting", "penguji cabang", "penguji ranting"), (req,res) => {
-    siswa.findAll({       
-        include: [
-            {
-                model: ranting,
-                as: "siswa_ranting",
-                attributes: ['name'],
-                required: false,
-            },
-            {
-                model: event,
-                as: "siswa_event",
-                attributes: ['name'],
-                required: false
-            },
             {
                 model: models.teknik_detail,
                 as: "siswa_teknik",
                 required: false,
                 attributes: ['id_siswa']
-            },
-        ],
-        where: {
-            id_event: req.params.id,
-            "$siswa_teknik.id_siswa$": {
-                [Op.is]: null
-            }
-        }, 
-    })
-    .then(siswa => {
-        res.json({
-            count: siswa.length,
-            data: siswa
-        })
-    })
-    .catch(error => {
-        res.json({
-            message: error.message
-        })
-    })    
-})
-app.get("/event/sambung/:id", Auth, verifyRoles("admin", "super admin", "admin ranting", "admin cabang", "pengurus cabang", "pengurus ranting", "penguji cabang", "penguji ranting"), (req,res) => {
-    siswa.findAll({       
-        include: [
-            {
-                model: ranting,
-                as: "siswa_ranting",
-                attributes: ['name'],
-                required: false,
-            },
-            {
-                model: event,
-                as: "siswa_event",
-                attributes: ['name'],
-                required: false
             },
             {
                 model: models.detail_sambung,
@@ -291,12 +170,10 @@ app.get("/event/sambung/:id", Auth, verifyRoles("admin", "super admin", "admin r
                 attributes: ['id_siswa']
             },
         ],
-        where: {
-            id_event: req.params.id,
-            "$sambung_siswa.id_siswa$": {
-                [Op.is]: null
-            }
-        }, 
+        where: whereClause,
+        order: [
+            ['nomor_urut', 'ASC']
+        ]
     })
     .then(siswa => {
         res.json({
@@ -334,6 +211,172 @@ app.get("/ranting/:id", Auth, verifyRoles("admin", "super admin", "admin ranting
     ]
     })
     .then((siswa) => {
+      res.json({
+        count: siswa.length,
+        data: siswa,
+      });
+    })
+    .catch((error) => {
+      res.json({
+        message: error.message,
+      });
+    }); 
+})
+
+
+app.get("/ranting/:idEvent/:id/:action", Auth, verifyRoles("admin", "super admin", "admin ranting", "admin cabang", "pengurus cabang", "pengurus ranting", "penguji cabang", "penguji ranting"), (req,res) => {
+    const id_event = req.params.idEvent
+    const id_ranting = req.params.id
+    const action = req.params.action
+    let whereClause = {
+        id_event: id_event,
+        id_ranting: id_ranting
+    };
+    
+    if (action == 'senam') {
+        whereClause["$senam_siswa.id_siswa$"] = {[Op.is]: null};
+    } else if (action == 'jurus') {
+        whereClause["$jurus_siswa.id_siswa$"] = {[Op.is]: null};
+    } else if (action == 'fisik') {
+        whereClause["$siswa_fisik.id_siswa$"] = {[Op.is]: null};
+    } else if (action == 'teknik') {
+        whereClause["$siswa_teknik.id_siswa$"] = {[Op.is]: null};
+    } else if (action == 'sambung') {
+        whereClause["$sambung_siswa.id_siswa$"] = {[Op.is]: null};
+    }
+    siswa
+    .findAll({
+        include: [
+        {
+            model: ranting,
+            as: "siswa_ranting",
+            attributes: ['name'],
+            required: false,
+        },
+        {
+            model: event,
+            as: "siswa_event",
+            attributes: ['name'],
+            required: false
+        },
+        {
+            model: models.senam_detail,
+            as: "senam_siswa",
+            required: false,
+            attributes: ['id_siswa']
+        },
+        {
+            model: models.jurus_detail,
+            as: "jurus_siswa",
+            required: false,
+            attributes: ['id_siswa']
+        },
+        {
+            model: models.fisik,
+            as: "siswa_fisik",
+            required: false,
+            attributes: ['id_siswa']
+        },
+        {
+            model: models.teknik_detail,
+            as: "siswa_teknik",
+            required: false,
+            attributes: ['id_siswa']
+        },
+        {
+            model: models.detail_sambung,
+            as: "sambung_siswa",
+            required: false,
+            attributes: ['id_siswa']
+        },
+    ],
+
+    where: whereClause
+})
+.then((siswa) => {
+      res.json({
+        count: siswa.length,
+        data: siswa,
+      });
+    })
+    .catch((error) => {
+      res.json({
+        message: error.message,
+      });
+    }); 
+})
+app.get("/search/:idEvent/:name/:action", Auth, verifyRoles("admin", "super admin", "admin ranting", "admin cabang", "pengurus cabang", "pengurus ranting", "penguji cabang", "penguji ranting"), (req,res) => {
+    const id_event = req.params.idEvent
+    const name =  req.params.name
+    const action = req.params.action
+    let whereClause = {
+        id_event: id_event,
+        name: {
+            [Op.like]: `%${name}%`
+          },
+    };
+    
+    if (action == 'senam') {
+        whereClause["$senam_siswa.id_siswa$"] = {[Op.is]: null};
+    } else if (action == 'jurus') {
+        whereClause["$jurus_siswa.id_siswa$"] = {[Op.is]: null};
+    } else if (action == 'fisik') {
+        whereClause["$siswa_fisik.id_siswa$"] = {[Op.is]: null};
+    } else if (action == 'teknik') {
+        whereClause["$siswa_teknik.id_siswa$"] = {[Op.is]: null};
+    } else if (action == 'sambung') {
+        whereClause["$sambung_siswa.id_siswa$"] = {[Op.is]: null};
+    }
+    siswa
+    .findAll({
+        include: [
+        {
+            model: ranting,
+            as: "siswa_ranting",
+            attributes: ['name'],
+            required: false,
+        },
+        {
+            model: event,
+            as: "siswa_event",
+            attributes: ['name'],
+            required: false
+        },
+        {
+            model: models.senam_detail,
+            as: "senam_siswa",
+            required: false,
+            attributes: ['id_siswa']
+        },
+        {
+            model: models.jurus_detail,
+            as: "jurus_siswa",
+            required: false,
+            attributes: ['id_siswa']
+        },
+        {
+            model: models.fisik,
+            as: "siswa_fisik",
+            required: false,
+            attributes: ['id_siswa']
+        },
+        {
+            model: models.teknik_detail,
+            as: "siswa_teknik",
+            required: false,
+            attributes: ['id_siswa']
+        },
+        {
+            model: models.detail_sambung,
+            as: "sambung_siswa",
+            required: false,
+            attributes: ['id_siswa']
+        },
+    ],
+
+    where: whereClause
+})
+.then((siswa) => {
       res.json({
         count: siswa.length,
         data: siswa,
@@ -409,54 +452,57 @@ app.post("/", Auth, verifyRoles("admin", "super admin", "admin ranting", "admin 
 }) 
 
 app.post('/csv', Auth, verifyRoles('admin', 'super admin', 'admin ranting', 'pengurus cabang', 'pengurus ranting', 'penguji cabang', 'penguji ranting'),upload2.single("csvFile"), (req, res) => {
-    const results = []
-  
-    fs.createReadStream(localStorage + req.file.filename)
-      .pipe(csv())
-      .on('data', (data) => results.push(data))
-      .on('end', () => {
-        const promises = []
-        for (const data of results) {
-            let dataKelamin = ''
-            if(data.jenisKelamin = "L"){
-                dataKelamin = 'Laki laki'
-            } else if(data.jeniskelamin = "P"){
-                dataKelamin = 'Perempuan'
+        
+    let results = []
+        fs.createReadStream(localStorage + req.file.filename)
+        .pipe(csv({headers: false}))
+        .on('data', (data) => results.push(data))
+        .on('end', () => {
+            const promises = [];
+
+            for (const data of results) {
+                const values = Object.values(data);
+            let dataKelamin = '';
+            if (values[2] === 'L') {
+                dataKelamin = 'Laki laki';
+            } else if (values[2] === 'P') {
+                dataKelamin = 'Perempuan';
             }
-            const idRole = "siswa"
+            const idRole = 'siswa';
             const newData = {
                 id_event: req.body.id_event,
-                nomor_urut: data.nomorUrut,
-                name: data.name,
+                nomor_urut: values[0],
+                name: values[1],
                 id_role: idRole,
                 jenis_kelamin: dataKelamin,
-                jenis_latihan: data.jenisLatihan,
-                peserta: data.jenisLatihan + ' - ' + dataKelamin,
+                jenis_latihan: values[3],
+                peserta: values[3] + ' - ' + dataKelamin,
                 tipe_ukt: req.body.tipe_ukt,
-                id_ranting: data.ranting,
-                rayon: data.rayon,
-                tingkatan: data.tingkatan
+                id_ranting: values[4],
+                rayon: values[5],
+                tingkatan: values[6],
+            };
+            // console.log(newData);
+            promises.push(siswa.create(newData));
             }
-            console.log(newData);
-          promises.push(siswa.create(newData))
-        }
-  
-        Promise.all(promises)
-          .then(() => {
-              const csvPath = localStorage + req.file.filename; 
-              fs.unlink(csvPath, (err) => {
-                  if (err) {
-                      console.error(err);
-                      return;
+
+            Promise.all(promises)
+            .then(() => {
+                const csvPath = localStorage + req.file.filename;
+                fs.unlink(csvPath, (err) => {
+                    if (err) {
+                        console.error(err);
+                        return;
                     }
                     console.log('csv deleted successfully');
                 })
                 res.json({ message: 'Data has been inserted' })
-          })
-          .catch((error) => {
-            res.json({ message: error.message })
-          })
-      })
+            })
+            .catch((error) => {
+                res.json({ message: error.message })
+            })
+        });
+    
   })
 
 //endpoint untuk meng UPDATE data siswa, METHOD: PUT, fuction: UPDATE

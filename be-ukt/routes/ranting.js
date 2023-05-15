@@ -32,6 +32,22 @@ app.get("/", Auth, verifyRoles("admin", "super admin", "admin ranting", "admin c
     })    
 })
 
+//endpoint get data ranting
+app.get("/:id", Auth, verifyRoles("admin", "super admin", "admin ranting", "admin cabang", "pengurus cabang", "pengurus ranting", "penguji cabang", "penguji ranting"), (req,res) => {
+    ranting.findAll({where: {id_ranting: req.params.id}})
+    .then(ranting => {
+        res.json({
+            count: ranting.length,
+            data: ranting
+        })
+    })
+    .catch(error => {
+        res.json({
+            message: error.message
+        })
+    })    
+})
+
 //endpoint untuk menyimpan data ranting, METHOD POST, function create
 app.post("/", Auth, verifyRoles("admin", "super admin", "admin ranting", "admin cabang", "pengurus cabang"), (req,res) =>{
     let data ={

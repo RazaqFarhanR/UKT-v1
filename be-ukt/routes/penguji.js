@@ -117,6 +117,34 @@ app.get("/:id", Auth, verifyRoles("admin", "super admin", "admin ranting", "admi
     });
 });
 
+app.get("/NIW/:id", Auth, verifyRoles("admin", "super admin", "admin ranting", "admin cabang", "pengurus cabang", "pengurus ranting", "penguji cabang", "penguji ranting"), async (req, res) => {
+  try {
+    let result = await penguji.findAll({
+      where: {
+        NIW: req.params.id
+      },
+      attributes: ['id_penguji','NIW']
+    });
+    if (result.length > 0 ) {
+      //ditemukan
+      //set payload from data
+      console.log("oi" + result)
+      res.json({
+        data: result
+      })
+    } else {
+      //tidak ditemukan
+      res.json({
+        logged: false,
+        message: "NIW tidak cocok dengan akun penguji manapun",
+      });
+    }
+    
+  } catch (e) {
+    res.status(404).json({ msg: e.message });
+  }
+})
+
 //endpoint get data penguji cabang berdasarkan nama dan ranting
 app.post("/name_dan_ranting", Auth, verifyRoles("admin", "super admin", "admin ranting", "admin cabang", "pengurus cabang", "pengurus ranting", "penguji ranting"), (req, res) => {
   const name = req.body.name;
@@ -144,21 +172,6 @@ app.post("/name_dan_ranting", Auth, verifyRoles("admin", "super admin", "admin r
       });
     });
 });
-
-app.get("/niw/:id", async (req, res) => {
-  try {
-    let niw = await penguji.findOne({
-      where: {
-        NIW: req.params.id
-      }
-    });
-    res.json({
-      data: niw 
-    })
-  } catch (e) {
-    res.status(404).json({ msg: error.message });
-  }
-})
 
 app.post("/", Auth, verifyRoles("admin", "super admin", "admin ranting", "admin cabang", "pengurus cabang", "pengurus ranting"), upload2.single("foto"), async (req, res) => {
   const Ranting = models.ranting;
