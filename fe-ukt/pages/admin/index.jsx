@@ -30,7 +30,7 @@ const index = () => {
                     <div className="flex justify-between items-center text-white mb-7">
 
                         {/* page name */}
-                        <h1 className='text-2xl tracking-wider'>Dashboard</h1>
+                        <h1 className='text-2xl tracking-wider uppercase font-bold'>Dashboard</h1>
                         
                         {/* download button */}
                         <div className="bg-purple rounded-md px-5 py-2 flex items-center gap-x-2">

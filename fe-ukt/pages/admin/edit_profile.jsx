@@ -14,7 +14,6 @@ const edit_profile = () => {
     const [passwordInput, setPasswordInput] = useState ('')
     const [editPassword, setEditPassword] = useState(false)
 
-
     // state modal
     const [showModalFoto, setShowModalFoto] = useState (false)
 
