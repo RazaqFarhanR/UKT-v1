@@ -26,7 +26,7 @@ const fisik = (props) => {
         getDataFisik()
     }, [])
     return (
-        <div className="min-h-full bg-darkBlue p-6">
+        <div className="min-h-full bg-darkBlue py-6">
             {dataFisik.length > 0
                 ? <div className="bg-navy rounded-md py-2 px-3">
 
@@ -43,7 +43,7 @@ const fisik = (props) => {
                                     <th>SPIR PERUT ATAS</th>
                                     <th>SPIR PERUT BAWAH</th>
                                     <th>SPIR DADA</th>
-                                    <th>Plank</th>
+                                    <th>PLANK</th>
                                 </tr>
                             </>
 
@@ -52,15 +52,15 @@ const fisik = (props) => {
                             {dataFisik.map((item, index) => (
                                 <>
                                     <tr className='text-green text-center' key={item.id_fisik_detail}>
-                                        <td className='border-b-2 text-white py-3 border-gray'>{index + 1}</td>
-                                        <td className='border-b-2 text-white border-gray '>{item.siswa_fisik.name}</td>
-                                        <td className='border-b-2 text-white border-gray '>{item.penguji_fisik.name}</td>
-                                        <td className='border-b-2 text-white border-gray '>{(item.mft).toFixed(1)}</td>
-                                        <td className='border-b-2 text-white border-gray '>{(item.push_up).toFixed(2)}</td>
-                                        <td className='border-b-2 text-white border-gray '>{item.spir_perut_atas}</td>
-                                        <td className='border-b-2 text-white border-gray '>{item.spir_perut_bawah}</td>
-                                        <td className='border-b-2 text-white border-gray '>{item.spir_dada}</td>
-                                        <td className='border-b-2 text-white border-gray '>{item.plank}</td>
+                                        <td className='border-b-2 text-white py-3 border-gray'>{item.siswa_fisik.nomor_urut}</td>
+                                        <td className='border-b-2 text-white border-gray text-left'>{item.siswa_fisik.name}</td>
+                                        <td className='border-b-2 text-white border-gray'>{item.penguji_fisik.name}</td>
+                                        <td className='border-b-2 text-white border-gray text-lg font-bold'>{(item.mft).toFixed(1)}</td>
+                                        <td className='border-b-2 text-white border-gray text-lg font-bold'>{item.push_up}</td>
+                                        <td className='border-b-2 text-white border-gray text-lg font-bold'>{item.spir_perut_atas}</td>
+                                        <td className='border-b-2 text-white border-gray text-lg font-bold'>{item.spir_perut_bawah}</td>
+                                        <td className='border-b-2 text-white border-gray text-lg font-bold'>{item.spir_dada}</td>
+                                        <td className='border-b-2 text-white border-gray text-lg font-bold'>{item.plank}</td>
                                     </tr>
                                 </>
                             ))}

@@ -31,20 +31,22 @@ const senam = (props) => {
 
     function TdComponent({ items }) {
         return items.map((item, index) => (
-            <td key={index + 1} className='px-3 border-b-2 border-gray'>{item.siswa_senam.name}
+            <td key={index + 1} className='px-3 border-b-2 border-gray uppercase'>{item.siswa_senam.name}
                 {item.predikat === true && (
-                    <div className="font-semibold bg-purple rounded-md text-white py-1.5 px-12">
+                    <div className="font-semibold bg-purple rounded-md text-white py-1.5 px-12 uppercase">
                         benar
                     </div>
                 )}
                 {item.predikat === false && (
-                    <div className="font-semibold bg-red rounded-md text-white py-1.5 px-12">
+                    <div className="font-semibold bg-red rounded-md text-white py-1.5 px-12 uppercase">
                         salah
                     </div>
                 )}
                 {item.predikat === null && (
-                    <div className="font-semibold bg-navy border-4 border-purple rounded-md text-white py-1.5 px-12">
-                        kosong
+                    <div className="bg-purple rounded-md p-0.5 col-span-4">
+                        <div className="font-semibold bg-navy rounded-md text-white py-1 px-10 uppercase">
+                                
+                        </div>
                     </div>
                 )}
             </td>
@@ -55,11 +57,11 @@ const senam = (props) => {
     }, [])
 
     return (
-        <div className="min-h-full bg-darkBlue p-6">
-            <div className="bg-navy rounded-md py-2 px-3">
+        <div className="min-h-screen bg-darkBlue h-screen">
+            <div className="bg-navy rounded-md py-2 px-3 h-[70%]">
 
                 {/* table */}
-                <div className='overflow-x-scroll'>
+                <div className='overflow-x-scroll h-full'>
                     <table className='w-max'>
                         <thead>
                             <tr className='text-white'>
@@ -74,9 +76,9 @@ const senam = (props) => {
                         <tbody>
                             {dataSenam?.map((item, index) => (
                                 <tr className='text-green text-center' key={item.id_senam_detail}>
-                                    <td className='border-b-2 text-white py-3 border-gray w-1/12'>{index + 1}</td>
-                                    <td className='border-b-2 text-white border-gray w-5/12'>{item.senam_siswa.name}</td>
-                                    <td className='border-b-2 text-white border-gray w-5/12'>{item.penguji_senam.name}</td>
+                                    <td className='border-b-2 text-white py-3 border-gray w-1/12'>{item.senam_siswa.nomor_urut}</td>
+                                    <td className='border-b-2 text-white border-gray text-left'>{item.senam_siswa.name}</td>
+                                    <td className='border-b-2 text-white border-gray'>{item.penguji_senam.name}</td>
                                     <TdComponent items={item.siswa_senam_detail} key={index + 1} />
                                 </tr>
                             ))}
