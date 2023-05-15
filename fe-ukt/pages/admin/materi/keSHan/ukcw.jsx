@@ -144,7 +144,7 @@ const ukcw = () => {
         })
 
         //get soal by id_lembar
-        axios.get(BASE_URL + 'soal/lembar_soal/' + id_lembar, headerConfig())
+        axios.get(BASE_URL + 'soal/tipe/' + id_lembar, headerConfig())
         .then(res => {
             setJumlah(res.data.count)
             setSoal(res.data.data)
@@ -156,7 +156,7 @@ const ukcw = () => {
         })
 
         //get soal by id_lembar
-        axios.get(BASE_URL + 'soal/kunci/lembar_soal/' + id_lembar, headerConfig())
+        axios.get(BASE_URL + 'soal/tipe/kunci/' + id_lembar, headerConfig())
         .then(res => {
             setJumlah(res.data.count)
             setKunciSoal(res.data.data)

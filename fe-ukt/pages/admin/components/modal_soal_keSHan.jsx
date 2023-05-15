@@ -6,12 +6,6 @@ const modal_soal_keSHan = (props) => {
 
     // state modal
     const {showModalSoalKeSHan, setShowModalSoalKeSHan} = useContext (globalState)
-    // const {pertanyaan, setPertanyaan} = useContext (globalState)
-    // const {opsi, setOpsi} = useContext (globalState)
-    // const {opsi1, setOpsi1} = useContext (globalState)
-    // const {opsi2, setOpsi2} = useContext (globalState)
-    // const {opsi3, setOpsi3} = useContext (globalState)
-    // const {opsi4, setOpsi4} = useContext (globalState)
 
     return (
         <>
