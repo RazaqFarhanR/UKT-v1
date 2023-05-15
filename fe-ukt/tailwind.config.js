@@ -22,7 +22,9 @@ module.exports = {
         gray : '#585884'
       },
       fontFamily : {
-        'lato' : ['Lato', 'sans-serif']
+        'lato' : ['Lato', 'sans-serif'],
+        'bebas' : ['Bebas Neue', 'sans-serif'],
+        'oswald' : ['Oswald', 'sans-serif']
       },
     },
   },
