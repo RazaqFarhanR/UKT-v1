@@ -34,7 +34,7 @@ const header = () => {
                     </svg>
                 </Link>
                     :
-                    <button onClick={() => location.back()} className="text-slate-600 text-2xl w-10 h-10 absolute translate-y-1 px-2 group">
+                    <button onClick={() => location.back()} className="text-slate-600 text-2xl w-10 h-10 absolute top-0 translate-y-1 px-2 group">
                         <svg className='stroke-white group-hover:stroke-purple duration-300' width="25" height="20" viewBox="0 0 25 20" fill="none" xmlns="http://www.w3.org/2000/svg">
                             <path d="M23 10H2" strokeWidth="4" strokeLinecap="round" strokeLinejoin="round"/>
                             <path d="M10 18L2 10L10 2" strokeWidth="4" strokeLinecap="round" strokeLinejoin="round"/>
@@ -64,6 +64,10 @@ const header = () => {
                                         <h1 className='text-xl font-semibold text-green tracking-wide uppercase'>{active}</h1>
         
                                     )
+                                }else if (active == 'ukcw') {
+                                    return (
+                                        <h1 className='text-xl font-semibold text-green tracking-wide uppercase'>{active}</h1>
+                                    )     
                                 } else {
                                     return (
                                         <h1 className='text-xl font-semibold text-green tracking-wide uppercase'>UKT {active}</h1>
