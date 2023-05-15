@@ -55,7 +55,7 @@ app.post("/", Auth, verifyRoles("admin", "super admin", "admin ranting", "admin 
     let data ={
         name: req.body.name,
         tanggal: req.body.tanggal,
-        tipe_ukt: req.body.tipe
+        tipe_ukt: req.body.tipe_ukt
     }
     event.create(data)
     .then(result => {
@@ -75,8 +75,10 @@ app.put("/:id", Auth, verifyRoles("admin", "super admin", "admin ranting", "admi
     let param = {
         id_event : req.params.id
     }
-    let data = {
-        name: req.body.name
+    let data ={
+        name: req.body.name,
+        tanggal: req.body.tanggal,
+        tipe_ukt: req.body.tipe_ukt
     }
     event.update(data, {where: param})
     .then(result => {
