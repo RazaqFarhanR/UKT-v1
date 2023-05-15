@@ -4,23 +4,43 @@ import Sidebar from '../components/sidebar'
 import Header from '../components/header'
 import Footer from '../components/footer'
 import axios from 'axios'
+import { useRouter } from 'next/router'
 const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
 
 const siswa = () => {
+    // deklarasi router
+    const router = useRouter()
 
     // state
     const [dataRanting, setDataRanting] = useState ([])
 
     // function get data ranting
     const getDataRanting = () => {
+        const pengurus = JSON.parse(localStorage.getItem ('pengurus'))
         const token = localStorage.getItem ('token')
-        axios.get (BASE_URL + `ranting`, { headers: { Authorization: `Bearer ${token}`}})
-        .then (res => {
-            setDataRanting (res.data.data)
-        })
-        .catch (err => {
-            console.log(err.message);
-        })
+
+        if (pengurus.id_role === 'pengurus cabang') {
+            axios.get (BASE_URL + `ranting`, { headers: { Authorization: `Bearer ${token}`}})
+            .then (res => {
+                setDataRanting (res.data.data)
+            })
+            .catch (err => {
+                console.log(err.message);
+            })
+        } else if (pengurus.id_role === 'pengurus ranting'){
+            axios.get (BASE_URL + `ranting/${pengurus.id_ranting}`, { headers: { Authorization: `Bearer ${token}`}})
+            .then (res => {
+                setDataRanting (res.data.data)
+            })
+            .catch (err => {
+                console.log(err.message);
+            })
+        }
+    }
+
+    const goToDetailSiswa = (item) => {
+        router.push ('./' + item.name)
+        localStorage.setItem ('ranting', JSON.stringify (item))
     }
 
     useEffect (() => {
@@ -66,11 +86,11 @@ const siswa = () => {
                             </div>
                         </div>
                         {/* ranting data count wrapper */}
-                        <div className="grid grid-cols-4 gap-x-5">
+                        <div className="grid grid-cols-4 gap-x-5 gap-y-5">
                             
                             {/* card ranting */}
                             {dataRanting.map ((item, index) => (
-                                <Link key={index + 1} href={'./' + item.name} className="bg-navy hover:bg-gradient-to-r from-[#16D4FC] to-[#9A4BE9] rounded-md p-0.5">
+                                <button onClick={() => goToDetailSiswa (item)} key={index + 1} href={'./' + item.name} className="bg-navy hover:bg-gradient-to-r from-[#16D4FC] to-[#9A4BE9] rounded-md p-0.5">
                                     
                                     {/* inner bg */}
                                     <div className="bg-navy p-5 rounded-md space-y-5">
@@ -81,7 +101,7 @@ const siswa = () => {
                                         {/* ranting data count and add button */}
                                         <h1 className='text-white text-3xl font-semibold tracking-wider'>1180</h1>
                                     </div>
-                                </Link>
+                                </button>
                             ))}
                         </div>
                     </div>

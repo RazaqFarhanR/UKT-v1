@@ -15,11 +15,15 @@ const detail_siswa = () => {
 
     // state
     const [dataSiswa, setDataSiswa] = useState ([])
+    const [ranting, setRanting] = useState ('')
 
     // function get data siswa
     const getDataSiswa = () => {
         const token = localStorage.getItem ('token')
-        axios.get(BASE_URL + `siswa` , { headers: { Authorization: `Bearer ${token}`}})
+        const ranting = JSON.parse (localStorage.getItem ('ranting'))
+        setRanting (ranting.id_ranting)
+
+        axios.get(BASE_URL + `siswa/ranting/${ranting.id_ranting}` , { headers: { Authorization: `Bearer ${token}`}})
         .then (res => {
             setDataSiswa (res.data.data)
         })
@@ -86,26 +90,24 @@ const detail_siswa = () => {
                                 <thead>
                                     <tr className='text-green'>
                                         <th className='py-3 w-[5%]'>No</th>
-                                        <th className='w-[13%]'>NIS</th>
-                                        <th className='w-[20%]'>Nama</th>
-                                        <th className='w-[10%]'>Rayon</th>
-                                        <th className='w-[10%]'>Jenis Kelamin</th>
-                                        <th className='w-[13%]'>Jenis Latihan</th>
-                                        <th className='w-[13%]'>UKT</th>
-                                        <th className='w-[13%]'>Event</th>
+                                        <th className='w-[9%]'>No Urut</th>
+                                        <th className='w-[31%]'>Nama</th>
+                                        <th className='w-[15%]'>Rayon</th>
+                                        <th className='w-[9%]'>Jenis Kelamin</th>
+                                        <th className='w-[9%]'>Jenis Latihan</th>
+                                        <th className='w-[12%]'>UKT</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     {dataSiswa.map ((item, index) => (
                                         <tr key={index + 1} className='text-white text-center'>
                                             <td className='border-b-2 py-3 border-gray'>{index + 1}</td>
-                                            <td className='border-b-2 border-gray'>{item.nis}</td>
-                                            <td className='border-b-2 border-gray'>{item.name}</td>
+                                            <td className='border-b-2 border-gray'>{item.nomor_urut}</td>
+                                            <td className='border-b-2 border-gray text-left'>{item.name}</td>
                                             <td className='border-b-2 border-gray'>{item.rayon}</td>
                                             <td className='border-b-2 border-gray'>{item.jenis_kelamin}</td>
                                             <td className='border-b-2 border-gray'>{item.jenis_latihan}</td>
-                                            <td className='border-b-2 border-gray'>{item.tipe_ukt}</td>
-                                            <td className='border-b-2 border-gray'>{item.siswa_event?.name}</td>
+                                            <td className='border-b-2 border-gray'>{item.tipe_ukt} - {item.siswa_event?.name}</td>
                                         </tr>
                                     ))}
                                 </tbody>
