@@ -90,12 +90,16 @@ app.get("/kosong", Auth, verifyRoles("admin", "super admin", "admin ranting", "a
         })
     })    
 })
-//endpoint get data soal by id_lembar_soal
-app.get("/lembar_soal/:id", Auth, verifyRoles("admin", "super admin", "admin ranting", "admin cabang", "pengurus cabang", "pengurus ranting", "penguji cabang", "penguji ranting"), (req,res) => {
+
+//endpoint get soal tanpa jawaban by id lembar soal
+app.get("/tipe/:id", Auth, verifyRoles("admin", "super admin", "admin ranting", "admin cabang", "pengurus cabang", "pengurus ranting", "penguji cabang", "penguji ranting"), (req,res) => {
     soal.findAll({
         where: {
             id_lembar_soal: req.params.id
         },
+        order: [
+            ["createdAt", "ASC"]
+        ]
     })
     .then(soal => {
         res.json({
@@ -110,7 +114,8 @@ app.get("/lembar_soal/:id", Auth, verifyRoles("admin", "super admin", "admin ran
     })    
 })
 
-app.get("/kunci/lembar_soal/:id", Auth, verifyRoles("admin", "super admin", "admin ranting", "admin cabang", "pengurus cabang", "pengurus ranting", "penguji cabang", "penguji ranting"), (req,res) => {
+//endpoint get soal dengan jawaban by id lembar soal
+app.get("/tipe/kunci/:id", Auth, verifyRoles("admin", "super admin", "admin ranting", "admin cabang", "pengurus cabang", "pengurus ranting", "penguji cabang", "penguji ranting"), (req,res) => {
     soal.findAll({
         where: {
             id_lembar_soal: req.params.id
@@ -123,6 +128,33 @@ app.get("/kunci/lembar_soal/:id", Auth, verifyRoles("admin", "super admin", "adm
                 required: true,
             }
         ],
+        order: [
+            ["createdAt", "ASC"]
+        ]
+    })
+    .then(soal => {
+        res.json({
+            count: soal.length,
+            data: soal
+        })
+    })
+    .catch(error => {
+        res.json({
+            message: error.message
+        })
+    })    
+})
+
+//endpoint get data soal by id_lembar_soal
+app.get("/lembar_soal/:id", Auth, verifyRoles("admin", "super admin", "admin ranting", "admin cabang", "pengurus cabang", "pengurus ranting", "penguji cabang", "penguji ranting"), (req,res) => {
+    soal.findAll({
+        where: {
+            id_lembar_soal: req.params.id
+        },
+        order: [
+            Sequelize.fn('RAND')
+        ],
+        limit: 20
     })
     .then(soal => {
         res.json({

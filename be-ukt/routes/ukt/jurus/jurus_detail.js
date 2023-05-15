@@ -101,7 +101,7 @@ app.get("/ukt/:id/:event", Auth, verifyRoles("admin", "super admin", "admin rant
         include: [
             {
                 model: models.siswa,
-                attributes: ['name'],
+                attributes: ['name', 'nomor_urut'],
                 as: "jurus_siswa",
             },
             {

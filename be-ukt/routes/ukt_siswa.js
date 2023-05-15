@@ -7,12 +7,14 @@ const verifyRoles = require("../middleware/verifyRoles");
 
 //implementasi
 const app = express();
+const { Sequelize, Op, where } = require("sequelize");
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: true}));
 
 //import model
 const models = require('../models/index');
 const ukt_siswa = models.ukt_siswa;
+const detail_sambung = models.detail_sambung
 
 //endpoint ditulis disini
 
@@ -32,16 +34,207 @@ app.get("/", Auth, verifyRoles("admin", "super admin", "admin ranting", "admin c
     })    
 })
 //endpoint get data ukt_siswa by tipe ukt
-app.get("/ukt/:id", Auth, verifyRoles("admin", "super admin", "admin ranting", "admin cabang", "pengurus cabang", "pengurus ranting", "penguji cabang", "penguji ranting",), (req,res) => {
+app.get("/ukt/:event/:jenis/:updown", Auth, verifyRoles("admin", "super admin", "admin ranting", "admin cabang", "pengurus cabang", "pengurus ranting", "penguji cabang", "penguji ranting",), (req,res) => {
+    const { jenis, updown } = req.params;
+    let orderCriteria = [];
+    
+    switch (jenis) {
+    case 'senam':
+        orderCriteria.push(['senam', updown === 'downToUp' ? 'ASC' : 'DESC']);
+    break;
+    case 'jurus':
+        orderCriteria.push(['jurus', updown === 'downToUp' ? 'ASC' : 'DESC']);
+        break;
+    case 'fisik':
+        orderCriteria.push(['fisik', updown === 'downToUp' ? 'ASC' : 'DESC']);
+        break;
+    case 'teknik':
+        orderCriteria.push(['teknik', updown === 'downToUp' ? 'ASC' : 'DESC']);
+        break;
+    case 'sambung':
+        orderCriteria.push(['sambung', updown === 'downToUp' ? 'ASC' : 'DESC']);
+        break;
+    case 'keshan':
+        orderCriteria.push(['keshan', updown === 'downToUp' ? 'ASC' : 'DESC']);
+        break;
+    case 'all':
+        orderCriteria.push([
+        Sequelize.literal('(COALESCE(senam, 0) + COALESCE(jurus, 0) + COALESCE(fisik, 0) + COALESCE(teknik, 0) + COALESCE(sambung, 0) + COALESCE(keshan, 0))/6'),
+        updown === 'downToUp' ? 'ASC' : 'DESC'
+        ]);
+    break;
+        default:
+          // handle invalid jenis value
+          res.status(400).send('Invalid jenis value');
+          return;
+      }
+    ukt_siswa.findAll({
+        include: [
+            {
+                model: models.siswa,
+                as: "siswa_ukt_siswa",
+                attributes: ['name','tingkatan',"nomor_urut"],
+                include: [
+                    {
+                        model: models.ranting,
+                        as: "siswa_ranting",
+                        attributes: ['name'],
+                    }
+                ]
+            }
+        ],
+        where: {
+            id_event: req.params.event,
+        },
+        order: orderCriteria
+    })
+    .then(ukt_siswa => {
+        res.json({
+            count: ukt_siswa.length,
+            data: ukt_siswa
+        })
+    })
+    .catch(error => {
+        res.json({
+            message: error.message
+        })
+    })    
+})
+
+//endpoint get data ukt_siswa by tipe ukt
+app.post("/ukt/:event/:jenis/:updown", Auth, verifyRoles("admin", "super admin", "admin ranting", "admin cabang", "pengurus cabang", "pengurus ranting", "penguji cabang", "penguji ranting",), (req,res) => {
+    const { jenis, updown } = req.params;
+    const rantings = req.body.ranting ?? []
+    let orderCriteria = [];
+    console.log(jenis)
+    
+    switch (jenis) {
+    case 'siswa':
+        console.log('siswa oi oi')
+        orderCriteria.push([{ model: models.siswa, as: "siswa_ukt_siswa" }, 'name', updown === 'upToDown' ? 'ASC' : 'DESC']);
+    break;
+    case 'senam':
+        orderCriteria.push(['senam', updown === 'downToUp' ? 'ASC' : 'DESC']);
+    break;
+    case 'jurus':
+        orderCriteria.push(['jurus', updown === 'downToUp' ? 'ASC' : 'DESC']);
+        break;
+    case 'fisik':
+        orderCriteria.push(['fisik', updown === 'downToUp' ? 'ASC' : 'DESC']);
+        break;
+    case 'teknik':
+        orderCriteria.push(['teknik', updown === 'downToUp' ? 'ASC' : 'DESC']);
+        break;
+    case 'sambung':
+        orderCriteria.push(['sambung', updown === 'downToUp' ? 'ASC' : 'DESC']);
+        break;
+    case 'keshan':
+        orderCriteria.push(['keshan', updown === 'downToUp' ? 'ASC' : 'DESC']);
+        break;
+    case 'all':
+        orderCriteria.push([
+        Sequelize.literal('(COALESCE(senam, 0) + COALESCE(jurus, 0) + COALESCE(fisik, 0) + COALESCE(teknik, 0) + COALESCE(sambung, 0) + COALESCE(keshan, 0))/6'),
+        updown === 'downToUp' ? 'ASC' : 'DESC'
+        ]);
+    break;
+        default:
+          // handle invalid jenis value
+          res.status(400).send('Invalid jenis value');
+          return;
+      }
+    ukt_siswa.findAll({
+        include: [
+            {
+                model: models.siswa,
+                as: "siswa_ukt_siswa",
+                attributes: ['name','tingkatan', "nomor_urut"],
+                where: {
+                    ...(rantings.length > 0 && {
+                      id_ranting: {
+                        [Op.in]: rantings
+                      }
+                    })
+                  },
+                include: [
+                      {
+                          model: models.ranting,
+                          as: "siswa_ranting",
+                          attributes: ['name'],
+                        }
+                    ],
+            }
+        ],
+        where: {
+            id_event: req.params.event,
+        },
+        order: orderCriteria
+    })
+    .then(ukt_siswa => {
+        res.json({
+            count: ukt_siswa.length,
+            data: ukt_siswa
+        })
+    })
+    .catch(error => {
+        res.json({
+            message: error.message
+        })
+    })    
+})
+
+//endpoint get data ukt_siswa by tipe ukt
+app.post("/ukt/:event", Auth, verifyRoles("admin", "super admin", "admin ranting", "admin cabang", "pengurus cabang", "pengurus ranting", "penguji cabang", "penguji ranting",), (req,res) => {
+    const rantings = req.body.ranting || []
+    ukt_siswa.findAll({
+        include: [
+            {
+                model: models.siswa,
+                as: "siswa_ukt_siswa",
+                attributes: ['name','tingkatan', "nomor_urut"],
+                where: {
+                    id_ranting: {
+                        [Op.in]: rantings   
+                    }
+                },
+                include: [
+                    {
+                        model: models.ranting,
+                        as: "siswa_ranting",
+                        attributes: ['name'],
+                    }
+                ]
+            }
+        ],
+        where: {
+            id_event: req.params.event,
+        },
+    })
+    .then(ukt_siswa => {
+        res.json({
+            count: ukt_siswa.length,
+            data: ukt_siswa
+        })
+    })
+    .catch(error => {
+        res.json({
+            message: error.message
+        })
+    })    
+})
+//endpoint get data ukt_siswa by tipe ukt
+app.get("/ukt/:event/:ukt", Auth, verifyRoles("admin", "super admin", "admin ranting", "admin cabang", "pengurus cabang", "pengurus ranting", "penguji cabang", "penguji ranting",), (req,res) => {
+    let orderCriteria = [[Sequelize.literal('(COALESCE(senam, 0) + COALESCE(jurus, 0) + COALESCE(fisik, 0) + COALESCE(teknik, 0) + COALESCE(sambung, 0) + COALESCE(keshan, 0))/6'), 'DESC']];
+
     ukt_siswa.findAll({
         where: {
-            tipe_ukt: req.params.id
+            tipe_ukt: req.params.ukt,
+            id_event: req.params.event
         },
         include: [
             {
                 model: models.siswa,
                 as: "siswa_ukt_siswa",
-                attributes: ['name','tingkatan'],
+                attributes: ['name','tingkatan', "nomor_urut"],
                 include: [
                     {
                         model: models.ranting,
@@ -50,7 +243,8 @@ app.get("/ukt/:id", Auth, verifyRoles("admin", "super admin", "admin ranting", "
                     }
                 ]
             }
-        ]
+        ],
+        order: orderCriteria
     })
     .then(ukt_siswa => {
         res.json({
@@ -69,7 +263,8 @@ app.get("/siswa/:id", Auth, verifyRoles("admin", "super admin", "admin ranting",
     ukt_siswa.findOne({
         where: {
             id_siswa: req.params.id
-        }
+        },
+        order: []
     })
     .then(ukt_siswa => {
         res.json({
@@ -158,6 +353,15 @@ app.delete("/:id", Auth, verifyRoles("admin", "super admin", "admin ranting", "a
         })
     })
 })
+
+app.put("/ukt_sambung/update"), (req,res) =>{
+    
+    detail_sambung.findAll({
+        attributes: ['id_siswa','nilai']
+    })
+
+    console.log(detail_sambung.length);
+} 
 
 
 module.exports = app;

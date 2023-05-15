@@ -86,7 +86,7 @@ app.get("/ukt/:id/:event", Auth, verifyRoles("admin", "super admin", "admin rant
             {
                 model: models.siswa,
                 as: "siswa_fisik",
-                attributes: ['name']
+                attributes: ['name', 'nomor_urut']
             },
             {
                 model: models.penguji,

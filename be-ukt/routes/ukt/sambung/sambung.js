@@ -140,7 +140,7 @@ app.get(
               {
                 model: siswa,
                 as: "sambung_siswa",
-                attributes: ["name"],
+                attributes: ["name","nomor_urut"],
               },
             ],
           },
