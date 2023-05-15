@@ -2,62 +2,62 @@ import React, { useEffect, useState } from 'react'
 import axios from 'axios';
 import Link from 'next/link'
 import { globalState } from '@/context/context';
-// import Modal_foto from './components/modal_foto';
+import Modal_foto from './components/modal_foto';
 const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
 const IMAGE_URL = process.env.NEXT_PUBLIC_IMAGE_URL;
 
 const edit_profile = () => {
 
     // state password
-    const [passwordType, setPassworrdType] = useState ('password')
-    const [passwordInput, setPasswordInput] = useState ('')
+    const [passwordType, setPassworrdType] = useState('password')
+    const [passwordInput, setPasswordInput] = useState('')
     const [editPassword, setEditPassword] = useState(false)
 
-
     // state modal
-    const [showModalFoto, setShowModalFoto] = useState (false)
+    const [showModalFoto, setShowModalFoto] = useState(false)
 
     // state
-    const [dataPenguji, setDataPenguji] = useState ([])
-    const [idPenguji, setIdPenguji] = useState ('')
-    const [name, setName] = useState ('')
-    const [niw, setNiw] = useState ('')
-    const [noWa, setNoWa] = useState ('')
-    const [ranting, setRanting] = useState ('')
-    const [username, setUsername] = useState ('')
-    const [password, setPassword] = useState ('')
-    const [role, setRole] = useState ('')
-    const [foto, setFoto] = useState ()
+    const [dataPenguji, setDataPenguji] = useState([])
+    const [idPenguji, setIdPenguji] = useState('')
+    const [name, setName] = useState('')
+    const [niw, setNiw] = useState('')
+    const [noWa, setNoWa] = useState('')
+    const [ranting, setRanting] = useState('')
+    const [username, setUsername] = useState('')
+    const [password, setPassword] = useState('')
+    const [role, setRole] = useState('')
+    const [foto, setFoto] = useState()
 
     // function get data penguji by id
     const getDataPenguji = () => {
-        const dataPenguji = JSON.parse (localStorage.getItem ('penguji'))
-        setIdPenguji (dataPenguji.id_penguji)
-        setDataPenguji (dataPenguji)
-        setNiw (dataPenguji.NIW)
-        setName (dataPenguji.name)
-        setRanting (dataPenguji.penguji_ranting.name)
-        setNoWa (dataPenguji.no_wa)
-        setUsername (dataPenguji.username)
-        setPassword (dataPenguji.password)
-        setRole (dataPenguji.id_role)
-        setFoto (dataPenguji.foto)
+        const dataPenguji = JSON.parse(localStorage.getItem('penguji'))
+        setIdPenguji(dataPenguji.id_penguji)
+        setDataPenguji(dataPenguji)
+        setNiw(dataPenguji.NIW)
+        setName(dataPenguji.name)
+        setRanting(dataPenguji.penguji_ranting.name)
+        setNoWa(dataPenguji.no_wa)
+        setUsername(dataPenguji.username)
+        setPassword(dataPenguji.password)
+        setRole(dataPenguji.id_role)
+        setFoto(dataPenguji.foto)
+        console.log(dataPenguji.foto)
     }
 
     // function show hide password
     const showPassword = () => {
         if (passwordType === 'password') {
-            setPassworrdType ('text')
+            setPassworrdType('text')
             return;
         } else {
-            setPassworrdType ('password')
+            setPassworrdType('password')
         }
     }
 
     // function modal foto
     const editFoto = () => {
-        setShowModalFoto (true)
-        setFoto ()
+        setShowModalFoto(true)
+        setFoto()
     }
 
     // function handle edit
@@ -85,8 +85,8 @@ const edit_profile = () => {
             })
     }
 
-    useEffect (() => {
-        getDataPenguji ()
+    useEffect(() => {
+        getDataPenguji()
     }, [])
 
     return (
@@ -106,14 +106,14 @@ const edit_profile = () => {
                         {/* button sidebar */}
                         <Link href={'/penguji'} className="text-slate-600 text-2xl w-10 h-10 absolute translate-y-1 px-2 group">
                             <svg className='stroke-white group-hover:stroke-purple duration-300' width="25" height="20" viewBox="0 0 25 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <path d="M23 10H2" strokeWidth="4" strokeLinecap="round" strokeLinejoin="round"/>
-                                <path d="M10 18L2 10L10 2" strokeWidth="4" strokeLinecap="round" strokeLinejoin="round"/>
+                                <path d="M23 10H2" strokeWidth="4" strokeLinecap="round" strokeLinejoin="round" />
+                                <path d="M10 18L2 10L10 2" strokeWidth="4" strokeLinecap="round" strokeLinejoin="round" />
                             </svg>
                         </Link>
 
                         {/* Title */}
                         <div className="flex justify-center items-center">
-                            <   h1 className='text-white font-semibold text-xl'>PSHT Cabang Trenggalek</h1>
+                            <   h1 className='text-white font-semibold text-xl'>PROFIL</h1>
                         </div>
                     </div>
 
@@ -127,12 +127,12 @@ const edit_profile = () => {
 
                             {/* wrapper foto profile */}
                             <div className="flex justify-center">
-                                <button onClick={() => editFoto ()} className="bg-gradient-to-r from-[#16D4FC] to-[#9A4BE9] w-40 h-40 rounded-full p-1 group">
+                                <button onClick={() => editFoto()} className="bg-gradient-to-r from-[#16D4FC] to-[#9A4BE9] w-40 h-40 rounded-full p-1 group">
                                     <img className='group-hover:hidden object-cover h-full w-full rounded-full' src={IMAGE_URL + dataPenguji.foto} alt="" />
                                     <div className="hidden rounded-full w-full h-full group-hover:flex flex-col justify-center items-center gap-y-2">
-                                        <img className='object-cover w-full h-full rounded-full' src={`http://localhost:8080/image/` + dataPenguji.foto} alt="" />
+                                        <img className='object-cover w-full h-full rounded-full' src={IMAGE_URL + dataPenguji.foto} alt="" />
                                         <svg className='absolute' width="28" height="26" viewBox="0 0 28 26" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                            <path d="M14 20.9444C15.75 20.9444 17.2377 20.3123 18.4632 19.0479C19.6887 17.7835 20.3009 16.249 20.3 14.4444C20.3 12.6389 19.6873 11.1039 18.4618 9.83955C17.2363 8.57518 15.7491 7.94348 14 7.94444C12.25 7.94444 10.7623 8.57663 9.5368 9.841C8.31133 11.1054 7.69907 12.6399 7.7 14.4444C7.7 16.25 8.31273 17.785 9.5382 19.0493C10.7637 20.3137 12.2509 20.9454 14 20.9444ZM14 19.5L12.46 16.0333L9.1 14.4444L12.46 12.8556L14 9.38889L15.54 12.8556L18.9 14.4444L15.54 16.0333L14 19.5ZM2.8 26C2.03 26 1.3706 25.7169 0.821802 25.1507C0.273002 24.5844 -0.000930956 23.9046 2.37691e-06 23.1111V5.77778C2.37691e-06 4.98333 0.274402 4.303 0.823202 3.73678C1.372 3.17056 2.03094 2.88793 2.8 2.88889H7.21L9.8 0H18.2L20.79 2.88889H25.2C25.97 2.88889 26.6294 3.172 27.1782 3.73822C27.727 4.30444 28.0009 4.9843 28 5.77778V23.1111C28 23.9056 27.7256 24.5859 27.1768 25.1521C26.628 25.7183 25.9691 26.001 25.2 26H2.8Z" fill="white"/>
+                                            <path d="M14 20.9444C15.75 20.9444 17.2377 20.3123 18.4632 19.0479C19.6887 17.7835 20.3009 16.249 20.3 14.4444C20.3 12.6389 19.6873 11.1039 18.4618 9.83955C17.2363 8.57518 15.7491 7.94348 14 7.94444C12.25 7.94444 10.7623 8.57663 9.5368 9.841C8.31133 11.1054 7.69907 12.6399 7.7 14.4444C7.7 16.25 8.31273 17.785 9.5382 19.0493C10.7637 20.3137 12.2509 20.9454 14 20.9444ZM14 19.5L12.46 16.0333L9.1 14.4444L12.46 12.8556L14 9.38889L15.54 12.8556L18.9 14.4444L15.54 16.0333L14 19.5ZM2.8 26C2.03 26 1.3706 25.7169 0.821802 25.1507C0.273002 24.5844 -0.000930956 23.9046 2.37691e-06 23.1111V5.77778C2.37691e-06 4.98333 0.274402 4.303 0.823202 3.73678C1.372 3.17056 2.03094 2.88793 2.8 2.88889H7.21L9.8 0H18.2L20.79 2.88889H25.2C25.97 2.88889 26.6294 3.172 27.1782 3.73822C27.727 4.30444 28.0009 4.9843 28 5.77778V23.1111C28 23.9056 27.7256 24.5859 27.1768 25.1521C26.628 25.7183 25.9691 26.001 25.2 26H2.8Z" fill="white" />
                                         </svg>
                                         <h1 className='text-white absolute translate-y-7'>Ubah Foto</h1>
                                     </div>
@@ -161,16 +161,16 @@ const edit_profile = () => {
                                 {/* wrapper form no wa */}
                                 <div className="flex flex-col gap-y-2">
                                     <label className='text-purple text-lg tracking-wider' htmlFor="">No WA </label>
-                                    <input className='rounded-md bg-navy p-2 text-white focus:outline-purple w-full' type="number" value={noWa} onChange={(e) => setNoWa (e.target.value)} />
+                                    <input className='rounded-md bg-navy p-2 text-white focus:outline-purple w-full' type="number" value={noWa} onChange={(e) => setNoWa(e.target.value)} />
                                 </div>
 
                                 {/* wrapper form username */}
                                 <div className="flex flex-col gap-y-2">
                                     <label className='text-purple text-lg tracking-wider' htmlFor="">Username</label>
-                                    <input className='rounded-md bg-navy p-2 text-white focus:outline-purple w-full' type="text" value={username} onChange={(e) => setUsername (e.target.value)} />
+                                    <input className='rounded-md bg-navy p-2 text-white focus:outline-purple w-full' type="text" value={username} onChange={(e) => setUsername(e.target.value)} />
                                 </div>
 
-                                {/* wrapper form password */}
+
                                 {
                                     editPassword
                                         ?
@@ -215,9 +215,9 @@ const edit_profile = () => {
             </div>
 
             {/* memanggil modal */}
-            {/* <globalState.Provider value={{ showModalFoto, setShowModalFoto, dataAdmin, setDataAdmin, foto, setFoto, idAdmin }}>
+            <globalState.Provider value={{ showModalFoto, setShowModalFoto, dataPenguji, setDataPenguji, foto, setFoto, idPenguji }}>
                 <Modal_foto />
-            </globalState.Provider> */}
+            </globalState.Provider>
         </>
     )
 }
