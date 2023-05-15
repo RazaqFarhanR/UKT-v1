@@ -21,20 +21,15 @@ const teknik = (props) => {
     }
 
     function ThComponent({ items }) {
-        let limit = 0;
-        limit = items.length;
-        let banding = 1;
-        let id = 1
-        banding < limit;
-        id < limit;
-        return items.map((item, index) => (
-            <th key={banding}>{banding++}</th>
-        ));
+        return items.map((item) => (
+            <th key={item.id_teknik} className='px-3 '>
+            <div className={"font-semibold text-white py-1.5 px-12 uppercase"}>{item.siswa_teknik.name}</div></th>
+        ));;
     }
 
     function TdComponent({ items }) {
         return items.map((item) => (
-            <td key={item.id_teknik} className='px-3 border-b-2 border-gray'>{item.siswa_teknik.name}
+            <td key={item.id_teknik} className='px-3 border-b-2 border-gray'>
             <div className={"font-semibold bg-purple rounded-md text-white py-1.5 px-12"}>{item.predikat}</div></td>
         ));
     }
@@ -43,7 +38,7 @@ const teknik = (props) => {
     }, [])
 
     return (
-        <div className="min-h-full bg-darkBlue p-6">
+        <div className="min-h-full bg-darkBlue py-6">
 
             <div className="bg-navy rounded-md py-2 px-3">
 

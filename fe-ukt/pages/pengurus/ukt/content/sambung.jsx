@@ -24,10 +24,10 @@ const sambung = (props) => {
             <td key={item.id_senam} className='border-b-2 border-gray w-[40%]'>
                 <div className="flex flex-row">
                     <div className="font-semibold w-3/4 bg-navy border-2 border-purple rounded-md rounded-br-none rounded-tr-none text-white py-1.5 px-2">
-                        {item.sambung_siswa.name}
+                    {item.sambung_siswa.nomor_urut} - {item.sambung_siswa.name}
                     </div>
-                    <div className="font-semibold w-[15%] bg-purple rounded-md rounded-l-none text-white py-1.5 px-2">
-                        {item.nilai}
+                    <div className="flex items-center justify-center text-bold font-semibold w-[15%] bg-purple rounded-md rounded-l-none text-white py-1.5 px-2">
+                            {item.nilai}
                     </div>
                 </div>
             </td>
@@ -39,34 +39,35 @@ const sambung = (props) => {
     }, [])
 
     return (
-        <div className="min-h-full bg-darkBlue p-6">
-
-            <div className="bg-navy rounded-md py-2 px-3">
+        <div className="min-h-screen bg-darkBlue h-screen">
+            <div className="bg-navy rounded-md py-2 px-3 h-[70%]">
 
                 {/* table */}
-                <table className='w-full table-fixed'>
-                    <thead>
+                <div className='h-full overflow-y-auto'>
+                    <table className='w-full'>
+                        <thead>
                             <tr className='text-white'>
                                 <th className='py-3 w-[5%]'>No</th>
                                 <th>Penguji</th>
-                                <th>Siswa 1</th>
-                                <th>Siswa 2</th>
+                                <th>SISWA 1</th>
+                                <th>SISWA 2</th>
                             </tr>
-                    </thead>
-                    <tbody>
-                        {dataSambung.map((item, index) => (
-                            <>
-                                <tr className='text-green text-center' key={item.id_sambung}>
-                                    <td className='border-b-2 text-white py-3 border-gray'>{index + 1}</td>
-                                    <td className='border-b-2 text-white border-gray '>{item.penguji_sambung.name}</td>
-                                    <TdComponent items={(item.detail_sambung)} />
-                                </tr>
-                            </>
-                        ))}
+                        </thead>
+                        <tbody>
+                            {dataSambung.map((item, index) => (
+                                <>
+                                    <tr className='text-green text-center' key={item.id_sambung}>
+                                        <td className='border-b-2 text-white py-3 border-gray'>{index + 1}</td>
+                                        <td className='border-b-2 text-white border-gray '>{item.penguji_sambung.name}</td>
+                                        <TdComponent items={(item.detail_sambung)} />
+                                    </tr>
+                                </>
+                            ))}
 
-                    </tbody>
+                        </tbody>
 
-                </table>
+                    </table>
+                </div>
             </div>
         </div>
     )
