@@ -354,14 +354,4 @@ app.delete("/:id", Auth, verifyRoles("admin", "super admin", "admin ranting", "a
     })
 })
 
-app.put("/ukt_sambung/update"), (req,res) =>{
-    
-    detail_sambung.findAll({
-        attributes: ['id_siswa','nilai']
-    })
-
-    console.log(detail_sambung.length);
-} 
-
-
 module.exports = app;
