@@ -47,7 +47,7 @@ const ukt_putih = () => {
         setAction ('insert')
         setName ('')
         setDate ('')
-        setTipe ('ukt_putih')
+        setTipe ('UKT Putih')
     }
 
     // function modal edit
@@ -57,7 +57,7 @@ const ukt_putih = () => {
         setIdEvent (selectedItem.id_event)
         setName (selectedItem.name)
         setDate (selectedItem.date)
-        setTipe ('ukt_putih')
+        setTipe ('UKT Putih')
     }
 
     // function modal delete
@@ -65,6 +65,7 @@ const ukt_putih = () => {
         setShowModalDelete (true)
         setAction ('deleteEvent')
         setIdEvent (selectedId)
+        setTipe ('UKT Putih')
     }
 
     // function to rekap nilai
@@ -110,7 +111,7 @@ const ukt_putih = () => {
                         <div className="flex justify-between items-center text-white mb-7">
 
                             {/* page name */}
-                            <h1 className='text-2xl tracking-wider'>UKT - UKT Putih</h1>
+                            <h1 className='text-2xl tracking-wider uppercase font-bold'>REKAP - UKT Putih</h1>
 
                             {/* search and button add data */}
                             <div className="flex gap-x-3">
@@ -186,7 +187,7 @@ const ukt_putih = () => {
                 <Modal_event />
             </globalState.Provider>
 
-            <globalState.Provider value={{ showModalDelete, setShowModalDelete, setDataEvent, action, idEvent }}>
+            <globalState.Provider value={{ showModalDelete, setShowModalDelete, setDataEvent, action, idEvent, tipe, setTipe }}>
                 <Modal_delete />
             </globalState.Provider>
         </>

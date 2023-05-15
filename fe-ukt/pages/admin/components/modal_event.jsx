@@ -1,6 +1,6 @@
 import { globalState } from '@/context/context'
 import axios from 'axios'
-import React, { useContext, useEffect } from 'react'
+import React, { useContext, } from 'react'
 const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
 
 const modal_event = () => {
@@ -35,7 +35,7 @@ const modal_event = () => {
         let form = {
             name : name,
             tanggal : date,
-            tipe : tipe,
+            tipe_ukt : tipe,
         }
 
         if (action === 'insert') {

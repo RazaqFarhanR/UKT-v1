@@ -46,7 +46,7 @@ const ukt_hijau = () => {
         setAction ('insert')
         setName ('')
         setDate ('')
-        setTipe ('ukt_hijau')
+        setTipe ('UKT Hijau')
     }
 
     // function modal edit
@@ -56,7 +56,7 @@ const ukt_hijau = () => {
         setIdEvent (selectedItem.id_event)
         setName (selectedItem.name)
         setDate (selectedItem.tanggal)
-        setTipe ('ukt_hijau')
+        setTipe ('UKT Hijau')
     }
 
     // function modal delete
@@ -64,6 +64,7 @@ const ukt_hijau = () => {
         setShowModalDelete (true)
         setAction ('deleteEvent')
         setIdEvent (selectedId)
+        setTipe ('UKT Hijau')
     }
 
     // function to rekap nilai
@@ -109,7 +110,7 @@ const ukt_hijau = () => {
                         <div className="flex justify-between items-center text-white mb-7">
 
                             {/* page name */}
-                            <h1 className='text-2xl tracking-wider'>UKT - UKT Hijau</h1>
+                            <h1 className='text-2xl tracking-wider uppercase font-bold'>REKAP - UKT Hijau</h1>
 
                             {/* search and button add data */}
                             <div className="flex gap-x-3">
@@ -131,7 +132,7 @@ const ukt_hijau = () => {
 
                         {/* wrapper card event */}
                         <div className="grid grid-cols-2 gap-x-5">
-                            
+
                             {/* card event */}
                             {dataEvent.map((item, index) => (
                                 <div key={index + 1} className="bg-navy hover:bg-gradient-to-r from-[#16D4FC] to-[#9A4BE9] rounded-md p-0.5">
@@ -159,7 +160,7 @@ const ukt_hijau = () => {
                                                 </button>
                                             </div>
                                         </div>
-        
+
                                         {/* action button */}
                                        <div className=" space-x-2 w-full flex justify-center text-white text-center">
                                             <button onClick={() => toRekapNilai (item)} className='bg-purple hover:bg-white hover:text-purple duration-300 p-2 rounded-md w-full'>Lihat Nilai</button>
@@ -185,7 +186,7 @@ const ukt_hijau = () => {
                 <Modal_event />
             </globalState.Provider>
 
-            <globalState.Provider value={{ showModalDelete, setShowModalDelete, setDataEvent, action, idEvent }}>
+            <globalState.Provider value={{ showModalDelete, setShowModalDelete, setDataEvent, action, idEvent, tipe, setTipe }}>
                 <Modal_delete />
             </globalState.Provider>
         </>

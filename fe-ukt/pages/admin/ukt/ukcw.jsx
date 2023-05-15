@@ -46,7 +46,7 @@ const ukcw = () => {
         setAction ('insert')
         setName ('')
         setDate ('')
-        setTipe ('ukcw')
+        setTipe ('UKCW')
     }
 
     // function modal edit
@@ -56,7 +56,7 @@ const ukcw = () => {
         setIdEvent (selectedItem.id_event)
         setName (selectedItem.name)
         setDate (selectedItem.date)
-        setTipe ('ukcw')
+        setTipe ('UKCW')
     }
 
     // function modal delete
@@ -64,6 +64,7 @@ const ukcw = () => {
         setShowModalDelete (true)
         setAction ('deleteEvent')
         setIdEvent (selectedId)
+        setTipe ('UKCW')
     }
 
     // function to rekap nilai
@@ -109,7 +110,7 @@ const ukcw = () => {
                         <div className="flex justify-between items-center text-white mb-7">
 
                             {/* page name */}
-                            <h1 className='text-2xl tracking-wider'>UKT - UKCW</h1>
+                            <h1 className='text-2xl tracking-wider uppercase font-bold'>REKAP - UKCW</h1>
 
                             {/* search and button add data */}
                             <div className="flex gap-x-3">
@@ -130,7 +131,7 @@ const ukcw = () => {
                         </div>
 
                         {/* wrapper card event */}
-                        <div className="grid grid-cols-2 gap-x-5">
+                        <div className="grid grid-cols-2 gap-5">
                             
                             {/* card event */}
                             {dataEvent.map((item, index) => (
@@ -185,7 +186,7 @@ const ukcw = () => {
                 <Modal_event />
             </globalState.Provider>
 
-            <globalState.Provider value={{ showModalDelete, setShowModalDelete, setDataEvent, action, idEvent }}>
+            <globalState.Provider value={{ showModalDelete, setShowModalDelete, setDataEvent, action, idEvent, tipe, setTipe }}>
                 <Modal_delete />
             </globalState.Provider>
         </>
