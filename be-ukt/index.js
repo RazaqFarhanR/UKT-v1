@@ -1,10 +1,25 @@
 const express = require('express');
 const cors = require('cors');
-
 const app = express();
-app.use(cors());
+const http = require('http');
+const server = http.createServer(app);
+const { Server } = require("socket.io");
+const io = new Server(server, {
+    cors: {
+      origin: "*",
+    }
+});
 
+app.use(cors());
 app.use(express.static(__dirname))
+
+//web socket
+io.on('connection', (socket) => {
+    // console.log('a user connected');
+    socket.on('pushRekap', () =>{
+        io.emit('refreshRekap')
+    })
+});
 
 //import end-point diletakkan disini
 
@@ -85,6 +100,10 @@ app.use("/ukt/soal", soal)
 const lembar_soal = require('./routes/lembar_soal');
 app.use("/ukt/lembar_soal", lembar_soal)
 
+//endpoint Lembar jawaban
+const lembar_jawaban = require('./routes/lembar_jawaban');
+app.use("/ukt/lembar_jawaban", lembar_jawaban)
+
 //endpoint Kunci Soal
 const kunci_soal = require('./routes/kunci_soal');
 app.use("/ukt/kunci_soal", kunci_soal)
@@ -105,6 +124,6 @@ const sambung = require('./routes/ukt/sambung/sambung');
 app.use("/ukt/sambung", sambung)
 
 //run server
-app.listen(8080, () => {
+server.listen(8080, () => {
     console.log('server run on port 8080')
 })
