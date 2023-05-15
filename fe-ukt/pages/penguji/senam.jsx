@@ -4,6 +4,9 @@ import { globalState } from '@/context/context'
 import Header from './components/header'
 import Modal_Alert from './components/modal_alert';
 import { useRouter } from 'next/router';
+import SocketIo from 'socket.io-client'
+const SOCKET_URL = process.env.NEXT_PUBLIC_SOCKET_URL
+const socket = SocketIo(SOCKET_URL)
 const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
 
 const senam = () => {
@@ -61,6 +64,8 @@ const senam = () => {
         console.log(data.data)
         if (data.data === true) {
             setAlert(true)
+        } else if (data.data === false){
+            setShowModalAlert(false)
         }
     }
 
@@ -126,6 +131,7 @@ const senam = () => {
                     }, { headers: { Authorization: `Bearer ${token}` } })
                         .then(res => {
                             console.log(res)
+                            socket.emit('pushRekap')
                             router.back()
                         })
                         .catch(err => {
@@ -172,25 +178,25 @@ const senam = () => {
                         <div className="space-y-3 mb-10">
                             {dataSenam.map((item, index) => (
                                 <div key={index + 1} className="grid grid-cols-2 items-center">
-                                    <h1 className='text-white text-xl font-semibold'>{item.name}</h1>
+                                    <h1 className='text-white text-xl font-semibold uppercase'>{item.name}</h1>
                                     <div className="flex gap-x-2">
                                         <button className={selectedButton.find(
                                             (option) =>
                                                 option.id_senam === item.id_senam &&
                                                 option.selectedOption === 'true'
-                                        ) ? "font-semibold bg-purple rounded-md text-white py-1.5 w-full" : "font-semibold bg-white border-2 border-purple rounded-md text-purple py-1.5 w-full"}
+                                        ) ? "font-semibold bg-purple rounded-md text-white py-1.5 w-full uppercase" : "font-semibold bg-white border-2 border-purple rounded-md text-purple py-1.5 w-full uppercase"}
                                             onClick={() => handleButtonClick(item.id_senam, 'true')}>Benar</button>
 
                                         <button className={selectedButton.find(
                                             (option) =>
                                                 option.id_senam === item.id_senam &&
                                                 option.selectedOption === 'false'
-                                        ) ? "font-semibold bg-purple rounded-md text-white py-1.5 w-full" : "font-semibold bg-white border-2 border-purple rounded-md text-purple py-1.5 w-full"} onClick={() => handleButtonClick(item.id_senam, 'false')}>Salah</button>
+                                        ) ? "font-semibold bg-purple rounded-md text-white py-1.5 w-full uppercase" : "font-semibold bg-white border-2 border-purple rounded-md text-purple py-1.5 w-full uppercase"} onClick={() => handleButtonClick(item.id_senam, 'false')}>Salah</button>
                                     </div>
                                 </div>
                             ))}
                         </div>
-                        <div className='bg-yellow hover:bg-white rounded-md p-3 text-center text-xl text-white hover:text-yellow font-semibold shadow shadow-slate-700 duration-300' onClick={() => handleSave()}>Selesai</div>
+                        <div className='bg-yellow hover:bg-white rounded-md p-3 text-center text-xl text-white hover:text-yellow font-semibold shadow shadow-slate-700 duration-300 uppercase' onClick={() => handleSave()}>Selesai</div>
                     </div>
                 </div>
             </div>

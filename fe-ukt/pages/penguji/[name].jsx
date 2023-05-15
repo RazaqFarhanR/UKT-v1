@@ -1,8 +1,8 @@
-import React, { useContext, useEffect, useState } from 'react'
+import React, { useEffect, useState, useContext } from 'react'
 import Link from 'next/link'
-import { globalState } from '@/context/context'
 import { useRouter } from 'next/router'
 import axios from 'axios'
+import { globalState } from '@/context/context'
 import Header from './components/header'
 import Modal_Filter from './components/modal_filter'
 const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
@@ -34,7 +34,7 @@ const detail_event = () => {
         setDataEvent(dataEvent)
         let IdEvent = (dataEvent.id_event)
         let newActive = active ? active : 'senam'
-        axios.get(BASE_URL + `siswa/event/${newActive}/${IdEvent}`, { headers: { Authorization: `Bearer ${token}` } })
+        axios.get(BASE_URL + `siswa/event/${IdEvent}/${newActive}`, { headers: { Authorization: `Bearer ${token}` } })
             .then(res => {
                 setDataSiswa(res.data.data)
             })
@@ -46,9 +46,8 @@ const detail_event = () => {
     // function search siswa by name
     const searchSiswa =() => {
         const token = localStorage.getItem('tokenPenguji')
-        axios.post(BASE_URL + `siswa/search`, {
-            name: searchName
-        },{ headers: { Authorization: `Bearer ${token}` } })
+        let newActive = active ? active : 'senam'
+        axios.get(BASE_URL + `siswa/search/${dataEvent.id_event}/${searchName}/${newActive}`,{ headers: { Authorization: `Bearer ${token}` } })
             .then(res => {
                 console.log(res);
                 setDataSiswa(res.data.data)
@@ -60,8 +59,9 @@ const detail_event = () => {
 
     const handleChildData = (data) => {
         const token = localStorage.getItem('tokenPenguji')
+        let newActive = active ? active : 'senam'
         if(data){
-            axios.get(BASE_URL + `siswa/ranting/${data.id_ranting}`, { headers: { Authorization: `Bearer ${token}` } })
+            axios.get(BASE_URL + `siswa/ranting/${dataEvent.id_event}/${data.id_ranting}/${newActive}`, { headers: { Authorization: `Bearer ${token}` } })
             .then(res => {
                 console.log(res)
                 setDataSiswa(res.data.data)
@@ -141,13 +141,12 @@ const detail_event = () => {
 
                         {/* wrapper category */}
                         <div className="flex bg-navy gap-x-2 overflow-x-scroll text-purple mb-3 scrollbar-hide">
-                            <button onClick={() => onActive('senam')} className={active === 'senam' ? "bg-purple text-white transition ease-in-out duration-300 py-1.5 px-4 rounded-md" : "bg-white hover:bg-purple hover:text-white transition ease-in-out duration-300 py-1.5 px-4 rounded-md"}>Senam</button>
-                            <button onClick={() => onActive('jurus')} className={active === 'jurus' ? "bg-purple text-white transition ease-in-out duration-300 py-1.5 px-4 rounded-md" : "bg-white hover:bg-purple hover:text-white transition ease-in-out duration-300 py-1.5 px-4 rounded-md"}>Jurus</button>
-                            <button onClick={() => onActive('fisik')} className={active === 'fisik' ? "bg-purple text-white transition ease-in-out duration-300 py-1.5 px-4 rounded-md" : "bg-white hover:bg-purple hover:text-white transition ease-in-out duration-300 py-1.5 px-4 rounded-md"}>Fisik</button>
-                            <button onClick={() => onActive('teknik')} className={active === 'teknik' ? "bg-purple text-white transition ease-in-out duration-300 py-1.5 px-4 rounded-md" : "bg-white hover:bg-purple hover:text-white transition ease-in-out duration-300 py-1.5 px-4 rounded-md"}>Teknik</button>
-                            <button onClick={() => router.push('./sambung')} className={active === 'sambung' ? "bg-purple text-white transition ease-in-out duration-300 py-1.5 px-4 rounded-md" : "bg-white hover:bg-purple hover:text-white transition ease-in-out duration-300 py-1.5 px-4 rounded-md"}>Sambung</button>
+                            <button onClick={() => onActive('senam')} className={active === 'senam' ? "bg-purple text-white transition ease-in-out duration-300 py-1.5 px-4 rounded-md" : "bg-white hover:bg-purple hover:text-white transition ease-in-out duration-300 py-1.5 px-4 rounded-md"}>SENAM</button>
+                            <button onClick={() => onActive('jurus')} className={active === 'jurus' ? "bg-purple text-white transition ease-in-out duration-300 py-1.5 px-4 rounded-md" : "bg-white hover:bg-purple hover:text-white transition ease-in-out duration-300 py-1.5 px-4 rounded-md"}>JURUS</button>
+                            <button onClick={() => onActive('fisik')} className={active === 'fisik' ? "bg-purple text-white transition ease-in-out duration-300 py-1.5 px-4 rounded-md" : "bg-white hover:bg-purple hover:text-white transition ease-in-out duration-300 py-1.5 px-4 rounded-md"}>FISIK</button>
+                            <button onClick={() => onActive('teknik')} className={active === 'teknik' ? "bg-purple text-white transition ease-in-out duration-300 py-1.5 px-4 rounded-md" : "bg-white hover:bg-purple hover:text-white transition ease-in-out duration-300 py-1.5 px-4 rounded-md"}>TEKNIK</button>
+                            <button onClick={() => router.push('./sambung')} className={active === 'sambung' ? "bg-purple text-white transition ease-in-out duration-300 py-1.5 px-4 rounded-md" : "bg-white hover:bg-purple hover:text-white transition ease-in-out duration-300 py-1.5 px-4 rounded-md"}>SAMBUNG</button>
                         </div>
-
                         {/* search */}
                         <div className="bg-white py-1.5 px-4 rounded-md gap-x-2 flex items-center mb-5 ">
                             {/* button search */}

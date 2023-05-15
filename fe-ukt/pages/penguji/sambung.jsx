@@ -1,10 +1,13 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useContext } from 'react'
 import axios from 'axios'
 import { globalState } from '@/context/context'
 import Header from './components/header'
 import Modal_Sambung from './components/modal_sambung';
 import Modal_Alert from './components/modal_alert';
 import { useRouter } from 'next/router';
+import SocketIo from 'socket.io-client'
+const SOCKET_URL = process.env.NEXT_PUBLIC_SOCKET_URL
+const socket = SocketIo(SOCKET_URL)
 const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
 
 const sambung = () => {
@@ -21,6 +24,13 @@ const sambung = () => {
     const [nilai1, setNilai1] = useState(60)
     const [nilai2, setNilai2] = useState(60)
 
+    const {active, setActive} = useContext(globalState)
+
+    // function set jneis
+    const onActive = (e) => {
+        setActive(e)
+    }
+
     // function get data siswa from local storage
     // function get data siswa
     const handleChildData = (data) => {
@@ -35,6 +45,8 @@ const sambung = () => {
         console.log(data.data)
         if (data.data === true) {
             setAlert(true)
+        } else if (data.data === false){
+            setShowModalAlert(false)
         }
     }
 
@@ -71,15 +83,16 @@ const sambung = () => {
                     console.log(error.message);
                 });
             
-            for (let i=0; i<2; i++){
-                axios.put(BASE_URL + `ukt_siswa/${i < 2 && i > 0 ? posisi1 : posisi2}`, {
-                    sambung: i < 2 ? nilai1 : nilai2
+            for (let i = 0; i < 2; i++) {
+                axios.put(BASE_URL + `ukt_siswa/${i == 0 ? posisi1 : posisi2}`, {
+                    sambung: i == 0  ? nilai1 : nilai2
                 }, { headers: { Authorization: `Bearer ${token}` } })
-                .then(res => {
-                    console.log(res)
-                })
+                    .then(res => {
+                        console.log(res)
+                    })
             }
 
+            socket.emit('pushRekap')
             router.back()
 
         }
@@ -103,13 +116,13 @@ const sambung = () => {
                     {/* akhir header */}
 
                     {/* konten utama */}
-                    <div className="min-h-full bg-darkBlue px-10 py-8 space-y-10">
+                    <div className="min-h-full bg-darkBlue px-5 py-8 space-y-10">
 
                         {/* wrapper siswa 1 */}
                         <div>
 
                             <div className="bg-purple rounded-md py-1.5 mb-7 text-center shadow-sm shadow-slate-400">
-                                <h1 className='text-white text-2xl tracking-wide'>Siswa 1</h1>
+                                <h1 className='text-white text-2xl tracking-wide uppercase font-bold font-lato'>SISWA 1</h1>
                             </div>
                             {/* card siswa information */}
                             <div className="bg-navy rounded-md p-3 text-white mb-4 shadow shadow-slate-700 hover:shadow-purple transition ease-in-out duration-300"
@@ -121,9 +134,9 @@ const sambung = () => {
                                     ? <>
                                         <h1 className='text-green tracking-wide text-lg'>{dataSiswa1.nomor_urut}</h1>
                                         <h1 className='text-xl font-semibold'>{dataSiswa1.name}</h1>
-                                        <h1 className='tracking-wide'>{dataSiswa1.id_ranting}</h1>
+                                        <h1 className='tracking-wide'>{dataSiswa1.rayon}</h1>
                                     </>
-                                    : <h1 className='text-xl font-semibold' >Pilih Siswa</h1>
+                                    : <h1 className='text-lg uppercase font-bold font-lato' >Pilih Siswa</h1>
 
                                 }
                             </div>
@@ -131,7 +144,7 @@ const sambung = () => {
 
                             {/* wrapper nilai siswa 1 */}
                             <div className="bg-navy rounded-md p-2 text-center text-white space-y-3 mb-3">
-                                <h1 className='text-xl font-semibold tracking-wider'>Nilai</h1>
+                                {/* <h1 className='text-xl font-semibold tracking-wider uppercase font-bold font-lato'>Nilai</h1> */}
 
                                 {/* nilai */}
                                 <div className="grid grid-cols-3 gap-x-3 items-center">
@@ -160,7 +173,7 @@ const sambung = () => {
                         <div>
 
                             <div className="bg-purple rounded-md py-1.5 mb-7 text-center shadow-sm shadow-slate-400">
-                                <h1 className='text-white text-2xl tracking-wide'>Siswa 2</h1>
+                                <h1 className='text-white text-2xl tracking-wide uppercase font-bold font-lato'>Siswa 2</h1>
                             </div>
 
                             {/* card siswa information */}
@@ -173,16 +186,16 @@ const sambung = () => {
                                     ? <>
                                         <h1 className='text-green tracking-wide text-lg'>{dataSiswa2.nomor_urut}</h1>
                                         <h1 className='text-xl font-semibold'>{dataSiswa2.name}</h1>
-                                        <h1 className='tracking-wide'>{dataSiswa2.id_ranting}</h1>
+                                        <h1 className='tracking-wide'>{dataSiswa2.rayon}</h1>
                                     </>
-                                    : <h1 className='text-xl font-semibold' >Pilih Siswa</h1>
+                                    : <h1 className='text-lg uppercase font-bold font-lato' >Pilih Siswa</h1>
 
                                 }
                             </div>
 
                             {/* wrapper nilai siswa 1 */}
                             <div className="bg-navy rounded-md p-2 text-center text-white space-y-3 mb-3">
-                                <h1 className='text-xl font-semibold tracking-wider'>Nilai</h1>
+                                {/* <h1 className='text-xl font-semibold tracking-wider uppercase font-bold font-lato'>Nilai</h1> */}
 
                                 {/* nilai */}
                                 <div className="grid grid-cols-3 gap-x-3 items-center">

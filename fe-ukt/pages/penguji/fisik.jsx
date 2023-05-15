@@ -1,14 +1,17 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useRef } from 'react'
 import axios from 'axios'
 import { globalState } from '@/context/context'
 import Header from './components/header'
 import Modal_Alert from './components/modal_alert';
 import { useRouter } from 'next/router';
+import SocketIo from 'socket.io-client'
+const SOCKET_URL = process.env.NEXT_PUBLIC_SOCKET_URL
+const socket = SocketIo(SOCKET_URL)
 const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
 
 const fisik = () => {
 
-    const [showModalAlert, setShowModalAlert ] = useState(false);
+    const [showModalAlert, setShowModalAlert] = useState(false);
     const router = useRouter()
 
     // state
@@ -22,6 +25,11 @@ const fisik = () => {
     const [spirDada, setSpirDada] = useState(0);
     const [plank, setPlank] = useState(0);
 
+    // state timer
+    const [seconds, setSeconds] = useState(0);
+    const [isRunning, setIsRunning] = useState(false);
+    const intervalRef = useRef(null);
+
     // function get data siswa from local storage
     const getDataSiswa = () => {
         const dataSiswa = JSON.parse(localStorage.getItem('dataSiswa'))
@@ -32,6 +40,8 @@ const fisik = () => {
         console.log(data.data)
         if (data.data === true) {
             setAlert(true)
+        } else if (data.data === false) {
+            setShowModalAlert(false)
         }
     }
 
@@ -56,12 +66,12 @@ const fisik = () => {
             .then(res => {
                 console.log(res.data);
                 setDataStandartFisik(res.data);
-                setMft(res.data.mft);
-                setPushUp(res.data.push_up);
-                setSpirPA(res.data.spir_perut_atas);
-                setSpirPB(res.data.spir_perut_bawah);
-                setSpirDada(res.data.spir_dada);
-                setPlank(res.data.plank);
+                // setMft(res.data.mft);
+                // setPushUp(res.data.push_up);
+                // setSpirPA(res.data.spir_perut_atas);
+                // setSpirPB(res.data.spir_perut_bawah);
+                // setSpirDada(res.data.spir_dada);
+                // setPlank(res.data.plank);
             })
             .catch(err => {
                 console.log(err.message);
@@ -69,12 +79,12 @@ const fisik = () => {
     }
     const handleSave = async () => {
         setShowModalAlert(true)
-        if(alert){
+        if (alert) {
             // -- data detail -- //
             const uktSiswa = JSON.parse(localStorage.getItem('dataUktSiswa'))
             const token = localStorage.getItem('tokenPenguji')
             const dataPenguji = JSON.parse(localStorage.getItem('penguji'))
-            
+
             const primeMft = mft.toFixed(1)
             const mftNew = ((primeMft / dataStandartFisik.mft) * 100)
             const pushUpNew = (pushUp / dataStandartFisik.push_up) * 100
@@ -107,6 +117,7 @@ const fisik = () => {
             }, { headers: { Authorization: `Bearer ${token}` } })
                 .then(res => {
                     console.log(res)
+                    socket.emit('pushRekap')
                     router.back()
                 })
                 .catch(err => {
@@ -124,6 +135,36 @@ const fisik = () => {
     useEffect(() => {
         console.log(mft)
     }, [mft])
+
+    // function untuk timer
+    useEffect(() => {
+        if (isRunning) {
+            intervalRef.current = setInterval(() => {
+                setSeconds(seconds => seconds + 1);
+            }, 1000);
+            return () => clearInterval(intervalRef.current);
+        }
+    }, [isRunning]);
+
+    function handleStart() {
+        setIsRunning(true);
+    }
+
+    function handlePause() {
+        setIsRunning(false);
+        clearInterval(intervalRef.current);
+    }
+
+    function handleRestart() {
+        setSeconds(0);
+        clearInterval(intervalRef.current);
+        setIsRunning(false);
+    }
+
+    const minutes = Math.floor(seconds / 60);
+    const remainingSeconds = seconds % 60;
+
+
     return (
         <>
             <div className="font-lato">
@@ -136,7 +177,7 @@ const fisik = () => {
                     {/* akhir header */}
 
                     {/* konten utama */}
-                    <div className="min-h-full bg-darkBlue px-10 py-8">
+                    <div className="min-h-full bg-darkBlue px-5 py-8">
 
                         {/* card siswa information */}
                         <div className="bg-navy rounded-md p-3 text-white mb-8 shadow shadow-slate-700 hover:shadow-purple transition ease-in-out duration-300">
@@ -147,33 +188,50 @@ const fisik = () => {
 
                         {/* wrapper mft */}
                         <div className="bg-navy rounded-md p-2 text-center text-white space-y-3 mb-3">
-                            <h1 className='text-xl font-semibold tracking-wider'>MFT</h1>
+                            <h1 className='text-xl font-semibold tracking-wider uppercase'>MFT</h1>
 
                             {/* fisik list */}
                             <div className="grid grid-cols-3 gap-x-3 items-center">
 
                                 {/* button minus */}
                                 <button className='bg-red rounded-md text-center text-2xl font-bold'
-                                    onClick={() => setMft(Math.round(mft - 0.1))}
+                                    onClick={() => {
+                                        const increment = 0.1;
+                                        const newMft = parseFloat((mft - increment).toFixed(1));
+                                        setMft(newMft);
+                                    }}
                                 >
                                     -
                                 </button>
 
                                 {/* score indicator */}
-                                <div className="outline outline-purple rounded-md h-full flex items-center justify-center">
-                                    <h1 className='text-xl font-semibold'>{mft.toFixed(1)}</h1>
-                                </div>
+                                <h1 className='outline outline-purple rounded-md h-full flex items-center justify-center text-xl font-semibold'>
+                                    <input
+                                        type="number"
+                                        value={mft}
+                                        onChange={(e) => setMft(parseFloat(e.target.value))}
+                                        step="0.1"
+                                        min="0"
+                                        max="100"
+                                        className='w-full text-center bg-transparent outline-none'
+                                    />
+                                </h1>
 
                                 {/* button plus */}
                                 <button className='bg-purple rounded-md text-center text-2xl font-bold'
-                                    onClick={() => setMft(mft + 0.1)}>
+                                    onClick={() => {
+                                        const increment = 0.1;
+                                        const newMft = parseFloat((mft + increment).toFixed(1));
+                                        setMft(newMft);
+                                    }}>
                                     +
                                 </button>
                             </div>
                         </div>
+
                         {/* wrapper push_up */}
                         <div className="bg-navy rounded-md p-2 text-center text-white space-y-3 mb-3">
-                            <h1 className='text-xl font-semibold tracking-wider'>Push Up</h1>
+                            <h1 className='text-xl font-semibold tracking-wider uppercase'>Push Up</h1>
 
                             {/* fisik list */}
                             <div className="grid grid-cols-3 gap-x-3 items-center">
@@ -186,9 +244,17 @@ const fisik = () => {
                                 </button>
 
                                 {/* score indicator */}
-                                <div className="outline outline-purple rounded-md h-full flex items-center justify-center">
-                                    <h1 className='text-xl font-semibold'>{pushUp}</h1>
-                                </div>
+                                <h1 className='outline outline-purple rounded-md h-full flex items-center justify-center text-xl font-semibold'>
+                                    <input
+                                        type="number"
+                                        value={pushUp}
+                                        onChange={(e) => setPushUp(e.target.value)}
+                                        step="0.1"
+                                        min="0"
+                                        max="100"
+                                        className='w-full text-center bg-transparent outline-none'
+                                    />
+                                </h1>
 
                                 {/* button plus */}
                                 <button className='bg-purple rounded-md text-center text-2xl font-bold'
@@ -197,9 +263,10 @@ const fisik = () => {
                                 </button>
                             </div>
                         </div>
+
                         {/* wrapper spir_perut_atas */}
                         <div className="bg-navy rounded-md p-2 text-center text-white space-y-3 mb-3">
-                            <h1 className='text-xl font-semibold tracking-wider'>Spir Perut Atas</h1>
+                            <h1 className='text-xl font-semibold tracking-wider uppercase'>Spir Perut Atas</h1>
 
                             {/* fisik list */}
                             <div className="grid grid-cols-3 gap-x-3 items-center">
@@ -212,9 +279,17 @@ const fisik = () => {
                                 </button>
 
                                 {/* score indicator */}
-                                <div className="outline outline-purple rounded-md h-full flex items-center justify-center">
-                                    <h1 className='text-xl font-semibold'>{spirPA}</h1>
-                                </div>
+                                <h1 className='outline outline-purple rounded-md h-full flex items-center justify-center text-xl font-semibold'>
+                                    <input
+                                        type="number"
+                                        value={spirPA}
+                                        onChange={(e) => setSpirPA(e.target.value)}
+                                        step="0.1"
+                                        min="0"
+                                        max="100"
+                                        className='w-full text-center bg-transparent outline-none'
+                                    />
+                                </h1>
 
                                 {/* button plus */}
                                 <button className='bg-purple rounded-md text-center text-2xl font-bold'
@@ -223,9 +298,10 @@ const fisik = () => {
                                 </button>
                             </div>
                         </div>
+
                         {/* wrapper spir_perut_bawah */}
                         <div className="bg-navy rounded-md p-2 text-center text-white space-y-3 mb-3">
-                            <h1 className='text-xl font-semibold tracking-wider'>Spir Perut Bawah</h1>
+                            <h1 className='text-xl font-semibold tracking-wider uppercase'>Spir Perut Bawah</h1>
 
                             {/* fisik list */}
                             <div className="grid grid-cols-3 gap-x-3 items-center">
@@ -238,9 +314,17 @@ const fisik = () => {
                                 </button>
 
                                 {/* score indicator */}
-                                <div className="outline outline-purple rounded-md h-full flex items-center justify-center">
-                                    <h1 className='text-xl font-semibold'>{spirPB}</h1>
-                                </div>
+                                <h1 className='outline outline-purple rounded-md h-full flex items-center justify-center text-xl font-semibold'>
+                                    <input
+                                        type="number"
+                                        value={spirPB}
+                                        onChange={(e) => setSpirPB(e.target.value)}
+                                        step="0.1"
+                                        min="0"
+                                        max="100"
+                                        className='w-full text-center bg-transparent outline-none'
+                                    />
+                                </h1>
 
                                 {/* button plus */}
                                 <button className='bg-purple rounded-md text-center text-2xl font-bold'
@@ -249,9 +333,10 @@ const fisik = () => {
                                 </button>
                             </div>
                         </div>
+
                         {/* wrapper spir_dada */}
                         <div className="bg-navy rounded-md p-2 text-center text-white space-y-3 mb-3">
-                            <h1 className='text-xl font-semibold tracking-wider'>Spir Dada</h1>
+                            <h1 className='text-xl font-semibold tracking-wider uppercase'>Spir Dada</h1>
 
                             {/* fisik list */}
                             <div className="grid grid-cols-3 gap-x-3 items-center">
@@ -264,9 +349,17 @@ const fisik = () => {
                                 </button>
 
                                 {/* score indicator */}
-                                <div className="outline outline-purple rounded-md h-full flex items-center justify-center">
-                                    <h1 className='text-xl font-semibold'>{spirDada}</h1>
-                                </div>
+                                <h1 className='outline outline-purple rounded-md h-full flex items-center justify-center text-xl font-semibold'>
+                                    <input
+                                        type="number"
+                                        value={spirDada}
+                                        onChange={(e) => setSpirDada(e.target.value)}
+                                        step="0.1"
+                                        min="0"
+                                        max="100"
+                                        className='w-full text-center bg-transparent outline-none'
+                                    />
+                                </h1>
 
                                 {/* button plus */}
                                 <button className='bg-purple rounded-md text-center text-2xl font-bold'
@@ -275,13 +368,13 @@ const fisik = () => {
                                 </button>
                             </div>
                         </div>
-                        {/* wrapper plank */}
+
+                        {/* wrapper Plank */}
                         <div className="bg-navy rounded-md p-2 text-center text-white space-y-3 mb-3">
-                            <h1 className='text-xl font-semibold tracking-wider'>Plank</h1>
+                            <h1 className='text-xl font-semibold tracking-wider uppercase'>Plank</h1>
 
                             {/* fisik list */}
                             <div className="grid grid-cols-3 gap-x-3 items-center">
-
                                 {/* button minus */}
                                 <button className='bg-red rounded-md text-center text-2xl font-bold'
                                     onClick={() => setPlank(plank - 1)}
@@ -290,9 +383,17 @@ const fisik = () => {
                                 </button>
 
                                 {/* score indicator */}
-                                <div className="outline outline-purple rounded-md h-full flex items-center justify-center">
-                                    <h1 className='text-xl font-semibold'>{plank}</h1>
-                                </div>
+                                <h1 className='outline outline-purple rounded-md h-full flex items-center justify-center text-xl font-semibold'>
+                                    <input
+                                        type="number"
+                                        value={plank}
+                                        onChange={(e) => setPlank(e.target.value)}
+                                        step="0.1"
+                                        min="0"
+                                        max="100"
+                                        className='w-full text-center bg-transparent outline-none'
+                                    />
+                                </h1>
 
                                 {/* button plus */}
                                 <button className='bg-purple rounded-md text-center text-2xl font-bold'
@@ -300,14 +401,34 @@ const fisik = () => {
                                     +
                                 </button>
                             </div>
+
                         </div>
-                        <div className='bg-yellow rounded-md p-3 text-white mb-8 shadow shadow-slate-700 text-center'
+
+                        {/* submit button */}
+                        <div className='bg-yellow rounded-md p-2 text-white mb-8 shadow shadow-slate-700 text-center text-xl uppercase font-bold font-lato my-3'
                             onClick={handleSave}>Selesai</div>
+
+                        {/* wrapper timer */}
+                        <div className="fixed bottom-0 left-0 w-full bg-navy text-white px-4 py-2">
+                            <div className="flex justify-center items-center">
+                                    <div className="flex items-center space-x-3">
+                                        <button className="bg-green rounded-md text-center text-2xl font-bold px-4 py-2" onClick={handleRestart}>⥀</button>
+                                        <div className="flex items-center space-x-3">
+                                        <div className="text-center text-white text-3xl font-bold">{minutes.toString().padStart(2, '0')}:{remainingSeconds.toString().padStart(2, '0')}</div>
+                                        </div>
+                                        {!isRunning ?
+                                            <button className="bg-green rounded-md text-center text-2xl font-bold px-4 py-2" onClick={handleStart}>▶</button>
+                                            :
+                                            <button className="bg-green rounded-md text-center text-2xl font-bold px-4 py-2" onClick={handlePause}>⦷</button>
+                                        }
+                                    </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
 
-            <globalState.Provider value={{ showModalAlert, setShowModalAlert}}>
+            <globalState.Provider value={{ showModalAlert, setShowModalAlert }}>
                 <Modal_Alert onData={handleAlertData} />
             </globalState.Provider>
         </>

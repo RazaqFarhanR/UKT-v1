@@ -1,12 +1,17 @@
 import axios from 'axios'
 import { useRouter } from 'next/router'
 import React, { useState } from 'react'
+import { globalState } from '@/context/context'
+import Modal_Password from './components/modal_password';
 const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
 
 const loginPage = () => {
     
     // deklarasi router
     const router = useRouter()
+
+    // state modal
+    const [showModalPassword, setShowModalPassword] = useState(false);
 
     // state
     const [username, setUsername] = useState ('')
@@ -32,17 +37,11 @@ const loginPage = () => {
                 console.log(res.data.message);
                 router.push ('/penguji')
             } else {
-                alert (res.data.message)
+                window.alert (res.data.message)
             }
         })
         .catch (err => {
-            console.log(err.response.data.message);
-            let status = err.response.status
-            if (status == 404) {
-                alert('username belum terdaftar')
-            } else if (400) {
-                alert('password salah')
-            }
+            console.log(err.message);
         })
     }
     
@@ -91,7 +90,8 @@ const loginPage = () => {
                             </form>
 
                             {/* forget password */}
-                            <button className='text-[15px] tracking-wider text-gray hover:text-white duration-300 transition ease-in-out mb-5'>Forget Password?</button>
+                            <button onClick={() => setShowModalPassword(true)}
+                            className='text-[15px] tracking-wider text-gray hover:text-white duration-300 transition ease-in-out mb-5'>Forget Password?</button>
                             
                             <form className='w-full' action="POST" onSubmit={login}>
 
@@ -103,6 +103,10 @@ const loginPage = () => {
                     </div>
                 </div>
             </div>
+
+            <globalState.Provider value={{ showModalPassword, setShowModalPassword}}>
+                <Modal_Password />
+            </globalState.Provider>
         </>
     )
 }

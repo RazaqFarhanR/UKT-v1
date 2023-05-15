@@ -1,9 +1,12 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useRef } from 'react'
 import axios from 'axios';
 import { globalState } from '@/context/context'
 import Modal_Alert from './components/modal_alert';
 import Header from './components/header'
 import { useRouter } from 'next/router';
+import SocketIo from 'socket.io-client'
+const SOCKET_URL = process.env.NEXT_PUBLIC_SOCKET_URL
+const socket = SocketIo(SOCKET_URL)
 const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
 
 const teknik = () => {
@@ -23,6 +26,8 @@ const teknik = () => {
         console.log(data.data)
         if (data.data === true) {
             setAlert(true)
+        } else if (data.data === false) {
+            setShowModalAlert(false)
         }
     }
 
@@ -33,14 +38,16 @@ const teknik = () => {
         }
     }, [alert])
 
-    function handleButtonClick(id_teknik, selectedOption) {
+    function handleButtonClick(id_teknik, name, selectedOption, warning) {
         const index = updatedOptions.findIndex(
             (option) => option.id_teknik === id_teknik
         );
         if (index === -1) {
-            updatedOptions.push({ id_teknik, selectedOption });
+            updatedOptions.push({ id_teknik, name, selectedOption, warning });
         } else {
+            updatedOptions[index].name = name;
             updatedOptions[index].selectedOption = selectedOption;
+            updatedOptions[index].warning = warning;
         }
         SetSelectedButton(updatedOptions);
     }
@@ -58,13 +65,14 @@ const teknik = () => {
         const dataSiswa = JSON.parse(localStorage.getItem('dataSiswa'));
         axios.get(BASE_URL + `teknik/ukt/${dataSiswa.tipe_ukt}`, { headers: { Authorization: `Bearer ${token}` } })
             .then(res => {
-                setDataTeknik(res.data.data)
                 const data = res.data.data
                 console.log(res);
                 for (let i = 0; i < res.data.data.length; i++) {
                     const id_teknik = data[i].id_teknik
+                    const name = data[i].name
                     const selectedOption = null
-                    handleButtonClick(id_teknik, selectedOption)
+                    const warning = null
+                    handleButtonClick(id_teknik, name, selectedOption, warning)
                 }
             })
             .catch(err => {
@@ -72,9 +80,25 @@ const teknik = () => {
             })
     }
 
-    // function post data teknik
+
+    //  function post data teknik  //
     const postDataTeknik = () => {
-        setShowModalAlert(true)
+        const newData = selectedButton.map((option) => {
+            return {
+                id_teknik: option.id_teknik,
+                name: option.name,
+                predikat: option.selectedOption,
+            };
+        }).sort((a, b) => a.id_teknik - b.id_teknik); // Sort the array by id_teknik in ascending order
+        let kosong = []
+        const warning = "kolom ini harus di isi"
+        for (let i = 0; i < newData.length; i++) {
+            if (newData[i].predikat == null) {
+                handleButtonClick(newData[i].id_teknik, newData[i].name, null, warning)
+                kosong.push('1')
+            }
+        }
+        kosong.length === 0 && setShowModalAlert(true)
         if (alert == true) {
 
             // -- data detail -- //
@@ -94,40 +118,29 @@ const teknik = () => {
                     console.log(res.data.data)
 
                     const id_teknik_detail = res.data.data.id_teknik_detail;
-                    const newData = selectedButton.map((option) => {
-                        return {
-                          id_teknik: option.id_teknik,
-                          predikat: option.selectedOption,
-                        };
-                      }).sort((a, b) => a.id_teknik - b.id_teknik); // Sort the array by id_teknik in ascending order
-                    
-                      console.log('newData');
-                      console.log(newData);
-                    
-                      let baik = [];
-                      let cukup = [];
-                      let kurang = [];
-                    
-                      for (let i = 0; i < newData.length; i++) {
+                    let baik = [];
+                    let cukup = [];
+                    let kurang = [];
+
+                    for (let i = 0; i < newData.length; i++) {
                         if (newData[i].predikat == 'BAIK') {
-                          baik.push('1');
+                            baik.push('1');
                         } else if (newData[i].predikat == 'CUKUP') {
-                          cukup.push('1');
+                            cukup.push('1');
                         } else if (newData[i].predikat == 'KURANG') {
-                          kurang.push('1');
+                            kurang.push('1');
                         }
-                    
                         try {
-                          const res = await axios.post(BASE_URL + `teknik_siswa`, {
-                            id_teknik_detail: id_teknik_detail,
-                            id_teknik: newData[i].id_teknik,
-                            predikat: newData[i].predikat
-                          }, { headers: { Authorization: `Bearer ${token}` } });
-                          console.log(res);
+                            const res = await axios.post(BASE_URL + `teknik_siswa`, {
+                                id_teknik_detail: id_teknik_detail,
+                                id_teknik: newData[i].id_teknik,
+                                predikat: newData[i].predikat
+                            }, { headers: { Authorization: `Bearer ${token}` } });
+                            console.log(res);
                         } catch (error) {
-                          console.log(error.message);
+                            console.log(error.message);
                         }
-                      }
+                    }
                     // -- redefine nilai -- //
                     const newBaik = baik.length * 3;
                     const newCukup = cukup.length * 2;
@@ -139,6 +152,7 @@ const teknik = () => {
                     }, { headers: { Authorization: `Bearer ${token}` } })
                         .then(res => {
                             console.log(res)
+                            socket.emit('pushRekap')
                             router.back()
                         })
                         .catch(err => {
@@ -148,7 +162,7 @@ const teknik = () => {
         } else {
             null
         }
-        
+
     }
 
     useEffect(() => {
@@ -156,9 +170,6 @@ const teknik = () => {
         getDataTeknik();
     }, [])
 
-    useEffect(() => {
-        console.log(selectedButton)
-    }, [selectedButton])
     return (
         <>
             <div className="font-lato">
@@ -171,7 +182,7 @@ const teknik = () => {
                     {/* akhir header */}
 
                     {/* konten utama */}
-                    <div className="min-h-full bg-darkBlue px-10 py-8">
+                    <div className="min-h-full bg-darkBlue px-5 py-8">
 
                         {/* card siswa information */}
                         <div className="bg-navy rounded-md p-3 text-white mb-8 shadow shadow-slate-700 hover:shadow-purple transition ease-in-out duration-300">
@@ -181,9 +192,9 @@ const teknik = () => {
                         </div>
 
                         {/* wrapper fisik list */}
-                        {dataTeknik.map((item, index) => (
+                        {selectedButton.map((item, index) => (
                             <div className="bg-navy rounded-md p-2 text-center text-white space-y-3 mb-3" key={item.id_teknik}>
-                                <h1 className='text-xl font-semibold tracking-wider'>{item.name}</h1>
+                                <h1 className='text-xl font-semibold tracking-wider uppercase'>{item.name}</h1>
 
                                 {/* fisik list */}
                                 <div className="grid grid-cols-3 gap-x-3 items-center">
@@ -193,29 +204,31 @@ const teknik = () => {
                                         (option) =>
                                             option.id_teknik == item.id_teknik &&
                                             option.selectedOption == "KURANG"
-                                    ) ? "font-semibold bg-purple rounded-md text-white py-1.5" : "font-semibold bg-navy border-2 border-purple rounded-md text-purple py-1.5"}
-                                        onClick={() => handleButtonClick(item.id_teknik, 'KURANG')}>Kurang</button>
+                                    ) ? "font-semibold bg-purple rounded-md text-white py-1.5 uppercase" : "font-semibold bg-navy border-2 border-purple rounded-md text-purple py-1.5 uppercase"}
+                                        onClick={() => handleButtonClick(item.id_teknik, item.name, 'KURANG')}>Kurang</button>
 
                                     {/* button cukup */}
                                     <button className={selectedButton.find(
                                         (option) =>
                                             option.id_teknik == item.id_teknik &&
                                             option.selectedOption == "CUKUP"
-                                    ) ? "font-semibold bg-purple rounded-md text-white py-1.5" : "font-semibold bg-navy border-2 border-purple rounded-md text-purple py-1.5"}
-                                        onClick={() => handleButtonClick(item.id_teknik, 'CUKUP')}>Cukup</button>
+                                    ) ? "font-semibold bg-purple rounded-md text-white py-1.5 uppercase" : "font-semibold bg-navy border-2 border-purple rounded-md text-purple py-1.5 uppercase"}
+                                        onClick={() => handleButtonClick(item.id_teknik, item.name, 'CUKUP')}>Cukup</button>
 
                                     {/* button baik */}
                                     <button className={selectedButton.find(
                                         (option) =>
                                             option.id_teknik == item.id_teknik &&
                                             option.selectedOption == "BAIK"
-                                    ) ? "font-semibold bg-purple rounded-md text-white py-1.5" : "font-semibold bg-navy border-2 border-purple rounded-md text-purple py-1.5"}
-                                        onClick={() => handleButtonClick(item.id_teknik, 'BAIK')}>Baik</button>
+                                    ) ? "font-semibold bg-purple rounded-md text-white py-1.5 uppercase" : "font-semibold bg-navy border-2 border-purple rounded-md text-purple py-1.5 uppercase"}
+                                        onClick={() => handleButtonClick(item.id_teknik, item.name, 'BAIK')}>Baik</button>
                                 </div>
+
+                                <h1 className='text-xl font-semibold tracking-wider text-red italic'>{item?.warning}</h1>
                             </div>
                         ))}
 
-                        <div className='bg-yellow hover:bg-white rounded-md p-3 text-center text-xl text-white hover:text-yellow font-semibold shadow shadow-slate-700 duration-300'
+                        <div className='bg-yellow rounded-md p-2 text-white mb-8 shadow shadow-slate-700 text-center text-2xl font-lato font-bold uppercase'
                             onClick={postDataTeknik}>Selesai</div>
                     </div>
                 </div>
