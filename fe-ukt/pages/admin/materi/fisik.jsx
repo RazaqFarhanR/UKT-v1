@@ -32,7 +32,7 @@ const fisik = () => {
                         <div className="flex justify-between items-center text-white mb-7">
 
                             {/* page name */}
-                            <h1 className='text-2xl tracking-wider'>Materi - Fisik</h1>
+                            <h1 className='text-2xl tracking-wider uppercase font-bold'>Materi - Fisik</h1>
 
                             {/* search */}
                             <div className="bg-purple rounded-md px-5 py-2 flex items-center gap-x-2 w-72">
